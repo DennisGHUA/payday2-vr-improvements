@@ -66,9 +66,21 @@ function WarpIdleState:update()
 	local hand = self.params.unit:hand():warp_hand()
 	local controller = state._unit:base():controller() -- TODO use self.params.controller - why is it nil!?
 	local sprint_button = (hand == "left" and "warp_left") or "warp_right"
-	state._running_wanted = controller:get_input_bool(sprint_button)
+	local sprit_pressed = controller:get_input_bool(sprint_button)
 	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"))
-	-- log(state._running_wanted)
+	
+	-- Toggle system
+	if VRPlusMod._data.rift_stickysprint then
+		if not self._sprit_pressed_last and sprit_pressed then
+			state._running_wanted = not state._running
+			state.__stop_running = not state._running_wanted
+		end
+		
+		self._sprit_pressed_last = sprit_pressed
+	else
+		state._running_wanted = sprit_pressed
+		state.__stop_running = not state._running_wanted
+	end
 end
 
 -- The VR implementation of this doesn't take sprinting into
@@ -129,13 +141,25 @@ function PlayerStandard:_get_max_walk_speed(t)
 end
 
 function PlayerStandard:_check_action_run(t, input)
-	-- Don't do anything to _running_wanted - this is updated on the hand controller.
+	-- Don't read input for _running_wanted - this is updated on the hand controller.
 	
-	if self._running and not self._running_wanted then
+	-- Don't do anything if we're not moving. Saves on crashes.
+	if not self._move_dir then
+		self._running_wanted = false
+		self.__stop_running = false
+	end
+	
+	if self._running and self.__stop_running then
 		self:_end_action_running(t)
 	elseif not self._running and self._running_wanted then
-		self:_start_action_running(t) -- TODO prevent this from being constantly called
+		self:_start_action_running(t)
 	end
+end
+
+-- Prevent crashes when stopping sprinting by letting go of the stick
+local old_can_run_directional = PlayerStandard._can_run_directional
+function PlayerStandard:_can_run_directional()
+	return self._stick_move and old_can_run_directional(self) or false
 end
 
 -- Hand ourselves ('playerstate') to the states
@@ -162,7 +186,6 @@ function PlayerStandardVR:update(...)
 	-- Very important we do this after everything else is done updating.
 	self._move_dir = nil
 	self._normal_move_dir = nil
-	self._running_wanted = false -- TODO add a toggle mode (same menu entry as usual?)
 end
 
 -- Handled in WarpIdleState:update and custom_move_direction

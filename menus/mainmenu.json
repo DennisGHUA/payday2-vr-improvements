@@ -1,0 +1,16 @@
+{
+	"menu_id": "json_example_menu",
+	"parent_menu_id": "blt_options",
+	"title": "vrplus_menu_main",
+	"description": "vrplus_menu_main_desc",
+	"items": [
+		{
+			"type": "toggle",
+			"id": "vrplus_rift_stickysprint",
+			"title": "vrplus_rift_stickysprint",
+			"description": "vrplus_rift_stickysprint_desc",
+			"callback": "vrplus_rift_stickysprint",
+			"value": "rift_stickysprint"
+		}
+	]
+}
