@@ -13,10 +13,6 @@ end
 
 local function custom_move_direction(self, stick_motion)
 	self._stick_move = stick_motion
-	
-	--if mvector3.length_sq(self._stick_move) < 0.001 then
-	--	self._stick_move = nil
-	--end
 
 	if self._state_data.on_zipline then
 		return
@@ -133,8 +129,8 @@ function PlayerStandard:_get_max_walk_speed(t)
 end
 
 function PlayerStandard:_check_action_run(t, input)
-	-- Don't do anything - this is updated on the hand controller.
-	-- self._running_wanted = false
+	-- Don't do anything to _running_wanted - this is updated on the hand controller.
+	
 	if self._running and not self._running_wanted then
 		self:_end_action_running(t)
 	elseif not self._running and self._running_wanted then
@@ -142,6 +138,7 @@ function PlayerStandard:_check_action_run(t, input)
 	end
 end
 
+-- Hand ourselves ('playerstate') to the states
 local old_init = PlayerStandardVR.init
 function PlayerStandardVR:init(unit)
 	old_init(self, unit)
@@ -156,10 +153,20 @@ function PlayerStandardVR:init(unit)
 	self._warp_state_machine:set_debug(false)
 end
 
-function PlayerStandardVR:_determine_move_direction()
-	-- self._move_dir = nil
-	-- self._normal_move_dir = nil
+local old_update = PlayerStandardVR.update
+function PlayerStandardVR:update(...)
+	old_update(self, ...)
+	
+	-- Reset all movement-related stuff so nothing blows up
+	-- if the idle controller disappears (both hands are busy)
+	-- Very important we do this after everything else is done updating.
+	self._move_dir = nil
+	self._normal_move_dir = nil
+	self._running_wanted = false -- TODO add a toggle mode (same menu entry as usual?)
 end
+
+-- Handled in WarpIdleState:update and custom_move_direction
+function PlayerStandardVR:_determine_move_direction() end
 
 local mvec_prev_pos = Vector3() -- Our custom one
 local mvec_achieved_walk_vel = Vector3()
