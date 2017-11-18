@@ -10,7 +10,8 @@ VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
 VRPlusMod._data = {}
 VRPlusMod._default_data = {
 	rift_stickysprint = true,
-	deadzone = 10
+	deadzone = 10,
+	sprint_time = 0.25
 }
 
 --[[
@@ -59,6 +60,11 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	
 	MenuCallbackHandler.vrplus_deadzone = function(self, item)
 		VRPlusMod._data.deadzone = item:value()
+		VRPlusMod:Save()
+	end
+
+	MenuCallbackHandler.vrplus_sprint_time = function(self, item)
+		VRPlusMod._data.sprint_time = item:value()
 		VRPlusMod:Save()
 	end
 
