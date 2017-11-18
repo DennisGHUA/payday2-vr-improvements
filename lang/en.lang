@@ -6,5 +6,12 @@
 	"vrplus_deadzone": "Deadzone",
 	"vrplus_deadzone_desc": "Percentage of the thumbstick/trackpad below which movement will be ignored",
 	"vrplus_sprint_time": "Sprint timer",
-	"vrplus_sprint_time_desc": "The amount of time the sprint button must be held to make the player sprint, rather than jump"
+	"vrplus_sprint_time_desc": "The amount of time the sprint button must be held to make the player sprint, rather than jump",
+
+	"vrplus_cam_fade_distance": "Fade distance",
+	"vrplus_cam_fade_distance_desc": "The distance from an obsticle at which the view starts to fade to black",
+	"vrplus_cam_reset_percent": "Camera reset percentage",
+	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
+	"vrplus_cam_reset_timer": "Camera reset timer",
+	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall"
 }

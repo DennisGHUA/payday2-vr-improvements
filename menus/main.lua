@@ -11,7 +11,12 @@ VRPlusMod._data = {}
 VRPlusMod._default_data = {
 	rift_stickysprint = true,
 	deadzone = 10,
-	sprint_time = 0.25
+	sprint_time = 0.25,
+
+	-- Camera fading parameters
+	cam_fade_distance = 2,
+	cam_reset_percent = 95,
+	cam_reset_timer = 0.25
 }
 
 --[[
@@ -57,15 +62,20 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod._data.rift_stickysprint = (item:value() == "on" and true or false)
 		VRPlusMod:Save()
 	end
-	
-	MenuCallbackHandler.vrplus_deadzone = function(self, item)
-		VRPlusMod._data.deadzone = item:value()
-		VRPlusMod:Save()
-	end
 
-	MenuCallbackHandler.vrplus_sprint_time = function(self, item)
-		VRPlusMod._data.sprint_time = item:value()
-		VRPlusMod:Save()
+	-- Sliders
+	for _, name in ipairs({
+		"deadzone",
+		"sprint_time",
+
+		"cam_fade_distance",
+		"cam_reset_percent",
+		"cam_reset_timer"
+	}) do
+		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
+			VRPlusMod._data[name] = item:value()
+			VRPlusMod:Save()
+		end
 	end
 
 	--[[

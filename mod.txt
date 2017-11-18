@@ -11,6 +11,10 @@
 			"script_path" : "playerstandardvr.lua"
 		},
 		{
+			"hook_id" : "lib/units/cameras/fpcameraplayerbase",
+			"script_path" : "fpcameraplayerbase.lua"
+		},
+		{
 			"hook_id" : "lib/managers/menumanager",
 			"script_path" : "menus/main.lua"
 		}
