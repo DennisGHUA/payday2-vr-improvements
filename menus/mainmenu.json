@@ -11,6 +11,17 @@
 			"description": "vrplus_rift_stickysprint_desc",
 			"callback": "vrplus_rift_stickysprint",
 			"value": "rift_stickysprint"
+		},
+		{
+			"type": "slider",
+			"id": "vrplus_deadzone",
+			"title": "vrplus_deadzone",
+			"description": "vrplus_deadzone_desc",
+			"callback": "vrplus_deadzone",
+			"value": "deadzone",
+			"max": 100,
+			"min": 0,
+			"step": 1
 		}
 	]
 }

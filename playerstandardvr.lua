@@ -18,7 +18,7 @@ local function custom_move_direction(self, stick_motion)
 		return
 	end
 
-	if mvector3.length(self._stick_move) < PlayerStandard.MOVEMENT_DEADZONE or self:_interacting() or self:_does_deploying_limit_movement() then
+	if mvector3.length(self._stick_move) < (VRPlusMod._data.deadzone / 100) or self:_interacting() or self:_does_deploying_limit_movement() then
 		self._stick_move = nil
 	end
 	

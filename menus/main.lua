@@ -7,8 +7,10 @@
 _G.VRPlusMod = _G.VRPlusMod or {}
 VRPlusMod._path = ModPath
 VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
-VRPlusMod._data = {
-	rift_stickysprint = true
+VRPlusMod._data = {}
+VRPlusMod._default_data = {
+	rift_stickysprint = true,
+	deadzone = 10
 }
 
 --[[
@@ -30,8 +32,11 @@ function VRPlusMod:Load()
 	if file then
 		self._data = json.decode( file:read("*all") )
 		file:close()
-	else
-		log("[VRPlus] Failed to save settings!")
+	end
+	
+	-- Copy in any new properties
+	for name, default in pairs(VRPlusMod._default_data) do
+		self._data[name] = self._data[name] or default
 	end
 end
 
@@ -47,18 +52,15 @@ end)
 ]]
 Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function( menu_manager )
 
-	--[[
-		Setup our callbacks as defined in our item callback keys, and perform our logic on the data retrieved.
-	]]
 	MenuCallbackHandler.vrplus_rift_stickysprint = function(self, item)
 		VRPlusMod._data.rift_stickysprint = (item:value() == "on" and true or false)
 		VRPlusMod:Save()
 	end
-	-- MenuCallbackHandler.callback_test_multi = function(self, item)
-		-- VRPlusMod._data.multi_value = item:value()
-		-- VRPlusMod:Save()
-		-- log("Multiple-choice value: " .. item:value())
-	-- end
+	
+	MenuCallbackHandler.vrplus_deadzone = function(self, item)
+		VRPlusMod._data.deadzone = item:value()
+		VRPlusMod:Save()
+	end
 
 	--[[
 		Load our previously saved data from our save file.
