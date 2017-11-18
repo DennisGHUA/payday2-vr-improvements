@@ -1,0 +1,14 @@
+{
+	"name": "VR Enhancements",
+	"description": "Bunch of tweaks for the VR Beta.",
+	"author": "ZNix",
+	"contact": "znix@znix.xyz",
+	"version": "0.1.0",
+	"blt_version": 2,
+	"hooks": [
+		{
+			"hook_id" : "lib/units/beings/player/states/vr/playerstandardvr",
+			"script_path" : "playerstandardvr.lua"
+		}
+	]
+}
