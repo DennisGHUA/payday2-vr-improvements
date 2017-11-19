@@ -418,12 +418,14 @@ end
 
 -- These aren't used elsewhere, so it's safe to duplicate them
 -- they're just to prevent reallocating vectors each frame
+local mvec_pos_initial = Vector3()
 local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
 local old_update_movement = PlayerStandardVR._update_movement
 function PlayerStandardVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
+	local init_pos_ghost = mvec_pos_initial
 
 	mvector3.set(pos_new, self._ext_movement:ghost_position())
 
@@ -466,6 +468,9 @@ function PlayerStandardVR:_update_movement(t, dt)
 		mvector3.add(pos_new, hmd_delta)
 	end
 	
+	-- only start tracking velocity from here - the HMD movement doesn't count.
+	mvector3.set(init_pos_ghost, pos_new)
+
 	inject_movement(self, t, dt, pos_new)
 
 	if self._state_data.on_ladder then
@@ -481,7 +486,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 		mvector3.set_z(self._last_velocity_xy, 0)
 	else
 		mvector3.set(self._last_velocity_xy, pos_new)
-		mvector3.subtract(self._last_velocity_xy, self._pos)
+		mvector3.subtract(self._last_velocity_xy, init_pos_ghost)
 		mvector3.divide(self._last_velocity_xy, dt)
 	end
 
