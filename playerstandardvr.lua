@@ -87,6 +87,8 @@ function orig_start_action_jump(self, t, action_start_data)
 end
 
 local function ps_trigger_jump(self, t)
+	if not self:_can_jump() then return end
+
 	-- Make the player jump
 	local action_forbidden = self._jump_t and t < self._jump_t + 0.55
 			action_forbidden = action_forbidden or self._unit:base():stats_screen_visible() or
@@ -459,3 +461,15 @@ function PlayerStandardVR:_update_movement(t, dt)
 	
 	-- old_update_movement(self, t, dt)
 end
+
+-- Respect _can_duck, to prevent ducking during mask-off
+local old_start_action_ducking = PlayerStandardVR._start_action_ducking
+function PlayerStandardVR:_start_action_ducking(t)
+	if not self:_can_duck() then return end
+	old_start_action_ducking(self, t)
+end
+
+-- Permission functions that are overridden by the mask off state
+-- define them so we can check them later
+function PlayerStandardVR:_can_jump() return true end
+function PlayerStandardVR:_can_duck() return true end
