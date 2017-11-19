@@ -7,6 +7,8 @@
 	"vrplus_deadzone_desc": "Percentage of the thumbstick/trackpad below which movement will be ignored",
 	"vrplus_sprint_time": "Sprint timer",
 	"vrplus_sprint_time_desc": "The amount of time the sprint button must be held to make the player sprint, rather than jump",
+	"vrplus_movement_controller_direction": "Controller-Relative Movement",
+	"vrplus_movement_controller_direction_desc": "Move relative to the direction of the active motion controller, not the HMD",
 
 	"vrplus_cam_fade_distance": "Fade distance",
 	"vrplus_cam_fade_distance_desc": "The distance from an obsticle at which the view starts to fade to black",

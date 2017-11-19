@@ -13,6 +13,14 @@
 			"value": "rift_stickysprint"
 		},
 		{
+			"type": "toggle",
+			"id": "vrplus_movement_controller_direction",
+			"title": "vrplus_movement_controller_direction",
+			"description": "vrplus_movement_controller_direction_desc",
+			"callback": "vrplus_movement_controller_direction",
+			"value": "movement_controller_direction"
+		},
+		{
 			"type": "slider",
 			"id": "vrplus_deadzone",
 			"title": "vrplus_deadzone",

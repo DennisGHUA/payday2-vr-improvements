@@ -10,7 +10,7 @@ function WarpIdleState:transition()
 	return
 end
 
-local function custom_move_direction(self, stick_motion)
+local function custom_move_direction(self, stick_motion, forwards)
 	self._stick_move = stick_motion
 
 	if self._state_data.on_zipline then
@@ -33,10 +33,12 @@ local function custom_move_direction(self, stick_motion)
 		local ladder_ext = ladder_unit:ladder()
 		self._move_dir = mvector3.copy(self._stick_move)
 		self._normal_move_dir = mvector3.copy(self._move_dir)
-		local cam_flat_rot = Rotation(self._cam_fwd_flat, math.UP)
+		local cam_flat_rot = Rotation(forwards, math.UP)
 
 		mvector3.rotate_with(self._normal_move_dir, cam_flat_rot)
 
+		-- FIXME uh-oh uses _cam_fwd
+		-- how do ladders work in this mod/in VR anyway?
 		local cam_rot = Rotation(self._cam_fwd, self._ext_camera:rotation():z())
 
 		mvector3.rotate_with(self._move_dir, cam_rot)
@@ -51,7 +53,7 @@ local function custom_move_direction(self, stick_motion)
 		mvector3.add(self._move_dir, ladder_ext:normal() * normal_offset)
 	else
 		self._move_dir = mvector3.copy(self._stick_move)
-		local cam_flat_rot = Rotation(self._cam_fwd_flat, math.UP)
+		local cam_flat_rot = Rotation(forwards, math.UP)
 
 		mvector3.rotate_with(self._move_dir, cam_flat_rot)
 
@@ -112,16 +114,32 @@ local function ps_trigger_jump(self, t)
 	new_action = orig_start_action_jump(self, t, action_start_data)
 end
 
+local mvec_hand_forward = Vector3()
 function WarpIdleState:update(t)
-	-- Update sprinting
 	local state = self.params.playerstate
-	local hand = self.params.unit:hand():warp_hand()
+	local hand_name = self.params.unit:hand():warp_hand()
 	local controller = state._unit:base():controller() -- TODO use self.params.controller - why is it nil!?
-	local sprint_button = (hand == "left" and "warp_left") or "warp_right"
-	local sprit_pressed = controller:get_input_bool(sprint_button)
-	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"))
 
-	-- Toggle system
+	-- Find which way forwards is, depending on if we're using controller-relative locomotion
+	local forwards
+	if VRPlusMod._data.movement_controller_direction then
+		local hand_unit = self.params.unit:hand():hand_unit(hand_name)
+		local hand_forward = mvec_hand_forward
+		mrotation.y(hand_unit:rotation(), hand_forward)
+		mvector3.set_z(hand_forward, 0)
+		mvector3.normalize(hand_forward)
+		forwards = hand_forward
+	else
+		forwards = state._cam_fwd_flat
+	end
+
+	-- Apply thumbstick-based movement to _stick_move
+	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards)
+
+	-- Sprinting
+	local sprint_button = (hand_name == "left" and "warp_left") or "warp_right"
+	local sprit_pressed = controller:get_input_bool(sprint_button)
+
 	if VRPlusMod._data.rift_stickysprint then
 		-- If the button is being held down, start the hold timer
 		if sprit_pressed and not self._click_time_start then
