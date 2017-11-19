@@ -52,7 +52,10 @@ function VRPlusMod:Load()
 	
 	-- Copy in any new properties
 	for name, default in pairs(VRPlusMod._default_data) do
-		self._data[name] = self._data[name] or default
+		-- Make sure to specificly say 'nil', so values set to false work
+		if self._data[name] == nil then
+			self._data[name] = default
+		end
 	end
 end
 
