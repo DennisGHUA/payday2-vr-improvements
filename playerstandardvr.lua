@@ -246,9 +246,53 @@ function PlayerStandardVR:init(unit)
 	self._warp_state_machine:set_debug(false)
 end
 
+local function do_rotation(self, t, dt)
+	local mode = VRPlusMod._data.turning_mode
+	if mode == VRPlusMod.C.TURNING_OFF then return end
+
+	local controller = self._unit:base():controller()
+	local axis = controller:get_input_axis("touchpad_primary")
+	local rot = VRManager:hmd_rotation() -- TODO don't do this
+
+	if not axis then return end
+
+	if mode == VRPlusMod.C.TURNING_SMOOTH then
+		local deadzone = 0.75 -- TODO add option
+
+		if math.abs(axis.x) > deadzone then
+			-- Scale from nothing to 100% over the course of the active zone
+			local amt = (axis.x > 0) and (axis.x - deadzone) or (axis.x + deadzone)
+			amt = amt * 1/(1-deadzone)
+
+			-- One full revolution per second on maxed stick
+			self.__yaw_rotation_offset = (self.__yaw_rotation_offset or 0) + (dt * 360 / 2 * -amt)
+			self:set_base_rotation(Rotation(rot:yaw() + self.__yaw_rotation_offset, 0, 0))
+		end
+	else
+		-- Snap turning
+		-- TODO move to options GUI
+		local turn, nonturn = 0.75, 0.5
+		local delay = 0.25 -- Delay before turning
+		local rotation_amt = 30 -- Rotation in degrees
+
+		-- Apply cooldown
+		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
+
+		if math.abs(axis.x) > turn and self.__snap_rotate_timer < 0 then
+			self.__snap_rotate_timer = delay
+			local amt = ((axis.x > 0) and 1 or -1) * rotation_amt
+
+			self.__yaw_rotation_offset = (self.__yaw_rotation_offset or 0) - amt
+			self:set_base_rotation(Rotation(rot:yaw() + self.__yaw_rotation_offset, 0, 0))
+		end
+	end
+end
+
 local old_update = PlayerStandardVR.update
-function PlayerStandardVR:update(...)
-	old_update(self, ...)
+function PlayerStandardVR:update(t, dt)
+	do_rotation(self, t, dt) -- Handle smooth/snap rotation
+
+	old_update(self, t, dt)
 	
 	-- Reset all movement-related stuff so nothing blows up
 	-- if the idle controller disappears (both hands are busy)

@@ -13,5 +13,11 @@
 	"vrplus_cam_reset_percent": "Camera reset percentage",
 	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
 	"vrplus_cam_reset_timer": "Camera reset timer",
-	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall"
+	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall",
+
+	"vrplus_turning_mode": "Turning mode",
+	"vrplus_turning_mode_desc": "Enabling this will allow you to use the thumbstick/trackpad on your weapon hand to rotate your view",
+	"vrplus_turning_mode_off": "Disable turning, keep default reload/gadget",
+	"vrplus_turning_mode_smooth": "Smooth view rotation",
+	"vrplus_turning_mode_snap": "Snap view rotation"
 }

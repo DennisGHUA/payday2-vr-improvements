@@ -5,6 +5,14 @@
 		different mod.
 ]]
 _G.VRPlusMod = _G.VRPlusMod or {}
+
+-- Constants
+VRPlusMod.C = {
+	TURNING_OFF = 1,
+	TURNING_SMOOTH = 2,
+	TURNING_SNAP = 3
+}
+
 VRPlusMod._path = ModPath
 VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
 VRPlusMod._data = {}
@@ -12,6 +20,7 @@ VRPlusMod._default_data = {
 	rift_stickysprint = true,
 	deadzone = 10,
 	sprint_time = 0.25,
+	turning_mode = VRPlusMod.C.TURNING_OFF,
 
 	-- Camera fading parameters
 	cam_fade_distance = 2,
@@ -63,10 +72,12 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod:Save()
 	end
 
-	-- Sliders
+	-- Sliders and multiselectors
 	for _, name in ipairs({
 		"deadzone",
 		"sprint_time",
+		"sprint_time",
+		"turning_mode",
 
 		"cam_fade_distance",
 		"cam_reset_percent",

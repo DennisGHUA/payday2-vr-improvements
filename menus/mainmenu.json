@@ -34,6 +34,19 @@
 			"min": 0,
 			"step": 0.05
 		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_turning_mode",
+			"title": "vrplus_turning_mode",
+			"description": "vrplus_turning_mode_desc",
+			"callback": "vrplus_turning_mode",
+			"value": "turning_mode",
+			"items": [
+				"vrplus_turning_mode_off",
+				"vrplus_turning_mode_smooth",
+				"vrplus_turning_mode_snap"
+			]
+		},
 
 		{
 			"type": "slider",
