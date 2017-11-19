@@ -1,8 +1,8 @@
 # Changelog
 
 ## V0.1.4:
-- Implement controller-relative (Onward-like) movement: [url=https://gitlab.com/znixian/payday2-vr-improvements/issues/8]Issue #8[/url]
-- Fix major movement bug ([url=https://gitlab.com/znixian/payday2-vr-improvements/issues/9]Issue #9[/url])
+- Implement controller-relative (Onward-like) movement: #8
+- Fix major movement bug: #9
 - Add thumbstick/trackpad-based rotation (smooth and snapping)
 
 ## V0.1.3:
