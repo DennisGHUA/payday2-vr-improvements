@@ -74,6 +74,7 @@ function orig_start_action_jump(self, t, action_start_data)
 	self._jump_t = t
 	local jump_vec = action_start_data.jump_vel_z * math.UP
 
+	assert(self._unit:mover(), "unit must have a mover")
 	self._unit:mover():jump()
 
 	if self._move_dir then
@@ -89,6 +90,10 @@ end
 
 local function ps_trigger_jump(self, t)
 	if not self:_can_jump() then return end
+
+	-- Some player states (eg, downed) won't have mover()s,
+	-- so they obviously can't jump.
+	if not self._unit:mover() then return end
 
 	-- Make the player jump
 	local action_forbidden = self._jump_t and t < self._jump_t + 0.55

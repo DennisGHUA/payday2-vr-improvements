@@ -66,7 +66,7 @@ end
 function PlayerStandard:_check_action_run(t, input)
 	-- Don't read input for _running_wanted - this is updated on the hand controller.
 	
-	-- Don't do anything if we're not moving. Saves on crashes.
+	-- Don't do anything if we're not moving. Saves on crashes, eg when downed.
 	if not self._move_dir then
 		self._running_wanted = false
 		self.__stop_running = false
