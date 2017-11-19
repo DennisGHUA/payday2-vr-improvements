@@ -389,18 +389,6 @@ local function inject_movement(self, t, dt, pos_new)
 		--self:_update_crosshair_offset()
 	end
 
-	--[[if self._headbob ~= self._target_headbob then
-		local ratio = 4
-
-		if weapon_tweak_data and weapon_tweak_data.headbob and weapon_tweak_data.headbob.speed_ratio then
-			ratio = weapon_tweak_data.headbob.speed_ratio
-		end
-
-		self._headbob = math.step(self._headbob, self._target_headbob, dt / ratio)
-
-		self._ext_camera:set_shaker_parameter("headbob", "amplitude", self._headbob)
-	end]]
-
 	--[[if pos_new then
 		self._unit:movement():set_position(pos_new)
 		mvector3.set(self._last_velocity_xy, pos_new)
@@ -429,20 +417,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 
 	mvector3.set(pos_new, self._ext_movement:ghost_position())
 
-	if self._state_data.warping and self._state_data._warp_target then
-		local dir = self._state_data._warp_target - pos_new
-		local dist = mvector3.normalize(dir)
-		local warp_len = dt*self.WARP_SPEED
-
-		if dist <= warp_len or dist == 0 then
-			mvector3.set(pos_new, self._state_data._warp_target)
-			self._end_action_warp(self)
-		elseif 3 < t - self._state_data._warp_start_time then
-			self._end_action_warp(self)
-		else
-			mvector3.add(pos_new, dir*warp_len)
-		end
-	elseif self._state_data.on_zipline and self._state_data.zipline_data.position then
+	if self._state_data.on_zipline and self._state_data.zipline_data.position then
 		local rot = Rotation()
 
 		mrotation.set_look_at(rot, self._state_data.zipline_data.zipline_unit:zipline():current_direction(), math.UP)
@@ -451,9 +426,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 
 		mvector3.set(pos_new, self._state_data.zipline_data.position)
 	else
-		if not self._state_data.last_warp_pos or self.MOVEMENT_DISTANCE_LIMIT*self.MOVEMENT_DISTANCE_LIMIT < mvector3.distance_sq(self._state_data.last_warp_pos, pos_new) then
-			mvector3.set_z(pos_new, self._pos.z)
-		end
+		mvector3.set_z(pos_new, self._pos.z)
 
 		local hmd_delta = mvec_hmd_delta
 
@@ -482,13 +455,9 @@ function PlayerStandardVR:_update_movement(t, dt)
 		self._ext_movement:set_ghost_position(pos_new)
 	end
 
-	if self._state_data.warping then
-		mvector3.set_z(self._last_velocity_xy, 0)
-	else
-		mvector3.set(self._last_velocity_xy, pos_new)
-		mvector3.subtract(self._last_velocity_xy, init_pos_ghost)
-		mvector3.divide(self._last_velocity_xy, dt)
-	end
+	mvector3.set(self._last_velocity_xy, pos_new)
+	mvector3.subtract(self._last_velocity_xy, init_pos_ghost)
+	mvector3.divide(self._last_velocity_xy, dt)
 
 	local cur_pos = pos_new or self._pos
 
