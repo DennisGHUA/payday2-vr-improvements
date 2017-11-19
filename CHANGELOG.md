@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.5:
+- Adds automatic updates
+
 ## V0.1.4:
 - Implement controller-relative (Onward-like) movement: #8
 - Fix major movement bug: #9
