@@ -1,5 +1,14 @@
 # Changelog
 
+## V0.1.5.3:
+- Add mod icon
+
+## V0.1.5.2:
+- Split camera and control options into two different menus
+
+## V0.1.5.1:
+- Fix crash when jumping while downed - See #18
+
 ## V0.1.5:
 - Adds automatic updates
 
