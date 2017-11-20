@@ -1,6 +1,18 @@
 {
 	"vrplus_menu_main": "VR Improvements",
 	"vrplus_menu_main_desc": "Settings for the VR Improvements Mod",
+
+	"vrplus_menu_camera": "Camera Options",
+	"vrplus_menu_camera_desc": "Configure camera behaviour",
+	"vrplus_cam_fade_distance": "Fade distance",
+	"vrplus_cam_fade_distance_desc": "The distance from an obsticle at which the view starts to fade to black",
+	"vrplus_cam_reset_percent": "Camera reset percentage",
+	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
+	"vrplus_cam_reset_timer": "Camera reset timer",
+	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall",
+
+	"vrplus_menu_controllers": "Motion Controller Options",
+	"vrplus_menu_controllers_desc": "Configure the inputs for your motion controllers",
 	"vrplus_rift_stickysprint": "Sticky Sprinting",
 	"vrplus_rift_stickysprint_desc": "Long-click to toggle sprinting, quick click to jump",
 	"vrplus_deadzone": "Deadzone",
@@ -9,14 +21,6 @@
 	"vrplus_sprint_time_desc": "The amount of time the sprint button must be held to make the player sprint, rather than jump",
 	"vrplus_movement_controller_direction": "Controller-Relative Movement",
 	"vrplus_movement_controller_direction_desc": "Move relative to the direction of the active motion controller, not the HMD",
-
-	"vrplus_cam_fade_distance": "Fade distance",
-	"vrplus_cam_fade_distance_desc": "The distance from an obsticle at which the view starts to fade to black",
-	"vrplus_cam_reset_percent": "Camera reset percentage",
-	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
-	"vrplus_cam_reset_timer": "Camera reset timer",
-	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall",
-
 	"vrplus_turning_mode": "Turning mode",
 	"vrplus_turning_mode_desc": "Enabling this will allow you to use the thumbstick/trackpad on your weapon hand to rotate your view",
 	"vrplus_turning_mode_off": "Disable turning, keep default reload/gadget",

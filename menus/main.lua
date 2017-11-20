@@ -111,5 +111,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		We also pass our data table as the third argument so that our saved values can be loaded from it.
 	]]
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, VRPlusMod._data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, VRPlusMod._data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, VRPlusMod._data )
 
 end)
