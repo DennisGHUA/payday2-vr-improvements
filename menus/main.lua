@@ -68,7 +68,17 @@ end
 	Load our localization keys for our menu, and menu items.
 ]]
 Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInit_VRPlusMod", function( loc )
+	-- Load english as the fallback for any missing keys
+	-- If a non-english language is in use, it will overwrite these keys
 	loc:load_localization_file( VRPlusMod._path .. "lang/en.lang")
+
+	for key, code in pairs({
+		russian = "ru"
+	}) do
+		if Idstring(key) and Idstring(key):key() == SystemInfo:language():key() then
+			loc:load_localization_file(VRPlusMod._path .. "lang/" .. code .. ".lang")
+		end
+	end
 end)
 
 --[[

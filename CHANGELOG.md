@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.7.0:
+- Add Russian translations (Thanks, Sergio)
+
 ## V0.1.6.3:
 - Remove BLT hook DLL from automatic updates
 - Warn user if the mod's filename is incorrect and will cause issues while updating
