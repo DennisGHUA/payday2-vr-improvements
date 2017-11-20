@@ -22,6 +22,7 @@ VRPlusMod._default_data = {
 	sprint_time = 0.25,
 	turning_mode = VRPlusMod.C.TURNING_OFF,
 	movement_controller_direction = true,
+	movement_locomotion = true,
 
 	-- Camera fading parameters
 	cam_fade_distance = 2,
@@ -74,7 +75,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	-- Checkboxes
 	for _, name in ipairs({
 		"rift_stickysprint",
-		"movement_controller_direction"
+		"movement_controller_direction",
+		"movement_locomotion"
 	}) do
 		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
 			VRPlusMod._data[name] = (item:value() == "on" and true or false)

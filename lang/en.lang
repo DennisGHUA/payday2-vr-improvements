@@ -13,6 +13,8 @@
 
 	"vrplus_menu_controllers": "Motion Controller Options",
 	"vrplus_menu_controllers_desc": "Configure the inputs for your motion controllers",
+	"vrplus_movement_locomotion": "Enable Locomotion",
+	"vrplus_movement_locomotion_desc": "Use thumbstick/trackpad motion to walk around, rather than warping/teleporting",
 	"vrplus_rift_stickysprint": "Sticky Sprinting",
 	"vrplus_rift_stickysprint_desc": "Long-click to toggle sprinting, quick click to jump",
 	"vrplus_deadzone": "Deadzone",

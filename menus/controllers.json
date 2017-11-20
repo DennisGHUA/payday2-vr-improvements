@@ -6,6 +6,15 @@
 	"description": "vrplus_menu_controllers_desc",
 	"items": [
 		{
+			"type": "toggle",
+			"id": "vrplus_movement_locomotion",
+			"title": "vrplus_movement_locomotion",
+			"description": "vrplus_movement_locomotion_desc",
+			"callback": "vrplus_movement_locomotion",
+			"value": "movement_locomotion",
+			"priority": 100
+		},
+		{
 			"type": "multiple_choice",
 			"id": "vrplus_turning_mode",
 			"title": "vrplus_turning_mode",

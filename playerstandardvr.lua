@@ -10,7 +10,12 @@ dofile(ModPath .. "playerstandardvr/warpidlestate.lua")
 -- account - therefore the player moves at sprinting speed nomatter
 -- what. Fixes #1
 -- TODO find some way to avoid overridding the whole method
+local old_get_max_walk_speed = PlayerStandard._get_max_walk_speed
 function PlayerStandard:_get_max_walk_speed(t)
+	if VRPlusMod._data.movement_locomotion then
+		return old_get_max_walk_speed(self, t)
+	end
+
 	-- Note: this is identical to the non-vr version of this function
 	local speed_tweak = self._tweak_data.movement.speed
 	local movement_speed = speed_tweak.STANDARD_MAX
@@ -90,9 +95,12 @@ local old_init = PlayerStandardVR.init
 function PlayerStandardVR:init(unit)
 	old_init(self, unit)
 
+	-- Pass in our playerstate
+	-- Always do this in case locomotion is later enabled.
+	local controller = self._unit:base():controller()
 	self._warp_state_machine = CoreFiniteStateMachine.FiniteStateMachine:new(WarpIdleState, "params", {
 			state_data = self._state_data,
-			unit = unit,
+			unit = self._unit,
 			controller = controller,
 			playerstate = self
 	})
@@ -151,8 +159,10 @@ function PlayerStandardVR:update(t, dt)
 	-- Reset all movement-related stuff so nothing blows up
 	-- if the idle controller disappears (both hands are busy)
 	-- Very important we do this after everything else is done updating.
-	self._move_dir = nil
-	self._normal_move_dir = nil
+	if VRPlusMod._data.movement_locomotion then -- TODO is this if necessary?
+		self._move_dir = nil
+		self._normal_move_dir = nil
+	end
 end
 
 -- Handled in WarpIdleState:update and custom_move_direction
@@ -266,6 +276,10 @@ local mvec_hmd_delta = Vector3()
 
 local old_update_movement = PlayerStandardVR._update_movement
 function PlayerStandardVR:_update_movement(t, dt)
+	if not VRPlusMod._data.movement_locomotion then
+		return old_update_movement(self, t, dt)
+	end
+
 	local pos_new = mvec_pos_new
 	local init_pos_ghost = mvec_pos_initial
 
@@ -330,8 +344,6 @@ function PlayerStandardVR:_update_movement(t, dt)
 	if self._is_jumping then
 		self._jump_timer = self._jump_timer + dt
 	end
-	
-	-- old_update_movement(self, t, dt)
 end
 
 -- Respect _can_duck, to prevent ducking during mask-off

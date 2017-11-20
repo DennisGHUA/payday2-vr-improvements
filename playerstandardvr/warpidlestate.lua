@@ -4,7 +4,12 @@
 	Disable warp pointer thing, and allow jumping and sprinting with a motion controller.
 --]]
 
-function WarpIdleState:transition()
+local old_transition = WarpIdleState.transition
+function WarpIdleState:transition(...)
+	if not VRPlusMod._data.movement_locomotion then
+		return old_transition(self, ...)
+	end
+
 	-- Always stay on Idle (this does not affect the special ladder
 	-- states, etc - only using the thumbpad to switch to WarpTargetState)
 	return
@@ -63,7 +68,7 @@ end
 
 -- Cloned directly from the flat version of playerstandard
 -- TODO get the old function somehow
-function orig_start_action_jump(self, t, action_start_data)
+local function orig_start_action_jump(self, t, action_start_data)
 	if self._running and not self.RUN_AND_RELOAD and not self._equipped_unit:base():run_and_shoot_allowed() then
 		self:_interupt_action_reload(t)
 		self._ext_camera:play_redirect(self:get_animation("stop_running"), self._equipped_unit:base():exit_run_speed_multiplier())
@@ -121,6 +126,10 @@ end
 
 local mvec_hand_forward = Vector3()
 function WarpIdleState:update(t)
+	if not VRPlusMod._data.movement_locomotion then
+		return -- no previous update state
+	end
+
 	local state = self.params.playerstate
 	local hand_name = self.params.unit:hand():warp_hand()
 	local controller = state._unit:base():controller() -- TODO use self.params.controller - why is it nil!?
