@@ -10,6 +10,12 @@
 	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
 	"vrplus_cam_reset_timer": "Camera reset timer",
 	"vrplus_cam_reset_timer_desc": "How long (in seconds) after the reset percentage has been reached wil the user be teleported out of the wall",
+	"vrplus_cam_redout_enable": "Enable Redout",
+	"vrplus_cam_redout_enable_desc": "When you're health gets to below a set threshold, the screen starts to turn red",
+	"vrplus_cam_redout_hp_start": "Redout %HP Start",
+	"vrplus_cam_redout_hp_start_desc": "The percentage of your health at which the screen begins to turn red",
+	"vrplus_cam_redout_fade_max": "Redout Max Fade",
+	"vrplus_cam_redout_fade_max_desc": "The maximum percentage of opacity for the redout effect",
 
 	"vrplus_menu_controllers": "Motion Controller Options",
 	"vrplus_menu_controllers_desc": "Configure the inputs for your motion controllers",

@@ -27,7 +27,11 @@ VRPlusMod._default_data = {
 	-- Camera fading parameters
 	cam_fade_distance = 2,
 	cam_reset_percent = 95,
-	cam_reset_timer = 0.25
+	cam_reset_timer = 0.25,
+
+	cam_redout_enable = false,
+	cam_redout_hp_start = 15,
+	cam_redout_fade_max = 50
 }
 
 --[[
@@ -76,7 +80,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	for _, name in ipairs({
 		"rift_stickysprint",
 		"movement_controller_direction",
-		"movement_locomotion"
+		"movement_locomotion",
+		"cam_redout_enable"
 	}) do
 		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
 			VRPlusMod._data[name] = (item:value() == "on" and true or false)
@@ -93,7 +98,10 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 		"cam_fade_distance",
 		"cam_reset_percent",
-		"cam_reset_timer"
+		"cam_reset_timer",
+
+		"cam_redout_hp_start",
+		"cam_redout_fade_max"
 	}) do
 		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
 			VRPlusMod._data[name] = item:value()

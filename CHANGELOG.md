@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.6.1:
+- Add redout effect (disabled by default), fading screen to red as your health runs low - See #21
+
 ## V0.1.6:
 - Add option to disable locomotion
 - Warn the user if an outdated IPHLPAPI.dll is found
