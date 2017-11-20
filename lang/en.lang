@@ -38,5 +38,7 @@
 	"vrplus_dll_out_of_date": "IPHLPAPI.dll Out Of Date",
 	"vrplus_dll_out_of_date_message": "Your IPHLPAPI.dll file is out of date. This may cause crashes, and automatic updates will not work (you will always be told you're up to date).",
 	"vrplus_dll_out_of_date_download": "Go to download page",
-	"vrplus_dll_out_of_date_continue": "Continue anyway"
+	"vrplus_dll_out_of_date_continue": "Continue anyway",
+	"vrplus_wrong_mod_name": "Bad mod filename",
+	"vrplus_wrong_mod_name_message": "The mod folder for the VR Improvements mod is incorrectly named - it should be called exactly 'vrplus'. While named incorrectly, any attempt to update this mod will leave the game hanging on 'Verifying'. Please go into your mods folder and rename this mod to 'vrplus'."
 }

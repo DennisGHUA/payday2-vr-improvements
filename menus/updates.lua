@@ -28,8 +28,9 @@ function BLTModManager:_RunAutoCheckForUpdates()
 	}
 
 	for _, hash in ipairs(outdated) do
+		local text = function(str) return managers.localization:text(str) end
+
 		if hash == dll_hash then
-			local text = function(str) return managers.localization:text(str) end
 			local options = {
 				{
 					text = text("vrplus_dll_out_of_date_download"),
@@ -49,6 +50,15 @@ function BLTModManager:_RunAutoCheckForUpdates()
 			)
 			menu:Show()
 		end
+	end
+
+	-- The mod being in the wrong folder breaks updates, leaving them hanging at 'verifying'
+	if VRPlusMod._path ~= "mods/vrplus/" then
+		QuickMenu:new(
+			text("vrplus_wrong_mod_name"),
+			text("vrplus_wrong_mod_name_message"),
+			{} -- Default 'ok' button
+		):Show()
 	end
 end
 
