@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.1.6:
+- Add option to disable locomotion
+- Warn the user if an outdated IPHLPAPI.dll is found
+
 ## V0.1.5.3:
 - Add mod icon
 
