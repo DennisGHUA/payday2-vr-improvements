@@ -1,5 +1,13 @@
 # Changelog
 
+## V0.1.6.3:
+- Remove BLT hook DLL from automatic updates
+- Warn user if the mod's filename is incorrect and will cause issues while updating
+
+## V0.1.6.2:
+- Fix crash on startup caused by v0.1.6.1 and extremely inadequate testing on my part
+- Note this version's mod.txt says v0.1.6.1 - I forgot to update it
+
 ## V0.1.6.1:
 - Add redout effect (disabled by default), fading screen to red as your health runs low - See #21
 
