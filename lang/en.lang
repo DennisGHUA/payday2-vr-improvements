@@ -27,5 +27,10 @@
 	"vrplus_turning_mode_desc": "Enabling this will allow you to use the thumbstick/trackpad on your weapon hand to rotate your view",
 	"vrplus_turning_mode_off": "Disable turning, keep default reload/gadget",
 	"vrplus_turning_mode_smooth": "Smooth view rotation",
-	"vrplus_turning_mode_snap": "Snap view rotation"
+	"vrplus_turning_mode_snap": "Snap view rotation",
+
+	"vrplus_dll_out_of_date": "IPHLPAPI.dll Out Of Date",
+	"vrplus_dll_out_of_date_message": "Your IPHLPAPI.dll file is out of date. This may cause crashes, and automatic updates will not work (you will always be told you're up to date).",
+	"vrplus_dll_out_of_date_download": "Go to download page",
+	"vrplus_dll_out_of_date_continue": "Continue anyway"
 }

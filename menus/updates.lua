@@ -11,11 +11,45 @@
 	These are URLs that are suffixed with the mod ID and used to fetch stuff.
 ]]
 
--- Print out hash for updating the server with
-do
-	local directory = Application:nice_path( ModPath, true )
-	local hash = SystemFS:exists(directory) and file.DirectoryHash(directory) or nil
-	log("[VRPlus] Update hash: " .. tostring(hash))
+-- Check for an outdated DLL that doesn't support HTTPS, breaking updating/update checks
+local old_update_check = BLTModManager._RunAutoCheckForUpdates
+function BLTModManager:_RunAutoCheckForUpdates()
+	old_update_check(self)
+
+	local dll_hash = file.FileHash("IPHLPAPI.dll")
+
+	local outdated = {
+		"2da0ae2df2985b7b883e150b1cf691bf6bb333bef51d8cef98e9f73503057450", -- 2.0VR4
+		"c9a4f75f32b699f4d752a205c7c57c713c5159b14b4035fefeff0159852908b1", -- 2.0VR3
+
+		-- The following shouldn't work, but incase ovk changes luaL_newstate and they start working in the future
+		"790713453ef81f0494ea51f42e91f061c11f12cd09a556c6db9687d6135261f0", -- 2.0VR2
+		"73352aae9639eb73180f0ec9f64975d0804abdb1a0babdf99140f34489a636d0" -- 2.0VR1
+	}
+
+	for _, hash in ipairs(outdated) do
+		if hash == dll_hash then
+			local text = function(str) return managers.localization:text(str) end
+			local options = {
+				{
+					text = text("vrplus_dll_out_of_date_download"),
+					callback = function()
+						os.execute("cmd /c start http://steamcommunity.com/groups/payday-2-vr-mod/discussions/0/2425614361138298439/")
+					end
+				},
+				{
+					text = text("vrplus_dll_out_of_date_continue"),
+					is_cancel_button = true,
+				}
+			}
+			local menu = QuickMenu:new(
+				text("vrplus_dll_out_of_date"),
+				text("vrplus_dll_out_of_date_message"),
+				options
+			)
+			menu:Show()
+		end
+	end
 end
 
 local function reload_updates()

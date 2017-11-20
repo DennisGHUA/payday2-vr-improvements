@@ -43,7 +43,7 @@
 			"custom_urls": {
 				"check": "https://znix.xyz/paydaymods/updates/meta.php?id=",
 				"patchnotes": "https://znix.xyz/paydaymods/patchnotes/view.php?id=",
-				"download": "https://znix.xyz/paydaymods/download/get.php?id="
+				"download": "https://znix.xyz/paydaymods/download/get.php?src=mod&id="
 			}
 		}
 	]
