@@ -3,7 +3,9 @@
 	"description": "Bunch of tweaks for the VR Beta.",
 	"author": "ZNix",
 	"contact": "znix@znix.xyz",
-	"version": "0.1.5.2",
+	"version": "0.1.5.3",
+	"image" : "vrplus.png",
+	"color" : "255 255 255",
 	"blt_version": 2,
 	"hooks": [
 		{
