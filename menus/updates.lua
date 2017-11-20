@@ -56,12 +56,22 @@ local function reload_updates()
 	-- Mods get loaded before us, so patch in a new set of updates
 	-- Nothing will have used the updates before this runs, though, so it's safe.
 	for _, mod in pairs(BLT.Mods:Mods()) do
+		local dll_id
+
 		for i, update in ipairs(mod.updates) do
 			local update_data = mod.json_data["updates"][i]
-			if update:GetId() == "vrplus" then -- Kinda cheating, FIXME
+
+			if update:GetId() == "payday2bltdll" then
+				dll_id = i -- Remove their DLL update, as we use our own
+			elseif update_data["custom_urls"] then
 				local new_update = BLTUpdate:new( mod, update_data )
+				new_update:SetEnabled(update:IsEnabled())
 				mod.updates[i] = new_update
 			end
+		end
+
+		if dll_id then
+			table.remove(mod.updates, dll_id)
 		end
 	end
 end
