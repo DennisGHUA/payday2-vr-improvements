@@ -48,6 +48,11 @@
 	"vrplus_max_movement_speed_enable_desc": "Включает ограничение скорости передвижения",
 	"vrplus_max_movement_speed": "Максимальная скорорость",
 	"vrplus_max_movement_speed_desc": "Максимальная скорость с которой вы будете идти/бежать",
-	
+
+	"vrplus_menu_hud": "Параметры интерфейса",
+	"vrplus_menu_hud_desc": "Параметры настроек интерфейса пользователя",
+	"vrplus_watch_health_wheel": "Дисплей здоровья на наручных часах",
+	"vrplus_watch_health_wheel_desc": "Переместить указатель здоровья на наручные часы (требуется перезагрузка)",
+
 	"vrplus_git_tag_end":""
 }
