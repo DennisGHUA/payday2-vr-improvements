@@ -1,3 +1,9 @@
+
+-- This file is loaded in the flat game AFAIK, and
+-- makes changes that would probably crash the game
+-- when run like that.
+if not _G.IS_VR then return end
+
 local mvec_temp1 = Vector3()
 local mvec_temp2 = Vector3()
 local mvec_temp3 = Vector3()
@@ -143,3 +149,27 @@ function FPCameraPlayerBase:_update_fadeout(hmd_position, ghost_position, t, dt)
 	end
 
 end
+
+-- Remove the overshot effect - running moves your hands, etc backwards
+-- This is because, for diesel engine 'units' (such as hand objects, etc) set_position only
+-- sets the position for the next frame - not the one currently being built. Cameras are
+-- not affected by this, so you're hands will always be in the position they should have
+-- been last frame.
+--
+-- To compensate, subtract the movement between where we should be now, and where we
+-- were last frame (which all the other objects are still stuck at).
+--
+-- Note this only affects movement from the thumbstick - anything else that moves
+-- your camera will not be affected, so not to increase input lag.
+
+
+Hooks:PostHook(FPCameraPlayerBase, "_update_movement", "VRPlusRemoveOvershot", function(self)
+	local playerstate = self._parent_movement_ext:current_state()
+	local delta = playerstate.__last_movement_xy
+
+	-- In case we're in a state that has never done a position update
+	if delta then
+		--mvector3.multiply(delta, 20)
+		mvector3.subtract(self._output_data.position, delta)
+	end
+end)

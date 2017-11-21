@@ -106,6 +106,10 @@ function PlayerStandardVR:init(unit)
 	})
 
 	self._warp_state_machine:set_debug(false)
+
+	-- Non-time compensated movement, only counting locomotion
+	-- See FPCameraPlayerBase
+	self.__last_movement_xy = Vector3()
 end
 
 local function do_rotation(self, t, dt)
@@ -323,8 +327,16 @@ function PlayerStandardVR:_update_movement(t, dt)
 		self._ext_movement:set_ghost_position(pos_new)
 	end
 
-	mvector3.set(self._last_velocity_xy, pos_new)
-	mvector3.subtract(self._last_velocity_xy, init_pos_ghost)
+	-- Non-time compensated version we can use to
+	-- fix up camera error (see FPCameraPlayerBase)
+	--
+	-- TODO set this even when locomotion is off, so that
+	-- the hands no longer disappear (shift back a lot).
+	mvector3.set(self.__last_movement_xy, pos_new)
+	mvector3.subtract(self.__last_movement_xy, init_pos_ghost)
+
+	-- Time-compensated version
+	mvector3.set(self._last_velocity_xy, self.__last_movement_xy)
 	mvector3.divide(self._last_velocity_xy, dt)
 
 	local cur_pos = pos_new or self._pos
