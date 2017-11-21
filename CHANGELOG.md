@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.8.1
+- Update Russian translations for V0.1.8.0 (Thanks, Sergio)
+
 ## V0.1.8.0
 - Fix player hands lagging behing camera while moving - Issue #23
 - Add movement speed cap in comfort options
