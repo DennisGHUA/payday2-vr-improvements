@@ -47,5 +47,12 @@
 	"vrplus_max_movement_speed_enable": "Enable speed cap",
 	"vrplus_max_movement_speed_enable_desc": "Enable movement speed cap",
 	"vrplus_max_movement_speed": "Movement speed cap",
-	"vrplus_max_movement_speed_desc": "The maximum speed you will be able to walk/run at"
+	"vrplus_max_movement_speed_desc": "The maximum speed you will be able to walk/run at",
+
+	"vrplus_menu_hud": "UI Options",
+	"vrplus_menu_hud_desc": "Configure User Interface settings",
+	"vrplus_watch_health_wheel": "Wristwatch Health Display",
+	"vrplus_watch_health_wheel_desc": "Move you're health indicator to you're wristwatch (requires restart)",
+
+	"vrplus_git_tag_end":""
 }

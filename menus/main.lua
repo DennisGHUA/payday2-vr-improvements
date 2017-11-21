@@ -36,6 +36,10 @@ VRPlusMod._default_data = {
 	comfort = {
 		max_movement_speed_enable = false,
 		max_movement_speed = 400
+	},
+
+	hud = {
+		watch_health_wheel = true
 	}
 }
 
@@ -78,6 +82,11 @@ function VRPlusMod:Load()
 end
 
 --[[
+	Load our previously saved data from our save file.
+]]
+VRPlusMod:Load()
+
+--[[
 	Load our localization keys for our menu, and menu items.
 ]]
 Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInit_VRPlusMod", function( loc )
@@ -98,11 +107,6 @@ end)
 	Setup our menu callbacks, load our saved data, and build the menu from our json file.
 ]]
 Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function( menu_manager )
-	--[[
-		Load our previously saved data from our save file.
-	]]
-	VRPlusMod:Load()
-
 	local data = VRPlusMod._data
 
 	local function add_inputs(scope, checkboxes, names)
@@ -149,6 +153,11 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"max_movement_speed"
 	})
 
+	-- HUD options
+	add_inputs(data.hud, true, {
+		"watch_health_wheel"
+	})
+
 	--[[
 		Load our menu json file and pass it to our MenuHelper so that it can build our in-game menu for us.
 		The second option used to be for keybinds, however that seems to not be implemented on BLT2.
@@ -158,5 +167,6 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, data )
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, data )
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/comfort.json", nil, data.comfort )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/hud.json", nil, data.hud )
 
 end)

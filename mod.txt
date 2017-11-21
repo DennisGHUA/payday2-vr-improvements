@@ -3,10 +3,20 @@
 	"description": "Bunch of tweaks for the VR Beta.",
 	"author": "ZNix",
 	"contact": "znix@znix.xyz",
-	"version": "0.1.8.1",
+	"version": "0.1.9.0",
 	"image" : "vrplus.png",
 	"color" : "255 255 255",
 	"blt_version": 2,
+	"pre_hooks" : [
+		{
+			"hook_id" : "lib/entry",
+			"script_path" : "menus/main.lua"
+		},
+		{
+			"hook_id" : "lib/entry",
+			"script_path" : "menus/updates.lua"
+		}
+	],
 	"hooks": [
 		{
 			"hook_id" : "lib/units/beings/player/states/vr/playerstandardvr",
@@ -29,16 +39,20 @@
 			"script_path" : "corecontrollerwrappervr.lua"
 		},
 		{
-			"hook_id" : "lib/managers/menumanager",
-			"script_path" : "menus/main.lua"
-		},
-		{
-			"hook_id" : "lib/entry",
-			"script_path" : "menus/updates.lua"
-		},
-		{
 			"hook_id" : "lib/managers/menumanagervr",
 			"script_path" : "menumanagervr.lua"
+		},
+		{
+			"hook_id" : "lib/managers/hudmanagervr",
+			"script_path" : "hud/hudmanagervr.lua"
+		},
+		{
+			"hook_id" : "lib/managers/hud/vr/hudteammatevr",
+			"script_path" : "hud/hudteammatevr.lua"
+		},
+		{
+			"hook_id" : "lib/managers/hud/vr/hudplayerdownedvr",
+			"script_path" : "hud/hudplayerdownedvr.lua"
 		}
 	],
 	"updates" : [

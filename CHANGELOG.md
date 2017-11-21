@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.9.0
+- Add HP-on-watch option (enabled by default) - Implements #16
+
 ## V0.1.8.1
 - Update Russian translations for V0.1.8.0 (Thanks, Sergio)
 

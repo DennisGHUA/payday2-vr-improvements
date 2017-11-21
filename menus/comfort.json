@@ -2,7 +2,7 @@
 	"menu_id": "vrplus_menu_comfort",
 	"parent_menu_id": "vrplus_menu_main",
 	"title": "vrplus_menu_comfort",
-	"priority": 3,
+	"priority": 97,
 	"description": "vrplus_menu_comfort_desc",
 	"items": [
 		{

@@ -2,7 +2,7 @@
 	"menu_id": "vrplus_menu_controllers",
 	"parent_menu_id": "vrplus_menu_main",
 	"title": "vrplus_menu_controllers",
-	"priority": 1,
+	"priority": 99,
 	"description": "vrplus_menu_controllers_desc",
 	"items": [
 		{
