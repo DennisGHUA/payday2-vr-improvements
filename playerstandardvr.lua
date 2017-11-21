@@ -12,7 +12,7 @@ dofile(ModPath .. "playerstandardvr/warpidlestate.lua")
 -- TODO find some way to avoid overridding the whole method
 local old_get_max_walk_speed = PlayerStandard._get_max_walk_speed
 function PlayerStandard:_get_max_walk_speed(t)
-	if VRPlusMod._data.movement_locomotion then
+	if not VRPlusMod._data.movement_locomotion then
 		return old_get_max_walk_speed(self, t)
 	end
 
