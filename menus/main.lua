@@ -31,7 +31,12 @@ VRPlusMod._default_data = {
 
 	cam_redout_enable = false,
 	cam_redout_hp_start = 15,
-	cam_redout_fade_max = 50
+	cam_redout_fade_max = 50,
+
+	comfort = {
+		max_movement_speed_enable = false,
+		max_movement_speed = 400
+	}
 }
 
 --[[
@@ -42,6 +47,19 @@ function VRPlusMod:Save()
 	if file then
 		file:write( json.encode( self._data ) )
 		file:close()
+	end
+end
+
+local function load_defaults(defaults, target)
+	for name, default in pairs(defaults) do
+		-- Make sure to specificly say 'nil', so values set to false work
+		if type(default) == "table" then
+			local subtarget = target[name] or {}
+			target[name] = subtarget
+			load_defaults(default, target[name])
+		elseif target[name] == nil then
+			target[name] = default
+		end
 	end
 end
 
@@ -56,12 +74,7 @@ function VRPlusMod:Load()
 	end
 	
 	-- Copy in any new properties
-	for name, default in pairs(VRPlusMod._default_data) do
-		-- Make sure to specificly say 'nil', so values set to false work
-		if self._data[name] == nil then
-			self._data[name] = default
-		end
-	end
+	load_defaults(self._default_data, self._data)
 end
 
 --[[
@@ -85,22 +98,36 @@ end)
 	Setup our menu callbacks, load our saved data, and build the menu from our json file.
 ]]
 Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function( menu_manager )
+	--[[
+		Load our previously saved data from our save file.
+	]]
+	VRPlusMod:Load()
+
+	local data = VRPlusMod._data
+
+	local function add_inputs(scope, checkboxes, names)
+		for _, name in ipairs(names) do
+			MenuCallbackHandler["vrplus_" .. name] = function(self, item)
+				if checkboxes then
+					scope[name] = (item:value() == "on" and true or false)
+				else
+					scope[name] = item:value()
+				end
+				VRPlusMod:Save()
+			end
+		end
+	end
 
 	-- Checkboxes
-	for _, name in ipairs({
+	add_inputs(data, true, {
 		"rift_stickysprint",
 		"movement_controller_direction",
 		"movement_locomotion",
 		"cam_redout_enable"
-	}) do
-		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
-			VRPlusMod._data[name] = (item:value() == "on" and true or false)
-			VRPlusMod:Save()
-		end
-	end
+	})
 
 	-- Sliders and multiselectors
-	for _, name in ipairs({
+	add_inputs(data, false, {
 		"deadzone",
 		"sprint_time",
 		"sprint_time",
@@ -112,26 +139,24 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 		"cam_redout_hp_start",
 		"cam_redout_fade_max"
-	}) do
-		MenuCallbackHandler["vrplus_" .. name] = function(self, item)
-			VRPlusMod._data[name] = item:value()
-			VRPlusMod:Save()
-		end
-	end
+	})
 
-	--[[
-		Load our previously saved data from our save file.
-	]]
-	VRPlusMod:Load()
+	-- Comfort options
+	add_inputs(data.comfort, true, {
+		"max_movement_speed_enable"
+	})
+	add_inputs(data.comfort, false, {
+		"max_movement_speed"
+	})
 
 	--[[
 		Load our menu json file and pass it to our MenuHelper so that it can build our in-game menu for us.
-		We pass our parent mod table as the second argument so that any keybind functions can be found and called
-			as necessary.
+		The second option used to be for keybinds, however that seems to not be implemented on BLT2.
 		We also pass our data table as the third argument so that our saved values can be loaded from it.
 	]]
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, VRPlusMod._data )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, VRPlusMod._data )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, VRPlusMod._data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/comfort.json", nil, data.comfort )
 
 end)

@@ -1,0 +1,30 @@
+{
+	"menu_id": "vrplus_menu_comfort",
+	"parent_menu_id": "vrplus_menu_main",
+	"title": "vrplus_menu_comfort",
+	"priority": 3,
+	"description": "vrplus_menu_comfort_desc",
+	"items": [
+		{
+			"type": "toggle",
+			"id": "vrplus_max_movement_speed_enable",
+			"title": "vrplus_max_movement_speed_enable",
+			"description": "vrplus_max_movement_speed_enable_desc",
+			"callback": "vrplus_max_movement_speed_enable",
+			"value": "max_movement_speed_enable",
+			"priority": 99
+		},
+		{
+			"type": "slider",
+			"id": "vrplus_max_movement_speed",
+			"title": "vrplus_max_movement_speed",
+			"description": "vrplus_max_movement_speed_desc",
+			"callback": "vrplus_max_movement_speed",
+			"value": "max_movement_speed",
+			"max": 600,
+			"min": 0,
+			"step": 10,
+			"priority": 98
+		}
+	]
+}

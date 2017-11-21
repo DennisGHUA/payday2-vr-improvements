@@ -65,6 +65,11 @@ function PlayerStandard:_get_max_walk_speed(t)
 		self._ext_network:send("action_change_speed", final_speed)
 	end
 
+	-- Apply a speed cap, as per the comfort options
+	if VRPlusMod._data.comfort.max_movement_speed_enable then
+		final_speed = math.min(final_speed, VRPlusMod._data.comfort.max_movement_speed)
+	end
+
 	return final_speed
 end
 

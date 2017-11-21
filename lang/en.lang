@@ -40,5 +40,12 @@
 	"vrplus_dll_out_of_date_download": "Go to download page",
 	"vrplus_dll_out_of_date_continue": "Continue anyway",
 	"vrplus_wrong_mod_name": "Bad mod filename",
-	"vrplus_wrong_mod_name_message": "The mod folder for the VR Improvements mod is incorrectly named - it should be called exactly 'vrplus'. While named incorrectly, any attempt to update this mod will leave the game hanging on 'Verifying'. Please go into your mods folder and rename this mod to 'vrplus'."
+	"vrplus_wrong_mod_name_message": "The mod folder for the VR Improvements mod is incorrectly named - it should be called exactly 'vrplus'. While named incorrectly, any attempt to update this mod will leave the game hanging on 'Verifying'. Please go into your mods folder and rename this mod to 'vrplus'.",
+
+	"vrplus_menu_comfort": "Comfort Options",
+	"vrplus_menu_comfort_desc": "Options to reduce motion sickness",
+	"vrplus_max_movement_speed_enable": "Enable speed cap",
+	"vrplus_max_movement_speed_enable_desc": "Enable movement speed cap",
+	"vrplus_max_movement_speed": "Movement speed cap",
+	"vrplus_max_movement_speed_desc": "The maximum speed you will be able to walk/run at"
 }
