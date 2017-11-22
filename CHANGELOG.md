@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.1.9.2
+- Allow users to jump while in hold-to-sprint mode - Fixes #30
+
 ## V0.1.9.1
 - Add Russian translations for v0.1.9.0
 
