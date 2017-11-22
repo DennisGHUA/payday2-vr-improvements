@@ -53,6 +53,11 @@ VRPlusMod._default_data = {
 
 	hud = {
 		watch_health_wheel = true
+	},
+
+	tweaks = {
+		laser_hue = 1/3,
+		laser_disco = false
 	}
 }
 
@@ -195,12 +200,27 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"watch_health_wheel"
 	})
 
+	-- Tweak options
+	local function reload_laser()
+		if managers.menu._player then
+			-- Make the changes take effeect
+			managers.menu._player.__laser_is_updated = false
+		end
+	end
+	add_inputs(data.tweaks, true, {
+		"laser_disco"
+	}, reload_laser)
+	add_inputs(data.tweaks, false, {
+		"laser_hue"
+	}, reload_laser)
+
 	--[[
 		Load our menu json file and pass it to our MenuHelper so that it can build our in-game menu for us.
 		The second option used to be for keybinds, however that seems to not be implemented on BLT2.
 		We also pass our data table as the third argument so that our saved values can be loaded from it.
 	]]
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/tweaks.json", nil, data.tweaks )
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, data )
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, data )
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/comfort.json", nil, data.comfort )

@@ -57,6 +57,10 @@
 		{
 			"hook_id" : "lib/input/handstatesplayer",
 			"script_path" : "handstatesplayer.lua"
+		},
+		{
+			"hook_id" : "lib/units/beings/player/states/vr/playermenu",
+			"script_path" : "playermenu.lua"
 		}
 	],
 	"updates" : [

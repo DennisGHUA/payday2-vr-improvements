@@ -64,5 +64,12 @@
 	"vrplus_watch_health_wheel": "Wristwatch Health Display",
 	"vrplus_watch_health_wheel_desc": "Move you're health indicator to you're wristwatch (requires restart)",
 
+	"vrplus_menu_tweaks": "Tweaks",
+	"vrplus_menu_tweaks_desc": "Random, unimportant options",
+	"vrplus_laser_hue": "Laser hue",
+	"vrplus_laser_hue_desc": "The hue of the laser in the main menu",
+	"vrplus_laser_disco": "Laser Disco",
+	"vrplus_laser_disco_desc": "Constantly make the laser fade through all possible hues, at a speed specified above",
+
 	"vrplus_git_tag_end":""
 }
