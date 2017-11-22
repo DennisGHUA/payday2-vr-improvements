@@ -10,17 +10,23 @@ _G.VRPlusMod = _G.VRPlusMod or {}
 VRPlusMod.C = {
 	TURNING_OFF = 1,
 	TURNING_SMOOTH = 2,
-	TURNING_SNAP = 3
+	TURNING_SNAP = 3,
+
+	SPRINT_OFF = 1,
+	SPRINT_STICKY = 2,
+	SPRINT_HOLD = 3,
+
+	nil
 }
 
 VRPlusMod._path = ModPath
 VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
 VRPlusMod._data = {}
 VRPlusMod._default_data = {
-	rift_stickysprint = true,
 	deadzone = 10,
 	sprint_time = 0.25,
 	turning_mode = VRPlusMod.C.TURNING_OFF,
+	sprint_mode = VRPlusMod.C.SPRINT_STICKY,
 	movement_controller_direction = true,
 	movement_locomotion = true,
 
@@ -124,7 +130,6 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 	-- Checkboxes
 	add_inputs(data, true, {
-		"rift_stickysprint",
 		"movement_controller_direction",
 		"movement_locomotion",
 		"cam_redout_enable"
@@ -142,7 +147,9 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"cam_reset_timer",
 
 		"cam_redout_hp_start",
-		"cam_redout_fade_max"
+		"cam_redout_fade_max",
+
+		"sprint_mode"
 	})
 
 	-- Comfort options

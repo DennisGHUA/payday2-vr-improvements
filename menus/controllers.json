@@ -29,12 +29,17 @@
 			"priority": 99
 		},
 		{
-			"type": "toggle",
-			"id": "vrplus_rift_stickysprint",
-			"title": "vrplus_rift_stickysprint",
-			"description": "vrplus_rift_stickysprint_desc",
-			"callback": "vrplus_rift_stickysprint",
-			"value": "rift_stickysprint",
+			"type": "multiple_choice",
+			"id": "vrplus_sprint_mode",
+			"title": "vrplus_sprint_mode",
+			"description": "vrplus_sprint_mode_desc",
+			"callback": "vrplus_sprint_mode",
+			"value": "sprint_mode",
+			"items": [
+				"vrplus_sprint_mode_off",
+				"vrplus_sprint_mode_sticky",
+				"vrplus_sprint_mode_hold"
+			],
 			"priority": 98
 		},
 		{

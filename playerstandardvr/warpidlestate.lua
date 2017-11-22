@@ -151,34 +151,49 @@ function WarpIdleState:update(t)
 	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards)
 
 	-- Sprinting
-	local sprint_button = (hand_name == "left" and "warp_left") or "warp_right"
-	local sprit_pressed = controller:get_input_bool(sprint_button)
+	local sprit_pressed = controller:get_input_bool(hand_name == "left" and "warp_left" or "warp_right")
 
-	if VRPlusMod._data.rift_stickysprint then
-		-- If the button is being held down, start the hold timer
-		if sprit_pressed and not self._click_time_start then
-			self._click_time_start = t
+	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
+		-- FIXME this allows bunny-hopping - Should we disable it or keep it?
+		if sprit_pressed then
+			ps_trigger_jump(state, t)
 		end
 
-		if self._click_time_start == -1 then
-			-- Wait for the user to release the button
-		elseif self._click_time_start then
-			local timer = t - self._click_time_start
-			if timer > VRPlusMod._data.sprint_time then
-				self._click_time_start = -1
+		return
+	end
 
-				state._running_wanted = not state._running
-				state.__stop_running = not state._running_wanted
-			elseif not sprit_pressed then
-				ps_trigger_jump(state, t)
-			end
+	-- If the button is being held down, start the hold timer
+	if sprit_pressed and not self._click_time_start then
+		self._click_time_start = t
+	end
+
+	-- the clock is running, and more than _data.sprint_time seconds have elapsed
+	local held_down = self._click_time_start and (t - self._click_time_start) > VRPlusMod._data.sprint_time
+
+	if not sprit_pressed then
+		if self._click_time_start and not held_down then
+			ps_trigger_jump(state, t)
+			self._click_time_start = nil
+		end
+
+		self._click_time_start = nil
+	end
+
+	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_STICKY then
+		if held_down and not self.__last_pressed then
+			self.__last_pressed = true
+
+			state._running_wanted = not state._running
+			state.__stop_running = not state._running_wanted
 		end
 
 		if not sprit_pressed then
-			self._click_time_start = nil
+			self.__last_pressed = false
 		end
-	else
-		state._running_wanted = sprit_pressed
+	elseif VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD then
+		state._running_wanted = held_down
 		state.__stop_running = not state._running_wanted
+	else
+		error("Unknown sprint mode " .. tostring(VRPlusMod._data.sprint_mode))
 	end
 end
