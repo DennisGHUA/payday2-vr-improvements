@@ -25,6 +25,29 @@
 			"min": 0,
 			"step": 10,
 			"priority": 98
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_interact_mode",
+			"title": "vrplus_interact_mode",
+			"description": "vrplus_interact_mode_desc",
+			"callback": "vrplus_interact_mode",
+			"value": "interact_mode",
+			"items": [
+				"vrplus_interact_mode_grip",
+				"vrplus_interact_mode_both",
+				"vrplus_interact_mode_trigger"
+			],
+			"priority": 97
+		},
+		{
+			"type": "toggle",
+			"id": "vrplus_interact_lock",
+			"title": "vrplus_interact_lock",
+			"description": "vrplus_interact_lock_desc",
+			"callback": "vrplus_interact_lock",
+			"value": "interact_lock",
+			"priority": 96
 		}
 	]
 }

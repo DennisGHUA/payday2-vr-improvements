@@ -62,8 +62,27 @@ Default: Enabled
 ## Comfort Options
 For those affected by simulator sickness, smooth locomotion is usually worse than teleporting in this regard. These options help try to mitigate this.
 
+Also, they can adjust some controls that some Vive users may find painful over time.
+
 ### Speed Cap
 Enabling this will artifically limit the player's walking and running speeds, to an adjustable amount.
+
+Default: Disabled
+
+### Interaction Input
+This allows you to select, when using an empty hand, which buttons on the motion controller can be used to interract with
+items (pick locks, start drills, answer pagers, etc). For Vive users who find their grip button uncomfortable, this may
+be extremely useful.
+
+It allows you to either select the Grip button, Trigger button or both as possible inputs.
+
+Default: `Either Grip or Trigger`. Vanilla: `Grip Button`.
+
+### Lock Interactions
+Once you start interacting with something (same as above - locks, drills, pagers, etc) you can release the
+button you used to start interacting with it, and the interacton will continue.
+
+You can interrupt an interaction by pressing the interact input a second time.
 
 Default: Disabled
 

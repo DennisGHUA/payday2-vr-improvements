@@ -363,6 +363,38 @@ function PlayerStandardVR:_update_movement(t, dt)
 	end
 end
 
+Hooks:PreHook(PlayerStandard, "_check_action_interact", "VRPlusLockInteration", function(self, t, input)
+	if not self._interact_params or not VRPlusMod._data.comfort.interact_lock then
+		return
+	end
+
+	-- Prevent the interation from stopping
+	input.btn_interact_release = false
+
+	if not input.btn_interact_press then
+		return
+	end
+
+	-- Prevent the player from interacting again
+	-- IDK what would happen, but it wouldn't be any good.
+	input.btn_interact_press = false
+
+	local release_hand = input.btn_interact_left_press and PlayerHand.LEFT or PlayerHand.RIGHT
+	if release_hand ~= self._interact_hand then
+		-- Player let go with the hand they weren't interacting with
+		return
+	end
+
+	-- Cancel the interaction
+	input.btn_interact_release = true
+
+	if self._interact_hand == PlayerHand.LEFT then
+		input.btn_interact_left_release = true
+	else
+		input.btn_interact_right_release = true
+	end
+end)
+
 -- Respect _can_duck, to prevent ducking during mask-off
 local old_start_action_ducking = PlayerStandardVR._start_action_ducking
 function PlayerStandardVR:_start_action_ducking(t)

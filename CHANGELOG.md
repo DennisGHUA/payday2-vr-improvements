@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.0
+- Add option to rebind interact control
+- Add sticky-interact option
+
 ## V0.1.9.2
 - Allow users to jump while in hold-to-sprint mode - Fixes #30
 

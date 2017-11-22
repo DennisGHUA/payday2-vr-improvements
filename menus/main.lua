@@ -16,6 +16,10 @@ VRPlusMod.C = {
 	SPRINT_STICKY = 2,
 	SPRINT_HOLD = 3,
 
+	INTERACT_GRIP = 1,
+	INTERACT_BOTH = 2,
+	INTERACT_TRIGGER = 3,
+
 	nil
 }
 
@@ -41,7 +45,10 @@ VRPlusMod._default_data = {
 
 	comfort = {
 		max_movement_speed_enable = false,
-		max_movement_speed = 400
+		max_movement_speed = 400,
+		interact_mode = VRPlusMod.C.INTERACT_BOTH,
+		interact_lock = false,
+		nil
 	},
 
 	hud = {
@@ -115,7 +122,7 @@ end)
 Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function( menu_manager )
 	local data = VRPlusMod._data
 
-	local function add_inputs(scope, checkboxes, names)
+	local function add_inputs(scope, checkboxes, names, callback)
 		for _, name in ipairs(names) do
 			MenuCallbackHandler["vrplus_" .. name] = function(self, item)
 				if checkboxes then
@@ -124,6 +131,10 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 					scope[name] = item:value()
 				end
 				VRPlusMod:Save()
+
+				if callback then
+					callback(name)
+				end
 			end
 		end
 	end
@@ -154,11 +165,30 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 	-- Comfort options
 	add_inputs(data.comfort, true, {
-		"max_movement_speed_enable"
+		"max_movement_speed_enable",
+		"interact_lock",
+		nil
 	})
 	add_inputs(data.comfort, false, {
-		"max_movement_speed"
+		"max_movement_speed",
+		nil
 	})
+
+	add_inputs(data.comfort, false, {
+		"interact_mode",
+		nil
+	}, function()
+		-- You can adjust settings on the flat version
+		-- this would crash in that case
+		if managers.vr then
+			local hsm = managers.vr:hand_state_machine()
+			-- If we're in the main menu, this will be nil
+			if hsm then
+				-- Apply the changes we made
+				hsm:refresh()
+			end
+		end
+	end)
 
 	-- HUD options
 	add_inputs(data.hud, true, {
