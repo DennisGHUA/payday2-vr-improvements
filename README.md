@@ -148,3 +148,16 @@ Redout %HP Start: When you're below this percentage of your health, your screen 
 
 Redout Max Fade: At zero health, what percentage opacity is the red tint?
 
+## Tweaks
+Random, misc options that probably aren't very important.
+
+### Laser pointer options
+The laser pointer options allow you to set the colour of the laser pointer in the main menu. The hue slider lets you adjust the
+hue of the beam, and disco mode makes the pointer fade through the colours of the rainbow at a speed determined by the hue option.
+
+Note that disco mode uses a logarithmic scale, so while setting the hue slider to 100% will do two rainbows per second, at 10% it will
+only do two rainbows every 100 seconds (10%=0.1, 0.1^2=0.01, 1/0.01=100).
+
+Default (hue): `33.3`%. Vanilla: `33.3`%
+Default (disco): Disabled
+

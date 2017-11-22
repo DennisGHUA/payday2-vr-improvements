@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.1
+- Add main-menu laser pointer customization
+- Update Russian translations (Thanks, Sergio)
+
 ## V0.2.0
 - Add option to rebind interact control
 - Add sticky-interact option
