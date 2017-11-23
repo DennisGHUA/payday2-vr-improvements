@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.2
+- Add Korean translation (Thanks, DreadNought_40k)
+- Add Spanish translation (Thanks, Souls Alive)
+
 ## V0.2.1
 - Add main-menu laser pointer customization
 - Update Russian translations (Thanks, Sergio)
