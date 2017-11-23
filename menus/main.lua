@@ -1,3 +1,5 @@
+-- If you want to use the korean language patch, enable this
+local LANG_KOREAN = false
 
 --[[
 	We setup the global table for our mod, along with some path variables, and a data table.
@@ -112,8 +114,13 @@ Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInit_VRPlusMod"
 	-- If a non-english language is in use, it will overwrite these keys
 	loc:load_localization_file( VRPlusMod._path .. "lang/en.lang")
 
+	if LANG_KOREAN then
+		loc:load_localization_file( VRPlusMod._path .. "lang/kr.lang")
+	end
+
 	for key, code in pairs({
-		russian = "ru"
+		russian = "ru",
+		spanish = "es"
 	}) do
 		if Idstring(key) and Idstring(key):key() == SystemInfo:language():key() then
 			loc:load_localization_file(VRPlusMod._path .. "lang/" .. code .. ".lang")
