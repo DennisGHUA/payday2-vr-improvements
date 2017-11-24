@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.4
+- Update Russian translations (Thanks, Sergio)
+- Fix weapons lagging behind their respective hand position/rotations - Fixes #38
+
 ## V0.2.3
 - Add toggle weapon grip option
 - Show warning when using IPHLPAPI.dll 2.0VR5 (crash-on-startup when used in VR)
