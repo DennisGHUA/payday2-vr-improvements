@@ -19,6 +19,7 @@ function BLTModManager:_RunAutoCheckForUpdates()
 	local dll_hash = file.FileHash("IPHLPAPI.dll")
 
 	local outdated = {
+		"8b110f1cf2802f7eb28a179871998e57dd5b053c1304187a7aa4cb40449cb5fc", -- 2.0VR5
 		"2da0ae2df2985b7b883e150b1cf691bf6bb333bef51d8cef98e9f73503057450", -- 2.0VR4
 		"c9a4f75f32b699f4d752a205c7c57c713c5159b14b4035fefeff0159852908b1", -- 2.0VR3
 
