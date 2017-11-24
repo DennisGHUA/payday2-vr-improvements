@@ -73,6 +73,10 @@
 		{
 			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateweaponassist",
 			"script_path" : "playerhandstateweaponassist.lua"
+		},
+		{
+			"hook_id" : "lib/units/beings/player/states/vr/playertasedvr",
+			"script_path" : "playertasedvr.lua"
 		}
 	],
 	"updates" : [
