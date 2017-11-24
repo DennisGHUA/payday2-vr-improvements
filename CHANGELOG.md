@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.2.5
+- Fix taser crash bug
+
 ## V0.2.4
 - Update Russian translations (Thanks, Sergio)
 - Fix weapons lagging behind their respective hand position/rotations - Fixes #38
