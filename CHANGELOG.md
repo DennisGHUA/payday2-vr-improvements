@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.3
+- Add toggle weapon grip option
+- Show warning when using IPHLPAPI.dll 2.0VR5 (crash-on-startup when used in VR)
+
 ## V0.2.2
 - Add Korean translation (Thanks, DreadNought_40k)
 - Add Spanish translation (Thanks, Souls Alive)
