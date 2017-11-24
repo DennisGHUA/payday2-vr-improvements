@@ -50,6 +50,7 @@ VRPlusMod._default_data = {
 		max_movement_speed = 400,
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
 		interact_lock = false,
+		weapon_assist_lock = false,
 		nil
 	},
 
@@ -179,6 +180,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs(data.comfort, true, {
 		"max_movement_speed_enable",
 		"interact_lock",
+		"weapon_assist_lock",
 		nil
 	})
 	add_inputs(data.comfort, false, {
