@@ -59,7 +59,7 @@
 	"vrplus_interact_lock": "Lock Interactions",
 	"vrplus_interact_lock_desc": "Press to interact, press to cancel interaction",
 	"vrplus_weapon_assist_lock": "Weapon Grip Lock",
-	"vrplus_weapon_assist_lock_desc": "Press once to toggle whether or not you are steadying your weapon with your off hand"
+	"vrplus_weapon_assist_lock_desc": "Press once to toggle whether or not you are steadying your weapon with your off hand",
 
 	"vrplus_menu_hud": "UI Options",
 	"vrplus_menu_hud_desc": "Configure User Interface settings",
