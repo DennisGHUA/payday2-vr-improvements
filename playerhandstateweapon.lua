@@ -2,6 +2,8 @@
 	PlayerHandStateWeapon
 
 	If view rotation is enabled, move gadget and firemode selectors
+	Enable toggling gripping the weapon
+	Update hand positions properly, using passed-in rotations for smoothness reasons
 --]]
 
 local function apply_thumbstick(self, t, dt)
@@ -46,16 +48,30 @@ end
 
 local hand_to_hand = Vector3()
 local other_hand = Vector3()
-local weapon_pos = Vector3()
 local pen = Draw:pen()
 
+Hooks:PostHook(PlayerHandStateWeapon, "init", "VRPlusAddWeaponTranslationParams", function(self)
+	self.__weapon_position = Vector3()
+	self.__weapon_rotation = Rotation()
+end)
+
+local function set_weapon_rotation(self, rotation)
+	self._weapon_unit:set_rotation(rotation)
+	self.__weapon_rotation = rotation -- No set function for rotations?
+end
+
 -- Almost compltetly identical to the default update method
--- but with grip_enable
+-- but with grip_enable and oneframe fixes
 function PlayerHandStateWeapon:update(t, dt)
+	local weapon_pos = self.__weapon_position
+
 	mvector3.set(weapon_pos, self:hsm():position())
+	local hand_rotation = self:hsm():rotation()
+	
+	self.__weapon_rotation = self._weapon_unit:rotation()
 
 	if self._weapon_kick and alive(self._weapon_unit) then
-		mvector3.subtract(weapon_pos, self._weapon_unit:rotation():y() * self._weapon_kick)
+		mvector3.subtract(weapon_pos, self.__weapon_rotation:y() * self._weapon_kick)
 		self._hand_unit:set_position(weapon_pos)
 	end
 
@@ -82,9 +98,9 @@ function PlayerHandStateWeapon:update(t, dt)
 		local is_assisting = self:hsm():other_hand():current_state_name() == "weapon_assist"
 
 		if is_assisting and not self._pistol_grip then
-			self._weapon_unit:set_rotation(Rotation(hand_to_hand, self._hand_unit:rotation():z()))
+			set_weapon_rotation(self, Rotation(hand_to_hand, hand_rotation:z()))
 		else
-			self._weapon_unit:set_rotation(self._hand_unit:rotation())
+			set_weapon_rotation(self, hand_rotation)
 		end
 
 		local assist_tweak = tweak_data.vr.weapon_assist.weapons[self._weapon_unit:base().name_id]
@@ -104,7 +120,9 @@ function PlayerHandStateWeapon:update(t, dt)
 				end
 
 				for _, position in ipairs(positions) do
-					pen:sphere(weapon_pos + position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()), 5)
+					pen:sphere(weapon_pos + position:rotate_with(self.__weapon_rotation)
+							+ (tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id]
+							or tweak_data.vr.weapon_offsets.default).position:rotate_with(self.__weapon_rotation), 5)
 				end
 			end
 
@@ -122,7 +140,10 @@ function PlayerHandStateWeapon:update(t, dt)
 						local closest_dis, closest = nil
 
 						for _, assist_data in ipairs(assist_tweak.points) do
-							local dis = mvector3.distance_sq(other_hand, weapon_pos + assist_data.position:rotate_with(self._weapon_unit:rotation()) + (tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id] or tweak_data.vr.weapon_offsets.default).position:rotate_with(self._weapon_unit:rotation()))
+							local dis = mvector3.distance_sq(other_hand,
+									weapon_pos + assist_data.position:rotate_with(self.__weapon_rotation) +
+									(tweak_data.vr.weapon_offsets.weapons[self._weapon_unit:base().name_id] or
+									tweak_data.vr.weapon_offsets.default).position:rotate_with(self.__weapon_rotation))
 
 							if not closest_dis or dis < closest_dis then
 								closest_dis = dis
@@ -142,7 +163,7 @@ function PlayerHandStateWeapon:update(t, dt)
 					end
 				end
 
-				mvector3.subtract(other_hand, self._assist_position:with_y(0):rotate_with(self._hand_unit:rotation()))
+				mvector3.subtract(other_hand, self._assist_position:with_y(0):rotate_with(hand_rotation))
 
 				local other_hand_dis = mvector3.direction(hand_to_hand, self:hsm():position(), other_hand)
 
@@ -162,11 +183,11 @@ function PlayerHandStateWeapon:update(t, dt)
 					end
 				elseif is_assisting then
 					self:hsm():other_hand():change_to_default()
-					self._weapon_unit:set_rotation(self._hand_unit:rotation())
+					set_weapon_rotation(self, hand_rotation)
 				end
 			elseif self:hsm():other_hand():current_state_name() == "weapon_assist" then
 				self:hsm():other_hand():change_to_default()
-				self._weapon_unit:set_rotation(self._hand_unit:rotation())
+				set_weapon_rotation(self, hand_rotation)
 
 				self._assist_position = nil
 				self._assist_grip = nil
@@ -176,7 +197,7 @@ function PlayerHandStateWeapon:update(t, dt)
 		local tweak = tweak_data.vr:get_offset_by_id(self._weapon_unit:base().name_id)
 
 		if tweak and tweak.position then
-			mvector3.add(weapon_pos, tweak.position:rotate_with(self._weapon_unit:rotation()))
+			mvector3.add(weapon_pos, tweak.position:rotate_with(hand_rotation))
 			self._weapon_unit:set_position(weapon_pos)
 			self._weapon_unit:set_moving(2)
 		end
