@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.2.6
+- Add ladder support - Fixes #42
+
 ## V0.2.5
 - Fix taser crash bug
 
