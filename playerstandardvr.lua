@@ -124,7 +124,7 @@ local function do_rotation(self, t, dt)
 
 	local controller = self._unit:base():controller()
 	local axis = controller:get_input_axis("touchpad_primary")
-	local rot = VRManager:hmd_rotation() -- TODO don't do this
+	local rot = VRManager:hmd_rotation():yaw() + self._camera_base_rot:yaw()
 
 	if not axis then return end
 
@@ -137,8 +137,8 @@ local function do_rotation(self, t, dt)
 			amt = amt * 1/(1-deadzone)
 
 			-- One full revolution per second on maxed stick
-			self.__yaw_rotation_offset = (self.__yaw_rotation_offset or 0) + (dt * 360 / 2 * -amt)
-			self:set_base_rotation(Rotation(rot:yaw() + self.__yaw_rotation_offset, 0, 0))
+			local delta = dt * 360 / 2 * -amt
+			self:set_base_rotation(Rotation(rot + delta, 0, 0))
 		end
 	else
 		-- Snap turning
@@ -154,8 +154,7 @@ local function do_rotation(self, t, dt)
 			self.__snap_rotate_timer = delay
 			local amt = ((axis.x > 0) and 1 or -1) * rotation_amt
 
-			self.__yaw_rotation_offset = (self.__yaw_rotation_offset or 0) - amt
-			self:set_base_rotation(Rotation(rot:yaw() + self.__yaw_rotation_offset, 0, 0))
+			self:set_base_rotation(Rotation(rot - amt, 0, 0))
 		end
 	end
 end
