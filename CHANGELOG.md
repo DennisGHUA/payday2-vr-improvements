@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.2.7
+- Allow player rotation while in casing mode - Fixes #44
+- Fix issues with rotation jumping the player's view the first time they use it per heist.
+
 ## V0.2.6
 - Add ladder support - Fixes #42
 
