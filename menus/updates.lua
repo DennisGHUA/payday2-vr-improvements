@@ -28,9 +28,9 @@ function BLTModManager:_RunAutoCheckForUpdates()
 		"73352aae9639eb73180f0ec9f64975d0804abdb1a0babdf99140f34489a636d0" -- 2.0VR1
 	}
 
-	for _, hash in ipairs(outdated) do
-		local text = function(str) return managers.localization:text(str) end
+	local text = function(str) return managers.localization:text(str) end
 
+	for _, hash in ipairs(outdated) do
 		if hash == dll_hash then
 			local options = {
 				{
