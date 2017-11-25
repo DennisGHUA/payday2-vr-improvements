@@ -15,7 +15,7 @@ function WarpIdleState:transition(...)
 	return
 end
 
-local function custom_move_direction(self, stick_motion, forwards)
+local function custom_move_direction(self, stick_motion, forwards, fwd_vert, rotation)
 	self._stick_move = stick_motion
 
 	if self._state_data.on_zipline then
@@ -42,9 +42,7 @@ local function custom_move_direction(self, stick_motion, forwards)
 
 		mvector3.rotate_with(self._normal_move_dir, cam_flat_rot)
 
-		-- FIXME uh-oh uses _cam_fwd
-		-- how do ladders work in this mod/in VR anyway?
-		local cam_rot = Rotation(self._cam_fwd, self._ext_camera:rotation():z())
+		local cam_rot = Rotation(fwd_vert, rotation:z())
 
 		mvector3.rotate_with(self._move_dir, cam_rot)
 
@@ -107,6 +105,10 @@ local function ps_trigger_jump(self, t)
 			self:_does_deploying_limit_movement() or self:_is_using_bipod()
 	if action_forbidden then return false end
 
+	if self._state_data.on_ladder then
+		self:_interupt_action_ladder(t)
+	end
+
 	local action_start_data = {}
 	local jump_vel_z = tweak_data.player.movement_state.standard.movement.jump_velocity.z
 	action_start_data.jump_vel_z = jump_vel_z
@@ -125,6 +127,7 @@ local function ps_trigger_jump(self, t)
 end
 
 local mvec_hand_forward = Vector3()
+local mvec_hand_forward_vert = Vector3()
 function WarpIdleState:update(t)
 	if not VRPlusMod._data.movement_locomotion then
 		return -- no previous update state
@@ -135,20 +138,26 @@ function WarpIdleState:update(t)
 	local controller = state._unit:base():controller() -- TODO use self.params.controller - why is it nil!?
 
 	-- Find which way forwards is, depending on if we're using controller-relative locomotion
-	local forwards
+	local forwards, fwd_vert, rotation
 	if VRPlusMod._data.movement_controller_direction then
 		local hand_unit = self.params.unit:hand():hand_unit(hand_name)
-		local hand_forward = mvec_hand_forward
-		mrotation.y(hand_unit:rotation(), hand_forward)
-		mvector3.set_z(hand_forward, 0)
-		mvector3.normalize(hand_forward)
-		forwards = hand_forward
+		forwards = mvec_hand_forward
+		fwd_vert = mvec_hand_forward_vert
+
+		rotation = hand_unit:rotation()
+		mrotation.y(rotation, fwd_vert)
+		
+		mvector3.set(forwards, fwd_vert)
+		mvector3.set_z(forwards, 0)
+		mvector3.normalize(forwards)
 	else
 		forwards = state._cam_fwd_flat
+		fwd_vert = state._cam_fwd
+		rotation = state._ext_camera:rotation()
 	end
 
 	-- Apply thumbstick-based movement to _stick_move
-	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards)
+	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards, fwd_vert, rotation)
 
 	-- Sprinting
 	local sprit_pressed = controller:get_input_bool(hand_name == "left" and "warp_left" or "warp_right")

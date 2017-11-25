@@ -5,6 +5,7 @@
 --]]
 
 dofile(ModPath .. "playerstandardvr/warpidlestate.lua")
+dofile(ModPath .. "playerstandardvr/ladders.lua")
 
 -- The VR implementation of this doesn't take sprinting into
 -- account - therefore the player moves at sprinting speed nomatter
@@ -323,14 +324,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 
 	inject_movement(self, t, dt, pos_new)
 
-	if self._state_data.on_ladder then
-		local unit_position = math.dot(pos_new - self._state_data.ladder.current_position, self._state_data.ladder.w_dir)*self._state_data.ladder.w_dir + self._state_data.ladder.current_position
-
-		self._ext_movement:set_ghost_position(pos_new, unit_position)
-		mvector3.set(pos_new, unit_position)
-	else
-		self._ext_movement:set_ghost_position(pos_new)
-	end
+	self._ext_movement:set_ghost_position(pos_new)
 
 	-- Non-time compensated version we can use to
 	-- fix up camera error (see FPCameraPlayerBase)
