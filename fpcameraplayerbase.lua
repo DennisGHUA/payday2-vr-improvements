@@ -48,7 +48,8 @@ function FPCameraPlayerBase:_update_fadeout(hmd_position, ghost_position, t, dt)
 
 	local fadeout_data = self._fadeout
 
-	if FPCameraPlayerBase.NO_FADEOUT or self._parent_movement_ext:warping() or self._parent_movement_ext:current_state_name() == "driving" then
+	if VRPlusMod._data.movement_locomotion or FPCameraPlayerBase.NO_FADEOUT or
+				self._parent_movement_ext:warping() or self._parent_movement_ext:current_state_name() == "driving" then
 		fadeout_data.value = 0
 		fadeout_data.effect.color.alpha = 0
 

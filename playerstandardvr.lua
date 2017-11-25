@@ -292,7 +292,8 @@ function PlayerStandardVR:_update_movement(t, dt)
 	local pos_new = mvec_pos_new
 	local init_pos_ghost = mvec_pos_initial
 
-	mvector3.set(pos_new, self._ext_movement:ghost_position())
+	-- Use the unit position rather than ghost position, so that we collide against stuff
+	mvector3.set(pos_new, self._pos)
 
 	if self._state_data.on_zipline and self._state_data.zipline_data.position then
 		local rot = Rotation()
