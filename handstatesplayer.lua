@@ -11,3 +11,11 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusInterationButton", function(self,
 		key_map["grip_" .. hand_name] = nil
 	end
 end)
+
+Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, hand, key_map)
+	if VRPlusMod._data.turning_mode == VRPlusMod.C.TURNING_OFF then return end
+
+	local hand_name = hand == 1 and "r" or "l"
+
+	key_map["dpad_" .. hand_name] = "touchpad_primary"
+end)
