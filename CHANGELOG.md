@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.2.8
+- Fix fade-to-black problem - Fixes #45
+
 ## V0.2.7
 - Allow player rotation while in casing mode - Fixes #44
 - Fix issues with rotation jumping the player's view the first time they use it per heist.
