@@ -46,6 +46,8 @@ local defaults_rift = {
 }
 
 local defaults_vive = {
+	sprint_time = 0.15,
+
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
 		weapon_assist_lock = true,
