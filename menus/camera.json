@@ -1,5 +1,5 @@
 {
-	"menu_id": "json_example_menu",
+	"menu_id": "vrplus_menu_camera",
 	"parent_menu_id": "vrplus_menu_main",
 	"title": "vrplus_menu_camera",
 	"priority": 98,

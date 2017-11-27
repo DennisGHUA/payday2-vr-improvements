@@ -4,5 +4,13 @@
 	"title": "vrplus_menu_main",
 	"description": "vrplus_menu_main_desc",
 	"items": [
+		{
+			"priority": 1,
+			"type": "button",
+			"id": "vrplus_reset_options",
+			"title": "vrplus_reset_options",
+			"description": "vrplus_reset_options_desc",
+			"callback": "vrplus_reset_options"
+		}
 	]
 }

@@ -61,6 +61,8 @@ function BLTModManager:_RunAutoCheckForUpdates()
 			{} -- Default 'ok' button
 		):Show()
 	end
+
+	VRPlusMod:OnMenusReady()
 end
 
 local function reload_updates()

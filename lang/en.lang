@@ -1,6 +1,8 @@
 {
 	"vrplus_menu_main": "VR Improvements",
 	"vrplus_menu_main_desc": "Settings for the VR Improvements Mod",
+	"vrplus_reset_options": "Reset Options",
+	"vrplus_reset_options_desc": "Reset options for this mod back to the default values",
 
 	"vrplus_menu_camera": "Camera Options",
 	"vrplus_menu_camera_desc": "Configure camera behaviour",
@@ -44,6 +46,12 @@
 	"vrplus_dll_out_of_date_continue": "Continue anyway",
 	"vrplus_wrong_mod_name": "Bad mod filename",
 	"vrplus_wrong_mod_name_message": "The mod folder for the VR Improvements mod is incorrectly named - it should be called exactly 'vrplus'. While named incorrectly, any attempt to update this mod will leave the game hanging on 'Verifying'. Please go into your mods folder and rename this mod to 'vrplus'.",
+	"vrplus_ask_hmd_type": "Select Control Scheme",
+	"vrplus_ask_hmd_type_message": "This mod contains default settings that are different depending on which VR system you have. Either you manually reset your options, or the mod was unable to determine what type of HMD you have (this may be caused by an outdated hook DLL).\nPlease select your control scheme.",
+	"vrplus_generic": "Generic",
+	"vrplus_rift": "Oculus Rift",
+	"vrplus_vive": "HTC Vive",
+	"vrplus_cancel": "Cancel",
 
 	"vrplus_menu_comfort": "Comfort Options",
 	"vrplus_menu_comfort_desc": "Options to increase physical comfort, by reducing motion sickness and remapping controls",

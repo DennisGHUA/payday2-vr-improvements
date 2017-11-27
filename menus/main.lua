@@ -25,44 +25,13 @@ VRPlusMod.C = {
 	nil
 }
 
+-- Load the default options
+dofile(ModPath .. "menus/defaults.lua")
+
 VRPlusMod._path = ModPath
 VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
 VRPlusMod._data = {}
-VRPlusMod._default_data = {
-	deadzone = 10,
-	sprint_time = 0.25,
-	turning_mode = VRPlusMod.C.TURNING_OFF,
-	sprint_mode = VRPlusMod.C.SPRINT_STICKY,
-	movement_controller_direction = true,
-	movement_locomotion = true,
-
-	-- Camera fading parameters
-	cam_fade_distance = 2,
-	cam_reset_percent = 95,
-	cam_reset_timer = 0.25,
-
-	cam_redout_enable = false,
-	cam_redout_hp_start = 15,
-	cam_redout_fade_max = 50,
-
-	comfort = {
-		max_movement_speed_enable = false,
-		max_movement_speed = 400,
-		interact_mode = VRPlusMod.C.INTERACT_BOTH,
-		interact_lock = false,
-		weapon_assist_lock = false,
-		nil
-	},
-
-	hud = {
-		watch_health_wheel = true
-	},
-
-	tweaks = {
-		laser_hue = 1/3,
-		laser_disco = false
-	}
-}
+VRPlusMod._menu_ids = {}
 
 --[[
 	A simple save function that json encodes our _data table and saves it to a file.
@@ -98,8 +67,83 @@ function VRPlusMod:Load()
 		file:close()
 	end
 	
-	-- Copy in any new properties
-	load_defaults(self._default_data, self._data)
+	-- Copy in any new properties'
+	local need_save = not self._data.defaults_hmd
+	local defaults, selected = VRPlusMod:_get_defaults(self._data.defaults_hmd)
+	load_defaults(defaults, self._data)
+
+	if need_save and selected then
+		self:Save()
+	end
+
+	self._need_to_select_hmd = not selected
+end
+
+function VRPlusMod:_ResetDefaultControls(hmd)
+	self._need_to_select_hmd = false
+	local defaults = VRPlusMod:_get_defaults(hmd)
+	self._data = {}
+	load_defaults(defaults, self._data)
+	self:Save()
+
+	-- Set the values for the GUI controls
+	for menu_id, table_data_name in pairs(self._menu_ids) do
+		local menu = MenuHelper:GetMenu(menu_id)
+		for _, item in ipairs(menu._items_list) do
+			if item.set_value then
+				local val_name = item:name():sub(8) -- remove vrplus_
+				local table_data = table_data_name == "_G" and self._data or self._data[table_data_name]
+				local value = table_data[val_name]
+
+				if item._type == "toggle" then
+					item:set_value( value and "on" or "off" )
+				else
+					item:set_value( value )
+				end
+			end
+		end
+	end
+end
+
+function VRPlusMod:AskHMDType(cancellable)
+	local defaults, selected = VRPlusMod:_get_defaults(self._data.defaults_hmd)
+	load_defaults(defaults, self._data)
+
+	local text = function(str) return managers.localization:text(str) end
+
+	local options = {
+		{
+			text = text("vrplus_rift"),
+			callback = function() self:_ResetDefaultControls("Rift") end
+		},
+		{
+			text = text("vrplus_vive"),
+			callback = function() self:_ResetDefaultControls("Vive") end
+		},
+		{
+			text = text("vrplus_generic"),
+			callback = function() self:_ResetDefaultControls("generic") end
+		}
+	}
+
+	if cancellable then
+		table.insert(options, {
+			text = text("vrplus_cancel")
+		})
+	end
+
+	QuickMenu:new(
+		text("vrplus_ask_hmd_type"),
+		text("vrplus_ask_hmd_type_message"),
+		options
+	):Show()
+end
+
+function VRPlusMod:OnMenusReady()
+	if self._need_to_select_hmd then
+		self._need_to_select_hmd = false
+		self:AskHMDType(false)
+	end
 end
 
 --[[
@@ -150,6 +194,10 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 				end
 			end
 		end
+	end
+
+	function MenuCallbackHandler:vrplus_reset_options()
+		VRPlusMod:AskHMDType(true)
 	end
 
 	-- Checkboxes
@@ -223,16 +271,23 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"laser_hue"
 	}, reload_laser)
 
+	local function addmenu(name, id, src)
+		local srctable = src == "_G" and data or data[src]
+		MenuHelper:LoadFromJsonFile(VRPlusMod._path .. "menus/" .. name .. ".json", nil, srctable)
+		VRPlusMod._menu_ids[id] = src
+	end
+
 	--[[
 		Load our menu json file and pass it to our MenuHelper so that it can build our in-game menu for us.
 		The second option used to be for keybinds, however that seems to not be implemented on BLT2.
 		We also pass our data table as the third argument so that our saved values can be loaded from it.
 	]]
 	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, data )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/tweaks.json", nil, data.tweaks )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/camera.json", nil, data )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/controllers.json", nil, data )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/comfort.json", nil, data.comfort )
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/hud.json", nil, data.hud )
+
+	addmenu("camera",		"vrplus_menu_camera",		"_G" )
+	addmenu("controllers",	"vrplus_menu_controllers",	"_G" )
+	addmenu("comfort",		"vrplus_menu_comfort",		"comfort" )
+	addmenu("hud",			"vrplus_menu_hud",			"hud" )
+	addmenu("tweaks",		"vrplus_menu_tweaks",		"tweaks" )
 
 end)
