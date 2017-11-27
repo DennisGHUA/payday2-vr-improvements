@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.2.9
+- Set default options depending on which HMD is used
+
 ## v0.2.8
 - Fix fade-to-black problem - Fixes #45
 
