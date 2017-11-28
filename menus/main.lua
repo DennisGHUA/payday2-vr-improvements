@@ -79,6 +79,10 @@ function VRPlusMod:Load()
 	self._need_to_select_hmd = not selected
 end
 
+function VRPlusMod:_GetOptionTable(name)
+	return name == "_G" and self._data or self._data[name]
+end
+
 function VRPlusMod:_ResetDefaultControls(hmd)
 	self._need_to_select_hmd = false
 	local defaults = VRPlusMod:_get_defaults(hmd)
@@ -92,7 +96,7 @@ function VRPlusMod:_ResetDefaultControls(hmd)
 		for _, item in ipairs(menu._items_list) do
 			if item.set_value then
 				local val_name = item:name():sub(8) -- remove vrplus_
-				local table_data = table_data_name == "_G" and self._data or self._data[table_data_name]
+				local table_data = self:_GetOptionTable(table_data_name)
 				local value = table_data[val_name]
 
 				if item._type == "toggle" then
@@ -177,15 +181,14 @@ end)
 	Setup our menu callbacks, load our saved data, and build the menu from our json file.
 ]]
 Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function( menu_manager )
-	local data = VRPlusMod._data
-
 	local function add_inputs(scope, checkboxes, names, callback)
 		for _, name in ipairs(names) do
 			MenuCallbackHandler["vrplus_" .. name] = function(self, item)
+				local options = VRPlusMod:_GetOptionTable(scope)
 				if checkboxes then
-					scope[name] = (item:value() == "on" and true or false)
+					options[name] = (item:value() == "on" and true or false)
 				else
-					scope[name] = item:value()
+					options[name] = item:value()
 				end
 				VRPlusMod:Save()
 
@@ -201,14 +204,14 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	end
 
 	-- Checkboxes
-	add_inputs(data, true, {
+	add_inputs("_G", true, {
 		"movement_controller_direction",
 		"movement_locomotion",
 		"cam_redout_enable"
 	})
 
 	-- Sliders and multiselectors
-	add_inputs(data, false, {
+	add_inputs("_G", false, {
 		"deadzone",
 		"sprint_time",
 		"sprint_time",
@@ -225,18 +228,18 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	})
 
 	-- Comfort options
-	add_inputs(data.comfort, true, {
+	add_inputs("comfort", true, {
 		"max_movement_speed_enable",
 		"interact_lock",
 		"weapon_assist_lock",
 		nil
 	})
-	add_inputs(data.comfort, false, {
+	add_inputs("comfort", false, {
 		"max_movement_speed",
 		nil
 	})
 
-	add_inputs(data.comfort, false, {
+	add_inputs("comfort", false, {
 		"interact_mode",
 		nil
 	}, function()
@@ -253,7 +256,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	end)
 
 	-- HUD options
-	add_inputs(data.hud, true, {
+	add_inputs("hud", true, {
 		"watch_health_wheel"
 	})
 
@@ -264,15 +267,15 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 			managers.menu._player.__laser_is_updated = false
 		end
 	end
-	add_inputs(data.tweaks, true, {
+	add_inputs("tweaks", true, {
 		"laser_disco"
 	}, reload_laser)
-	add_inputs(data.tweaks, false, {
+	add_inputs("tweaks", false, {
 		"laser_hue"
 	}, reload_laser)
 
 	local function addmenu(name, id, src)
-		local srctable = src == "_G" and data or data[src]
+		local srctable = VRPlusMod:_GetOptionTable(src)
 		MenuHelper:LoadFromJsonFile(VRPlusMod._path .. "menus/" .. name .. ".json", nil, srctable)
 		VRPlusMod._menu_ids[id] = src
 	end
@@ -282,7 +285,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		The second option used to be for keybinds, however that seems to not be implemented on BLT2.
 		We also pass our data table as the third argument so that our saved values can be loaded from it.
 	]]
-	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, data )
+	MenuHelper:LoadFromJsonFile( VRPlusMod._path .. "menus/mainmenu.json", nil, nil )
 
 	addmenu("camera",		"vrplus_menu_camera",		"_G" )
 	addmenu("controllers",	"vrplus_menu_controllers",	"_G" )
