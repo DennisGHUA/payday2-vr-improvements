@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.3.0
+- Fix menu options having no effect after resetting them - Fixes #50
+- Fix player slowing down while quickly moving the HMD - Fixes #51
+
 ## V0.2.9
 - Set default options depending on which HMD is used
 
