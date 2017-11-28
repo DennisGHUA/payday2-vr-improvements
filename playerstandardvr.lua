@@ -174,6 +174,16 @@ function PlayerStandardVR:update(t, dt)
 	end
 end
 
+-- Prevent _calculate_standard_variables from changing our velocity. Fixes #51
+local mvec_throwaway_last_velocity = Vector3()
+local old_calculate_standard_variables = PlayerStandard._calculate_standard_variables
+function PlayerStandard:_calculate_standard_variables(t, dt)
+	local real_last_velocity = self._last_velocity_xy
+	self._last_velocity_xy = mvec_throwaway_last_velocity
+	old_calculate_standard_variables(self, t, dt)
+	self._last_velocity_xy = real_last_velocity
+end
+
 -- Handled in WarpIdleState:update and custom_move_direction
 function PlayerStandardVR:_determine_move_direction() end
 
