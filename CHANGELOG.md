@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.3.1
+- Add endscreen speedup option - Implements #40
+
 ## V0.3.0
 - Fix menu options having no effect after resetting them - Fixes #50
 - Fix player slowing down while quickly moving the HMD - Fixes #51
