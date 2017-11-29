@@ -36,7 +36,8 @@ local default_data = {
 
 	tweaks = {
 		laser_hue = 1/10,
-		laser_disco = true
+		laser_disco = true,
+		endscreen_speedup = 5,
 	}
 }
 

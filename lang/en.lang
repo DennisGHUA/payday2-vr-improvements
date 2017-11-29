@@ -80,6 +80,8 @@
 	"vrplus_laser_hue_desc": "The hue of the laser in the main menu",
 	"vrplus_laser_disco": "Laser Disco",
 	"vrplus_laser_disco_desc": "Constantly make the laser fade through all possible hues, at a speed specified above",
+	"vrplus_endscreen_speedup": "Endscreen Speedup",
+	"vrplus_endscreen_speedup_desc": "Speed multiplier for the end-heist screen (same effect as holding space)"
 
 	"vrplus_git_tag_end":""
 }

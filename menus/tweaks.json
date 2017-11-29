@@ -24,6 +24,18 @@
 			"callback": "vrplus_laser_disco",
 			"value": "laser_disco",
 			"priority": 98
+		},
+		{
+			"type": "slider",
+			"id": "vrplus_endscreen_speedup",
+			"title": "vrplus_endscreen_speedup",
+			"description": "vrplus_endscreen_speedup_desc",
+			"callback": "vrplus_endscreen_speedup",
+			"value": "endscreen_speedup",
+			"max": 5,
+			"min": 1,
+			"step": 1,
+			"priority": 97
 		}
 	]
 }

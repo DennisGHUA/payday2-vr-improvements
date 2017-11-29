@@ -261,6 +261,10 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	})
 
 	-- Tweak options
+	add_inputs("tweaks", false, {
+		"endscreen_speedup"
+	})
+
 	local function reload_laser()
 		if managers.menu._player then
 			-- Make the changes take effeect
