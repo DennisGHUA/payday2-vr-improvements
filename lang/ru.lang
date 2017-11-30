@@ -1,6 +1,8 @@
 {
 	"vrplus_menu_main": "VR Improvements",
 	"vrplus_menu_main_desc": "Настройки для мода VR Improvements",
+	"vrplus_reset_options": "Сброс опций",
+	"vrplus_reset_options_desc": "Сброс опций для этого мода на первоначальные значения",
 
 	"vrplus_menu_camera": "Опции камеры",
 	"vrplus_menu_camera_desc": "Настройка поведения камеры",
@@ -44,6 +46,12 @@
 	"vrplus_dll_out_of_date_continue": "Продолжить в любом случае",
 	"vrplus_wrong_mod_name": "Неверное имя папки мода",
 	"vrplus_wrong_mod_name_message": "Папка для мода VR Improvements неправильно названа - ее нужно называть точно 'vrplus'. При неправильном указании любая попытка обновления этого мода приведет к тому что обновление повиснет на 'Verifying(Проверка)'. Перейдите в папку mods и переименуйте папку мода в 'vrplus'.",
+	"vrplus_ask_hmd_type": "Выберите схему управления",
+	"vrplus_ask_hmd_type_message": "Этот мод имеет значения по умолчанию которые различаются в зависимости от того какую VR системы вы используете. Или вы вручную сбросили свои параметры, или мод не смог определить, какой тип шлема у вас (это может быть вызвано устаревшим DLL-файлом). \nВыберите свою схему управления.",
+	"vrplus_generic": "Общая",
+	"vrplus_rift": "Oculus Rift",
+	"vrplus_vive": "HTC Vive",
+	"vrplus_cancel": "Отмена",
 
 	"vrplus_menu_comfort": "Опции комфорта",
 	"vrplus_menu_comfort_desc": "Опции комфорта для уменьшения вероятности появления симптомов морской болезни, и переназначение элементов управления",
@@ -72,6 +80,8 @@
 	"vrplus_laser_hue_desc": "Цвет лазера в меню",
 	"vrplus_laser_disco": "'Лазерная дискотека'",
 	"vrplus_laser_disco_desc": "Заставляет лазер переливаться разными оттенками с заданной скоростью",
+	"vrplus_endscreen_speedup": "Ускорение заставки",
+	"vrplus_endscreen_speedup_desc": "Множитель скорости для экрана заставки (тот же эффект, что и при удерживании Пробела)",
 
 	"vrplus_git_tag_end":""
 }
