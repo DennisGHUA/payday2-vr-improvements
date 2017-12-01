@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.3.3
+- Fix jumping in PD2VRBeta update 1.3 - Fixes #57
+
 ## V0.3.2
 - Update Russian translation
 - Updates for VR Beta 1.3
