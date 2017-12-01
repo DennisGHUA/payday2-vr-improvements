@@ -43,7 +43,7 @@
 	"vrplus_dll_out_of_date_download": "Ir a la página de descarga",
 	"vrplus_dll_out_of_date_continue": "Continuar de todas formas",
 	"vrplus_wrong_mod_name": "Nombre de fichero del mod incorrecto",
-	"vrplus_wrong_mod_name_message": "La carpeta para el mod VR Improvements mod tiene un nomre incorrecto- debería llamarse exactamente'vrplus'. Si el nombre no es correcto, cualquier intento de actualización del mod dejará el estado de la actualización en "Verificando" de manera permanente. Por favor, ve a la carpeta de mods y renómbralo a 'vrplus'.",
+	"vrplus_wrong_mod_name_message": "La carpeta para el mod VR Improvements mod tiene un nomre incorrecto- debería llamarse exactamente'vrplus'. Si el nombre no es correcto, cualquier intento de actualización del mod dejará el estado de la actualización en \"Verificando\" de manera permanente. Por favor, ve a la carpeta de mods y renómbralo a 'vrplus'.",
 
 	"vrplus_menu_comfort": "Opciones de comfort",
 	"vrplus_menu_comfort_desc": "Opciones para incrementar el comfort físico, reduciendo las nauseas y remapeando los controles",
