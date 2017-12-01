@@ -160,7 +160,7 @@ function WarpIdleState:update(t)
 	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards, fwd_vert, rotation)
 
 	-- Sprinting
-	local sprit_pressed = controller:get_input_bool(hand_name == "left" and "warp_left" or "warp_right")
+	local sprit_pressed = controller:get_input_bool("warp")
 
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
 		-- FIXME this allows bunny-hopping - Should we disable it or keep it?

@@ -199,6 +199,19 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		end
 	end
 
+	local function reload_hands()
+		-- You can adjust settings on the flat version
+		-- this would crash in that case
+		if managers.vr then
+			local hsm = managers.vr:hand_state_machine()
+			-- If we're in the main menu, this will be nil
+			if hsm then
+				-- Apply the changes we made
+				hsm:refresh()
+			end
+		end
+	end
+
 	function MenuCallbackHandler:vrplus_reset_options()
 		VRPlusMod:AskHMDType(true)
 	end
@@ -206,9 +219,12 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	-- Checkboxes
 	add_inputs("_G", true, {
 		"movement_controller_direction",
-		"movement_locomotion",
 		"cam_redout_enable"
 	})
+
+	add_inputs("_G", true, {
+		"movement_locomotion",
+	}, reload_hands)
 
 	-- Sliders and multiselectors
 	add_inputs("_G", false, {
@@ -241,18 +257,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("comfort", false, {
 		"interact_mode",
 		nil
-	}, function()
-		-- You can adjust settings on the flat version
-		-- this would crash in that case
-		if managers.vr then
-			local hsm = managers.vr:hand_state_machine()
-			-- If we're in the main menu, this will be nil
-			if hsm then
-				-- Apply the changes we made
-				hsm:refresh()
-			end
-		end
-	end)
+	}, reload_hands)
 
 	-- HUD options
 	add_inputs("hud", true, {
