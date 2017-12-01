@@ -22,6 +22,7 @@ local function remap_name(name)
 	-- TODO swap gadget and firemode
 	-- For some bizzare reason, it wasn't working on my end
 
+	-- TODO remove these when basegame snapturning is confirmed to work
 	local target = ({
 		switch_hands = "weapon_firemode",
 		weapon_firemode = "switch_hands",

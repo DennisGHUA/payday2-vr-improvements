@@ -118,6 +118,7 @@ function PlayerStandardVR:init(unit)
 	self.__last_movement_xy = Vector3()
 end
 
+-- TODO remove when basegame rotation is confirmed to work
 local function do_rotation(self, t, dt)
 	local mode = VRPlusMod._data.turning_mode
 	if mode == VRPlusMod.C.TURNING_OFF then return end

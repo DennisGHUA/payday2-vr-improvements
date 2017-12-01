@@ -231,7 +231,6 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("comfort", true, {
 		"max_movement_speed_enable",
 		"interact_lock",
-		"weapon_assist_lock",
 		nil
 	})
 	add_inputs("comfort", false, {

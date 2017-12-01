@@ -26,7 +26,6 @@ local default_data = {
 		max_movement_speed = 400,
 		interact_mode = VRPlusMod.C.INTERACT_GRIP,
 		interact_lock = false,
-		weapon_assist_lock = false,
 		nil
 	},
 
@@ -51,7 +50,6 @@ local defaults_vive = {
 
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
-		weapon_assist_lock = true,
 	},
 	
 	nil

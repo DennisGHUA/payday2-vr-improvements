@@ -4,11 +4,12 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusInterationButton", function(self,
 	local nice_name = hand == 1 and "right" or "left"
 
 	if VRPlusMod._data.comfort.interact_mode ~= VRPlusMod.C.INTERACT_GRIP then
-		key_map["trigger_" .. hand_name] = "interact_" .. nice_name
+		-- TODO should we just override it completely?
+		table.insert(key_map["trigger_" .. hand_name], "interact_" .. nice_name)
 	end
 
 	if VRPlusMod._data.comfort.interact_mode == VRPlusMod.C.INTERACT_TRIGGER then
-		key_map["grip_" .. hand_name] = nil
+		key_map["grip_" .. hand_name][1] = nil
 	end
 end)
 
@@ -17,5 +18,5 @@ Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, ha
 
 	local hand_name = hand == 1 and "r" or "l"
 
-	key_map["dpad_" .. hand_name] = "touchpad_primary"
+	key_map["dpad_" .. hand_name] = { "touchpad_primary" }
 end)

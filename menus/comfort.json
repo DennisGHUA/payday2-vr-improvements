@@ -48,15 +48,6 @@
 			"callback": "vrplus_interact_lock",
 			"value": "interact_lock",
 			"priority": 96
-		},
-		{
-			"type": "toggle",
-			"id": "vrplus_weapon_assist_lock",
-			"title": "vrplus_weapon_assist_lock",
-			"description": "vrplus_weapon_assist_lock_desc",
-			"callback": "vrplus_weapon_assist_lock",
-			"value": "weapon_assist_lock",
-			"priority": 95
 		}
 	]
 }
