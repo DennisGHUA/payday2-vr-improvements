@@ -1,5 +1,12 @@
 # Changelog
 
+## V0.3.2
+- Update Russian translation
+- Updates for VR Beta 1.3
+  - Fixed crash-on-startup
+  - Disable weapon-grip-toggle as it's in the base game
+  - Note snap turning is not removed, as the builtin one doesn't seem to work.
+
 ## V0.3.1
 - Add endscreen speedup option - Implements #40
 
