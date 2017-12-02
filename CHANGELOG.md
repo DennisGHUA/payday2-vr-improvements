@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.3.4
+- Fix movement for left-handed users
+
 ## V0.3.3
 - Fix jumping in PD2VRBeta update 1.3 - Fixes #57
 
