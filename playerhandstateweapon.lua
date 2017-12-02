@@ -44,6 +44,7 @@ end
 
 -- Almost compltetly identical to the default update method
 -- except for oneframe fixes
+-- Plus rewritten toggle-grip as that wasn't working for whatever reason.
 function PlayerHandStateWeapon:update(t, dt)
 	local weapon_pos = self.__weapon_position
 
@@ -109,7 +110,15 @@ function PlayerHandStateWeapon:update(t, dt)
 
 			local interact_btn = self:hsm():hand_id() == PlayerHand.LEFT and "interact_right" or "interact_left"
 			local wants_assist = nil
-			wants_assist = self._weapon_assist_toggle_setting and self._weapon_assist_toggle or controller:get_input_bool(interact_btn)
+			wants_assist = controller:get_input_bool(interact_btn)
+
+			if controller:get_input_pressed(interact_btn) then
+				self._weapon_assist_toggle = not self._weapon_assist_toggle
+			end
+
+			if self._weapon_assist_toggle_setting then
+				wants_assist = self._weapon_assist_toggle
+			end
 
 			if wants_assist then
 				mvector3.set(other_hand, self:hsm():other_hand():position())
