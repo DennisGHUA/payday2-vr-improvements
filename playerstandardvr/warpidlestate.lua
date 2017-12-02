@@ -157,7 +157,7 @@ function WarpIdleState:update(t)
 	end
 
 	-- Apply thumbstick-based movement to _stick_move
-	custom_move_direction(state, controller:get_input_axis("touchpad_warp_target"), forwards, fwd_vert, rotation)
+	custom_move_direction(state, controller:get_input_axis("move"), forwards, fwd_vert, rotation)
 
 	-- Sprinting
 	local sprit_pressed = controller:get_input_bool("warp")
