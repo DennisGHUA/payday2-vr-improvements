@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.3.5
+- Fix weapon-assist toggling - Fixes #58
+
 ## V0.3.4
 - Fix movement for left-handed users
 
