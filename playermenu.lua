@@ -57,5 +57,7 @@ Hooks:PreHook(PlayerMenu, "update", "VRPlusUpdateLaserColour", function(self, t,
 	self.__laser_is_updated = not VRPlusMod._data.tweaks.laser_disco
 
 	local r, g, b = HSVToRGB(hue * 360, 1, 1)
-	self._brush_laser:set_color(Color(0.15, r, g, b))
+	local colour = Color(0.15, r, g, b)
+	self._brush_laser:set_color(colour)
+	self._brush_laser_dot:set_color(colour)
 end)
