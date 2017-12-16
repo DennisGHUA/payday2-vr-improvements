@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.3.6
+- Temporaraly remove camera fade options, fixing PD2VR 1.4 crash
+- Fix menu laser dot colour not matching beam colour
+
 ## V0.3.5
 - Fix weapon-assist toggling - Fixes #58
 
