@@ -1,5 +1,10 @@
 # Changelog
 
+## V0.3.7
+- Fix messiah skill not activating while jumping (Thanks, Kevin Stich)
+- Add zeadzone-based sprinting/jumping option - Implements #70
+- Add movement smoothing, same as that in the base game - Implements #69
+
 ## V0.3.6
 - Temporaraly remove camera fade options, fixing PD2VR 1.4 crash
 - Fix menu laser dot colour not matching beam colour
