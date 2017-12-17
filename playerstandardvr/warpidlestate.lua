@@ -94,6 +94,14 @@ end
 local function ps_trigger_jump(self, t)
 	if not self:_can_jump() then return end
 
+	if managers.player._messiah_charges > 0 and managers.player._current_state == "bleed_out" and managers.player._coroutine_mgr:is_running("get_up_messiah") then
+		managers.player:use_messiah_charge()
+		managers.player:send_message(Message.RevivePlayer, nil, nil)
+
+		return end
+	end
+
+
 	-- Some player states (eg, downed) won't have mover()s,
 	-- so they obviously can't jump.
 	if not self._unit:mover() then return end
