@@ -39,6 +39,7 @@
 	"vrplus_sprint_mode_off": "Disable Sprinting",
 	"vrplus_sprint_mode_sticky": "Long-click to toggle sprinting",
 	"vrplus_sprint_mode_hold": "Hold-click to sprint",
+	"vrplus_sprint_mode_hold_outer": "Hold-click to sprint, click inside the deadzone to jump",
 
 	"vrplus_dll_out_of_date": "IPHLPAPI.dll Out Of Date",
 	"vrplus_dll_out_of_date_message": "Your IPHLPAPI.dll file is out of date. This may cause crashes, and automatic updates will not work (you will always be told you're up to date).",

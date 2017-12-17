@@ -94,14 +94,6 @@ end
 local function ps_trigger_jump(self, t)
 	if not self:_can_jump() then return end
 
-	if managers.player._messiah_charges > 0 and managers.player._current_state == "bleed_out" and managers.player._coroutine_mgr:is_running("get_up_messiah") then
-		managers.player:use_messiah_charge()
-		managers.player:send_message(Message.RevivePlayer, nil, nil)
-
-		return end
-	end
-
-
 	-- Some player states (eg, downed) won't have mover()s,
 	-- so they obviously can't jump.
 	if not self._unit:mover() then return end
@@ -170,11 +162,30 @@ function WarpIdleState:update(t)
 	-- Sprinting
 	local sprit_pressed = controller:get_input_bool("warp")
 
+	if sprit_pressed and managers.player._messiah_charges > 0 and
+			managers.player._current_state == "bleed_out" and managers.player._coroutine_mgr:is_running("get_up_messiah") then
+		managers.player:use_messiah_charge()
+		managers.player:send_message(Message.RevivePlayer, nil, nil)
+
+		return
+	end
+
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
 		-- FIXME this allows bunny-hopping - Should we disable it or keep it?
 		if sprit_pressed then
 			ps_trigger_jump(state, t)
 		end
+
+		return
+	end
+
+	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD_OUTER then
+		if sprit_pressed and not state._stick_move then
+			ps_trigger_jump(state, t)
+		end
+
+		state._running_wanted = state._stick_move and sprit_pressed
+		state.__stop_running = not state._running_wanted
 
 		return
 	end
