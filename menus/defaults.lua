@@ -11,6 +11,7 @@ local default_data = {
 	sprint_mode = VRPlusMod.C.SPRINT_STICKY,
 	movement_controller_direction = true,
 	movement_locomotion = true,
+	movement_smoothing = true,
 
 	-- Camera fading parameters
 	cam_fade_distance = 2,

@@ -64,6 +64,39 @@ local function custom_move_direction(self, stick_motion, forwards, fwd_vert, rot
 	end
 end
 
+-- Copied from PlayerMovementInputVR:update
+local function apply_smoothing(axis)
+	if not VRPlusMod._data.movement_smoothing then return axis end
+
+	local dz = VRPlusMod._data.deadzone / 100
+	local raw_move_length = mvector3.length(axis)
+	local m = raw_move_length
+	m = math.clamp((m - dz) / (1 - dz), 0, 1)
+
+	if m > 0.98 then
+			m = 1
+	end
+
+	local unscaled_edge = 0.25 -- Should this be 0.3?
+
+	if raw_move_length - dz < unscaled_edge then
+			local edge = unscaled_edge / (1 - dz)
+			local x = m / (2 * edge)
+			x = x * x * (3 - 2 * x)
+			x = x * x * (3 - 2 * x)
+			m = x * 2 * edge
+	end
+
+	if math.abs(m) < 0.01 then
+			m = 0
+	end
+
+	mvector3.normalize(axis)
+	mvector3.multiply(axis, m)
+
+	return axis
+end
+
 -- Cloned directly from the flat version of playerstandard
 -- TODO get the old function somehow
 local function orig_start_action_jump(self, t, action_start_data)
@@ -157,7 +190,7 @@ function WarpIdleState:update(t)
 	end
 
 	-- Apply thumbstick-based movement to _stick_move
-	custom_move_direction(state, controller:get_input_axis("move"), forwards, fwd_vert, rotation)
+	custom_move_direction(state, apply_smoothing(controller:get_input_axis("move")), forwards, fwd_vert, rotation)
 
 	-- Sprinting
 	local sprit_pressed = controller:get_input_bool("warp")

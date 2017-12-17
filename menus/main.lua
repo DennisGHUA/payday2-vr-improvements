@@ -220,7 +220,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	-- Checkboxes
 	add_inputs("_G", true, {
 		"movement_controller_direction",
-		"cam_redout_enable"
+		"cam_redout_enable",
+		"movement_smoothing"
 	})
 
 	add_inputs("_G", true, {

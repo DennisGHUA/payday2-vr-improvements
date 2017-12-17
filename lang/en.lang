@@ -29,6 +29,8 @@
 	"vrplus_sprint_time_desc": "The amount of time the sprint button must be held to make the player sprint, rather than jump",
 	"vrplus_movement_controller_direction": "Controller-Relative Movement",
 	"vrplus_movement_controller_direction_desc": "Move relative to the direction of the active motion controller, not the HMD",
+	"vrplus_movement_smoothing": "Apply movement smoothing",
+	"vrplus_movement_smoothing_desc": "Apply a smoothing factor to make movement easier",
 	"vrplus_turning_mode": "Turning mode",
 	"vrplus_turning_mode_desc": "Enabling this will allow you to use the thumbstick/trackpad on your weapon hand to rotate your view",
 	"vrplus_turning_mode_off": "Disable turning, keep default reload/gadget",
