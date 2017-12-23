@@ -195,6 +195,13 @@ function WarpIdleState:update(t)
 	-- Sprinting
 	local sprit_pressed = controller:get_input_bool("warp")
 
+	-- For whatever reason, at least on the Rift, pressing the 'Y' button
+	-- also seems to trigger the warp input, even if it has been unbound.
+	-- TODO FIXME this doesn't always seem to work.
+	if VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE and controller:get_input_bool("duck") then
+		sprint_pressed = false
+	end
+
 	if sprit_pressed and managers.player._messiah_charges > 0 and
 			managers.player._current_state == "bleed_out" and managers.player._coroutine_mgr:is_running("get_up_messiah") then
 		managers.player:use_messiah_charge()

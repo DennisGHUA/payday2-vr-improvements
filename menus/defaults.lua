@@ -27,6 +27,8 @@ local default_data = {
 		max_movement_speed = 400,
 		interact_mode = VRPlusMod.C.INTERACT_GRIP,
 		interact_lock = false,
+		crouching = VRPlusMod.C.CROUCH_TOGGLE,
+		crouch_scale = 50,
 		nil
 	},
 

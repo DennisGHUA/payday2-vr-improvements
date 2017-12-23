@@ -400,6 +400,23 @@ Hooks:PreHook(PlayerStandard, "_check_action_interact", "VRPlusLockInteration", 
 	end
 end)
 
+Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", function(self, t, input)
+	local mode = VRPlusMod._data.comfort.crouching
+	if mode == VRPlusMod.C.CROUCH_TOGGLE then
+		if input.btn_duck_press then
+			self.__bttn_ducking = not self.__bttn_ducking
+		end
+	elseif mode == VRPlusMod.C.CROUCH_HOLD then
+		if input.btn_duck_release then
+			self.__bttn_ducking = false
+		elseif input.btn_duck_press then
+			self.__bttn_ducking = true
+		end
+	else
+		self.__bttn_ducking = false
+	end
+end)
+
 -- Respect _can_duck, to prevent ducking during mask-off
 local old_start_action_ducking = PlayerStandardVR._start_action_ducking
 function PlayerStandardVR:_start_action_ducking(t)

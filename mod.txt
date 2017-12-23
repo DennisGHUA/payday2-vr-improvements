@@ -85,6 +85,10 @@
 		{
 			"hook_id" : "lib/managers/hudmanagervr",
 			"script_path" : "hudmanagervr.lua"
+		},
+		{
+			"hook_id" : "lib/units/beings/player/playermovement",
+			"script_path" : "playermovement.lua"
 		}
 	],
 	"updates" : [

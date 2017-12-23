@@ -1,4 +1,16 @@
 
+local function add_offhand_actions(hand_name, key_map)
+	if VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE then
+		key_map["menu_" .. hand_name] = { "duck" }
+	end
+
+	if VRPlusMod._data.movement_locomotion then
+		-- Shouldn't break warp, as dpad_ isn't used outside the weapon hand anymore
+		-- Still do it here, just to be safe
+		key_map["dpad_" .. hand_name] = { "move" }
+	end
+end
+
 -- Note EmptyHandState deals with everything for your non-weapon hand.
 -- including shouting down civs, bagging loot, etc.
 Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, hand, key_map)
@@ -17,11 +29,20 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, h
 	if VRPlusMod._data.movement_locomotion then
 		-- Prevent moving forwards from jumping for Rift users
 		key_map["d_up_" .. hand_name] = nil
-
-		-- Shouldn't break warp, as dpad_ isn't used outside the weapon hand anymore
-		-- Still do it here, just to be safe
-		key_map["dpad_" .. hand_name] = { "move" }
 	end
+
+	add_offhand_actions(hand_name, key_map)
+end)
+
+Hooks:PostHook(PointHandState, "apply", "VRPlusPointingHandActions", function(self, hand, key_map)
+	local hand_name = hand == 1 and "r" or "l"
+
+	if VRPlusMod._data.movement_locomotion then
+		-- Prevent moving forwards from jumping for Rift users
+		key_map["d_up_" .. hand_name] = nil
+	end
+
+	add_offhand_actions(hand_name, key_map)
 end)
 
 Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, hand, key_map)
@@ -40,7 +61,7 @@ Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand,
 		key_map["dpad_" .. hand_name] = { "touchpad_primary" }
 	end
 
-	if VRPlusMod._data.movement_locomotion and hand_name ~= weapon_hand then
-		key_map["dpad_" .. hand_name] = { "move" }
+	if hand_name ~= weapon_hand then
+		add_offhand_actions(hand_name, key_map)
 	end
 end)

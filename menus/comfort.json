@@ -48,6 +48,32 @@
 			"callback": "vrplus_interact_lock",
 			"value": "interact_lock",
 			"priority": 96
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_crouching",
+			"title": "vrplus_crouching",
+			"description": "vrplus_crouching_desc",
+			"callback": "vrplus_crouching",
+			"value": "crouching",
+			"items": [
+				"vrplus_crouching_mode_none",
+				"vrplus_crouching_mode_toggle",
+				"vrplus_crouching_mode_hold"
+			],
+			"priority": 95
+		},
+		{
+			"type": "slider",
+			"id": "vrplus_crouch_scale",
+			"title": "vrplus_crouch_scale",
+			"description": "vrplus_crouch_scale_desc",
+			"callback": "vrplus_crouch_scale",
+			"value": "crouch_scale",
+			"max": 100,
+			"min": 20,
+			"step": 10,
+			"priority": 94
 		}
 	]
 }

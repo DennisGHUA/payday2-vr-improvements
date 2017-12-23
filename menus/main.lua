@@ -23,6 +23,10 @@ VRPlusMod.C = {
 	INTERACT_BOTH = 2,
 	INTERACT_TRIGGER = 3,
 
+	CROUCH_NONE = 1,
+	CROUCH_TOGGLE = 2,
+	CROUCH_HOLD = 3,
+
 	nil
 }
 
@@ -253,11 +257,13 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	})
 	add_inputs("comfort", false, {
 		"max_movement_speed",
+		"crouch_scale",
 		nil
 	})
 
 	add_inputs("comfort", false, {
 		"interact_mode",
+		"crouching",
 		nil
 	}, reload_hands)
 
