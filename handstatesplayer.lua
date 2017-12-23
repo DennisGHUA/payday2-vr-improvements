@@ -31,3 +31,16 @@ Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, ha
 
 	key_map["dpad_" .. hand_name] = { "touchpad_primary" }
 end)
+
+Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand, key_map)
+	local weapon_hand = managers.vr:get_setting("default_weapon_hand"):sub(1,1)
+	local hand_name = hand == 1 and "r" or "l"
+
+	if VRPlusMod._data.turning_mode ~= VRPlusMod.C.TURNING_OFF and hand_name == weapon_hand then
+		key_map["dpad_" .. hand_name] = { "touchpad_primary" }
+	end
+
+	if VRPlusMod._data.movement_locomotion and hand_name ~= weapon_hand then
+		key_map["dpad_" .. hand_name] = { "move" }
+	end
+end)
