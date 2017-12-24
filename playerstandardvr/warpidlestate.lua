@@ -248,15 +248,9 @@ function WarpIdleState:update(t)
 	end
 
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_STICKY then
-		if held_down and not self.__last_pressed then
-			self.__last_pressed = true
-
-			state._running_wanted = not state._running
-			state.__stop_running = not state._running_wanted
-		end
-
-		if not sprit_pressed then
-			self.__last_pressed = false
+		if held_down then
+			state._running_wanted = true
+			state.__stop_running = false
 		end
 	elseif VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD then
 		state._running_wanted = held_down
