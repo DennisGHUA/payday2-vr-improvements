@@ -1,5 +1,10 @@
 # Changelog
 
+## V0.3.8
+- Fix hand inputs not working while interacting with belt
+- Add crouch button - Implements #75
+- Prevent hold-to-sprint from toggling off
+
 ## V0.3.7
 - Fix messiah skill not activating while jumping (Thanks, Kevin Stich)
 - Add zeadzone-based sprinting/jumping option - Implements #70
