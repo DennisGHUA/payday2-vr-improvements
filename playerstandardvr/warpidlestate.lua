@@ -168,7 +168,7 @@ function WarpIdleState:update(t)
 
 	local state = self.params.playerstate
 	local hand_name = self.params.unit:hand():warp_hand()
-	local controller = state._unit:base():controller() -- TODO use self.params.controller - why is it nil!?
+	local controller = state._unit:base():controller()
 
 	-- Find which way forwards is, depending on if we're using controller-relative locomotion
 	local forwards, fwd_vert, rotation

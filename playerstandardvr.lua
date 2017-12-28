@@ -107,7 +107,7 @@ function PlayerStandardVR:init(unit)
 	self._warp_state_machine = CoreFiniteStateMachine.FiniteStateMachine:new(WarpIdleState, "params", {
 			state_data = self._state_data,
 			unit = self._unit,
-			controller = controller,
+			input = self._movement_input,
 			playerstate = self
 	})
 
