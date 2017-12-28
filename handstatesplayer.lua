@@ -65,3 +65,20 @@ Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand,
 		add_offhand_actions(hand_name, key_map)
 	end
 end)
+
+Hooks:PostHook(WeaponHandState, "apply", "VRPlusMoveGadgetFiremode", function(self, hand, key_map)
+	if VRPlusMod._data.turning_mode == VRPlusMod.C.TURNING_OFF then
+		return
+	end
+
+	-- By default
+	-- switch_hands -> up
+	-- weapon_firemode -> left
+	-- weapon_gadget ->  right
+
+	local hand_name = hand == 1 and "r" or "l"
+	key_map["d_left_" .. hand_name] = nil
+	key_map["d_right_" .. hand_name] = nil
+	key_map["d_up_" .. hand_name] = { "weapon_gadget" }
+	key_map["d_down_" .. hand_name] = { "weapon_firemode" }
+end)

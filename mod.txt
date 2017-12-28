@@ -35,10 +35,6 @@
 			"script_path" : "playerhandstateweapon.lua"
 		},
 		{
-			"hook_id" : "core/lib/managers/controller/corecontrollerwrappervr",
-			"script_path" : "corecontrollerwrappervr.lua"
-		},
-		{
 			"hook_id" : "lib/managers/menumanagervr",
 			"script_path" : "menumanagervr.lua"
 		},
