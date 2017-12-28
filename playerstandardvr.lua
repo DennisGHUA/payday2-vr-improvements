@@ -428,3 +428,8 @@ end
 -- define them so we can check them later
 function PlayerStandardVR:_can_jump() return true end
 function PlayerStandardVR:_can_duck() return true end
+
+-- Since the 'jump' input isn't used by the vanilla game in VR, it's
+-- action isn't disabled. As we use it for sprinting/jumping, make
+-- sure the vanilla jumping logic doesn't fire (and lead to a crash).
+function PlayerStandardVR:_check_action_jump(t, input) return false end

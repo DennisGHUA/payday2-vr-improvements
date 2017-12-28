@@ -8,6 +8,10 @@ local function add_offhand_actions(hand_name, key_map)
 		-- Shouldn't break warp, as dpad_ isn't used outside the weapon hand anymore
 		-- Still do it here, just to be safe
 		key_map["dpad_" .. hand_name] = { "move" }
+
+		-- Don't use 'warp' for running/jumping, as it seems somehow tied
+		-- to the Rift's 'Y' button.
+		key_map["trackpad_button_" .. hand_name] = { "jump" }
 	end
 end
 

@@ -193,7 +193,7 @@ function WarpIdleState:update(t)
 	custom_move_direction(state, apply_smoothing(controller:get_input_axis("move")), forwards, fwd_vert, rotation)
 
 	-- Sprinting
-	local sprit_pressed = controller:get_input_bool("warp")
+	local sprit_pressed = controller:get_input_bool("jump")
 
 	-- For whatever reason, at least on the Rift, pressing the 'Y' button
 	-- also seems to trigger the warp input, even if it has been unbound.
