@@ -1,5 +1,11 @@
 # Changelog
 
+## V0.3.9
+- Fix crash when starting heist with mod locomotion disabled - Fixes #78
+- Fix gadget always toggling from the right-hand side, when the player is
+in left-handed mode - Fixes #76
+- Fix toggle crouch button also jumping the player - Fixes #79
+
 ## V0.3.8
 - Fix hand inputs not working while interacting with belt
 - Add crouch button - Implements #75
