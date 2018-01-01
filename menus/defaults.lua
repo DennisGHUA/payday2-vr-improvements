@@ -40,6 +40,8 @@ local default_data = {
 		laser_hue = 1/10,
 		laser_disco = true,
 		endscreen_speedup = 5,
+		force_quality_enable = false,
+		force_quality = 4,
 	}
 }
 

@@ -36,6 +36,27 @@
 			"min": 1,
 			"step": 1,
 			"priority": 97
+		},
+		{
+			"type": "toggle",
+			"id": "vrplus_force_quality_enable",
+			"title": "vrplus_force_quality_enable",
+			"description": "vrplus_force_quality_enable_desc",
+			"callback": "vrplus_force_quality_enable",
+			"value": "force_quality_enable",
+			"priority": 96
+		},
+		{
+			"type": "slider",
+			"id": "vrplus_force_quality",
+			"title": "vrplus_force_quality",
+			"description": "vrplus_force_quality_desc",
+			"callback": "vrplus_force_quality",
+			"value": "force_quality",
+			"max": 7,
+			"min": 1,
+			"step": 1,
+			"priority": 95
 		}
 	]
 }

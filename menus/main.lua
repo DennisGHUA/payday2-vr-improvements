@@ -198,7 +198,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 				VRPlusMod:Save()
 
 				if callback then
-					callback(name)
+					callback(name, item)
 				end
 			end
 		end
@@ -274,8 +274,23 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 	-- Tweak options
 	add_inputs("tweaks", false, {
-		"endscreen_speedup"
+		"endscreen_speedup",
 	})
+	add_inputs("tweaks", true, {
+		"force_quality_enable",
+	})
+
+	add_inputs("tweaks", false, {
+		"force_quality",
+	}, function(name, item)
+		local quality_level = math.floor(VRPlusMod._data.tweaks.force_quality + 0.5)
+
+		if VRPlusMod._data.tweaks.force_quality ~= quality_level then
+			item:set_value( quality_level )
+			VRPlusMod._data.tweaks.force_quality = quality_level
+			VRPlusMod:Save()
+		end
+	end)
 
 	local function reload_laser()
 		if managers.menu._player then
