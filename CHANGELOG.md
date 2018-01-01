@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.4.0
+- Add force quality setting, for use on slower computers - Implements #81
+
 ## V0.3.9
 - Fix crash when starting heist with mod locomotion disabled - Fixes #78
 - Fix gadget always toggling from the right-hand side, when the player is
