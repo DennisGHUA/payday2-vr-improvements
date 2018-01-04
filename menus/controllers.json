@@ -84,6 +84,15 @@
 			"min": 0,
 			"step": 0.05,
 			"priority": 94
+		},
+		{
+			"type": "toggle",
+			"id": "vrplus_teleport_on_release",
+			"title": "vrplus_teleport_on_release",
+			"description": "vrplus_teleport_on_release_desc",
+			"callback": "vrplus_teleport_on_release",
+			"value": "teleport_on_release",
+			"priority": 93
 		}
 	]
 }

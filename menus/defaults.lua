@@ -12,6 +12,7 @@ local default_data = {
 	movement_controller_direction = true,
 	movement_locomotion = true,
 	movement_smoothing = true,
+	teleport_on_release = false,
 
 	-- Camera fading parameters
 	cam_fade_distance = 2,

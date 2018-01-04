@@ -225,7 +225,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("_G", true, {
 		"movement_controller_direction",
 		"cam_redout_enable",
-		"movement_smoothing"
+		"movement_smoothing",
+		"teleport_on_release",
 	})
 
 	add_inputs("_G", true, {

@@ -5,6 +5,7 @@
 --]]
 
 dofile(ModPath .. "playerstandardvr/warpidlestate.lua")
+dofile(ModPath .. "playerstandardvr/warptargetstate.lua")
 dofile(ModPath .. "playerstandardvr/ladders.lua")
 
 -- The VR implementation of this doesn't take sprinting into
