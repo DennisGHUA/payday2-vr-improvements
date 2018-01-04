@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.4.1
+- Add teleport-on-untouch support - Implements #77
+
 ## V0.4.0
 - Add force quality setting, for use on slower computers - Implements #81
 
