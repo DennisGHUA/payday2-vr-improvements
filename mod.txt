@@ -71,10 +71,6 @@
 			"script_path" : "playerhandstateweaponassist.lua"
 		},
 		{
-			"hook_id" : "lib/units/beings/player/states/vr/playertasedvr",
-			"script_path" : "playertasedvr.lua"
-		},
-		{
 			"hook_id" : "lib/units/props/ladder",
 			"script_path" : "ladder.lua"
 		},
