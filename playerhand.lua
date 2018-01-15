@@ -35,6 +35,9 @@ function PlayerHand:_update_controllers(t, dt)
 
 			pos = pos + ghost_position
 
+			mrotation.set_zero(controller.rotation_raw)
+			mrotation.multiply(controller.rotation_raw, rot)
+			mrotation.multiply(controller.rotation_raw, controller.base_rotation_controller)
 			mrotation.multiply(rot, controller.base_rotation)
 
 			controller.rotation = rot
@@ -60,8 +63,6 @@ function PlayerHand:_update_controllers(t, dt)
 				state:post_update(t, dt)
 			end
 
-			controller.state_machine:end_update(t, dt)
-
 			if self._scheculed_wall_checks and self._scheculed_wall_checks[i] and self._scheculed_wall_checks[i].t < t then
 				local custom_obj = self._scheculed_wall_checks[i].custom_obj
 				self._scheculed_wall_checks[i] = nil
@@ -71,6 +72,12 @@ function PlayerHand:_update_controllers(t, dt)
 				end
 			end
 		end
+
+		for _, controller in ipairs(self._hand_data) do
+			controller.state_machine:update(t, dt)
+		end
+
+		self._shared_transition_queue:do_state_change()
 	end
 	
 	-- Update everything but the motion controllers
