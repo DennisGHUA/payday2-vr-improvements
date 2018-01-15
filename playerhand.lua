@@ -62,7 +62,10 @@ function PlayerHand:_update_controllers(t, dt)
 			if state and state.post_update then
 				state:post_update(t, dt)
 			end
+		end
 
+		-- Run the wall checks, highlighting hands red if they're inside a wall
+		for i, controller in ipairs(self._hand_data) do
 			if self._scheculed_wall_checks and self._scheculed_wall_checks[i] and self._scheculed_wall_checks[i].t < t then
 				local custom_obj = self._scheculed_wall_checks[i].custom_obj
 				self._scheculed_wall_checks[i] = nil
@@ -98,7 +101,7 @@ function PlayerHand:_update_controllers(t, dt)
 	local v = forward
 
 	if forward.y < 0.5 then
-			v = up
+		v = up
 	end
 
 	mvector3.set_z(v, 0)
@@ -111,8 +114,8 @@ function PlayerHand:_update_controllers(t, dt)
 	local distance = mvector3.distance_sq(self._prev_ghost_position, ghost_position)
 
 	if rot:pitch() > -35 or max_angle < abs_angle or distance > 1600 then
-			self._prev_ghost_position = mvector3.copy(ghost_position)
-			self._belt_yaw = rot:yaw()
+		self._prev_ghost_position = mvector3.copy(ghost_position)
+		self._belt_yaw = rot:yaw()
 	end
 
 	local belt_rot = Rotation(self._belt_yaw, 0, 0)
