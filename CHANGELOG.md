@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.4.2
+- Remove lag removal now included in the base game, fixes #82 and #85
+
 ## V0.4.1
 - Add teleport-on-untouch support - Implements #77
 
