@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.4.3
+- Disable slowmotion effects, hopefully fixing #87
+
 ## V0.4.2
 - Remove lag removal now included in the base game, fixes #82 and #85
 
