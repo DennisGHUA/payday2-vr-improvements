@@ -77,6 +77,10 @@
 		{
 			"hook_id" : "lib/managers/vrmanagerpd2",
 			"script_path" : "vrmanagerpd2.lua"
+		},
+		{
+			"hook_id": "lib/tweak_data/timespeedeffecttweakdata",
+			"script_path": "timespeedeffecttweakdata.lua"
 		}
 	],
 	"updates" : [
