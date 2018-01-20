@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.4.4
+- Fix double-update error, making it impossible to hold your weapon with your off hand when toggle-grabbing was enabled, see #89
+- Same change as above also fixes #88, which was bags making a ghost copy when picked from your inventory
+
 ## V0.4.3
 - Disable slowmotion effects, hopefully fixing #87
 
