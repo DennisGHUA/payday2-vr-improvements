@@ -22,11 +22,9 @@ function PlayerHand:_update_controllers(t, dt)
 	local ghost_position = self._unit_movement_ext:ghost_position()
 
 	if self._vr_controller then
-		-- Update controller positions and update the states in seperate passes
-		-- Fixes #38
 		for i, controller in ipairs(self._hand_data) do
 			local pos, rot = self._vr_controller:pose(i - 1)
-			self._unit_movement_ext:__affect_vrobj_position(pos)
+			self._unit_movement_ext:__affect_vrobj_position(pos) -- Move the hands if in crouch mode
 			rot = self._base_rotation * rot
 			pos = pos - hmd_pos
 
@@ -49,22 +47,7 @@ function PlayerHand:_update_controllers(t, dt)
 			controller.unit:set_rotation(rot)
 			controller.state_machine:set_position(pos)
 			controller.state_machine:set_rotation(rot)
-		end
 
-		for i, controller in ipairs(self._hand_data) do
-			controller.state_machine:update(t, dt)
-		end
-		
-		for i, controller in ipairs(self._hand_data) do
-			-- Lets states move data between hands without unidirectional delays
-			local state = controller.state_machine:current_state()
-			if state and state.post_update then
-				state:post_update(t, dt)
-			end
-		end
-
-		-- Run the wall checks, highlighting hands red if they're inside a wall
-		for i, controller in ipairs(self._hand_data) do
 			if self._scheculed_wall_checks and self._scheculed_wall_checks[i] and self._scheculed_wall_checks[i].t < t then
 				local custom_obj = self._scheculed_wall_checks[i].custom_obj
 				self._scheculed_wall_checks[i] = nil
