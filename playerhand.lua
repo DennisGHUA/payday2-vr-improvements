@@ -13,7 +13,6 @@
 	the crouch button.
 --]]
 
-local old_update_controllers = PlayerHand._update_controllers
 function PlayerHand:_update_controllers(t, dt)
 	local hmd_pos = VRManager:hmd_position()
 	local current_height = hmd_pos.z
@@ -82,14 +81,7 @@ function PlayerHand:_update_controllers(t, dt)
 
 		self._shared_transition_queue:do_state_change()
 	end
-	
-	-- Update everything but the motion controllers
-	local old_vr_controller = self._vr_controller
-	self._vr_controller = false
-	old_update_controllers(self, t, dt)
-	self._vr_controller = old_vr_controller
 
-	-- Update the post
 	local rot = VRManager:hmd_rotation()
 	rot = self._base_rotation * rot
 	local forward = Vector3(0, 1, 0)
