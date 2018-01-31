@@ -57,6 +57,20 @@
 			"min": 1,
 			"step": 1,
 			"priority": 95
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_weapon_melee",
+			"title": "vrplus_weapon_melee",
+			"description": "vrplus_weapon_melee_desc",
+			"callback": "vrplus_weapon_melee",
+			"value": "weapon_melee",
+			"items": [
+				"vrplus_weapon_melee_enabled",
+				"vrplus_weapon_melee_loud",
+				"vrplus_weapon_melee_disabled"
+			],
+			"priority": 94
 		}
 	]
 }

@@ -98,6 +98,11 @@
 	"vrplus_force_quality_enable_desc": "Force-set the desktop window resolution",
 	"vrplus_force_quality": "Graphics Quality",
 	"vrplus_force_quality_desc": "The desktop window resolution, not visible when wearing a headset (HMD)",
+	"vrplus_weapon_melee": "Weapon-hand Melee",
+	"vrplus_weapon_melee_desc": "Use your weapon hand as a melee weapon",
+	"vrplus_weapon_melee_enabled": "Yes (vanilla default)",
+	"vrplus_weapon_melee_loud": "Only in Loud, not in Stealth",
+	"vrplus_weapon_melee_disabled": "No",
 
 	"vrplus_git_tag_end":""
 }

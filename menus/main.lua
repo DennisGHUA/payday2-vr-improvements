@@ -27,6 +27,10 @@ VRPlusMod.C = {
 	CROUCH_TOGGLE = 2,
 	CROUCH_HOLD = 3,
 
+	WEAPON_MELEE_ENABLED = 1,
+	WEAPON_MELEE_LOUD = 2,
+	WEAPON_MELEE_DISABLED = 3,
+
 	nil
 }
 
@@ -276,6 +280,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	-- Tweak options
 	add_inputs("tweaks", false, {
 		"endscreen_speedup",
+		"weapon_melee",
 	})
 	add_inputs("tweaks", true, {
 		"force_quality_enable",

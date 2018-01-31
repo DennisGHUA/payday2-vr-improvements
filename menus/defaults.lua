@@ -43,6 +43,7 @@ local default_data = {
 		endscreen_speedup = 5,
 		force_quality_enable = false,
 		force_quality = 4,
+		weapon_melee = VRPlusMod.C.WEAPON_MELEE_LOUD,
 	}
 }
 
