@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.4.6
+- Add hand meele enable/loud only/disable option
+- Improve name and description for force-desktop-resolution option
+
 ## V0.4.5
 - Fix #90
 
