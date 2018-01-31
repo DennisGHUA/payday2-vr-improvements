@@ -95,9 +95,9 @@
 	"vrplus_endscreen_speedup": "Endscreen Speedup",
 	"vrplus_endscreen_speedup_desc": "Speed multiplier for the end-heist screen (same effect as holding space)"
 	"vrplus_force_quality_enable": "Force graphics quality",
-	"vrplus_force_quality_enable_desc": "Force-set the VR graphics quality level",
+	"vrplus_force_quality_enable_desc": "Force-set the desktop window resolution",
 	"vrplus_force_quality": "Graphics Quality",
-	"vrplus_force_quality_desc": "The quality level, higher values look better but are slower",
+	"vrplus_force_quality_desc": "The desktop window resolution, not visible when wearing a headset (HMD)",
 
 	"vrplus_git_tag_end":""
 }
