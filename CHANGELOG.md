@@ -1,5 +1,11 @@
 # Changelog
 
+## V0.4.7
+- If you fire a bullet on the same frame as being tased, your guns break - weapons on automatic mode will fire
+at the maximum possible ROF of once per frame, and semiautomatic weapons will not fire at all - Fixes #87. Many thanks
+to [Kane](http://steamcommunity.com/app/218620/discussions/30/1693785669845446430/) for providing an invaluable analysis
+of this problem.
+
 ## V0.4.6
 - Add hand meele enable/loud only/disable option
 - Improve name and description for force-desktop-resolution option
