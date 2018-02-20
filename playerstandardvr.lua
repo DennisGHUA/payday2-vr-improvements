@@ -380,3 +380,19 @@ function PlayerStandardVR:_can_duck() return true end
 -- action isn't disabled. As we use it for sprinting/jumping, make
 -- sure the vanilla jumping logic doesn't fire (and lead to a crash).
 function PlayerStandardVR:_check_action_jump(t, input) return false end
+
+-- Fix weapons breaking (minigun firerate in automatic, won't fire in
+-- semifire mode) after being tazed.
+--
+-- This is caused when the player fires on the same frame they are tazed.
+-- When they stop being tazed, _shooting is set to false but _shooting_weapons
+-- isn't necessaraly cleared.
+--
+-- For _shooting_weapons to be emptied, _shooting must be true - we're getting
+-- stuck in a state where _shooting is false and _shooting_weapons is not empty.
+
+Hooks:PreHook(PlayerStandardVR, "_check_fire_per_weapon", "VRPlusFixWeaponFireRate", function(self)
+	if not self._shooting and self._shooting_weapons and next(self._shooting_weapons) then
+		self._shooting_weapons = {}
+	end
+end)
