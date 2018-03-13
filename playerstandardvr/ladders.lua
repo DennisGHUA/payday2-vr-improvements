@@ -5,9 +5,9 @@
 --]]
 
 local old_check_action_ladder = PlayerStandardVR._check_action_ladder
-function PlayerStandardVR:_check_action_ladder(t, input)
+function PlayerStandardVR:_check_action_ladder(t, input, ...)
 	if not VRPlusMod._data.movement_locomotion then
-		return old_check_action_ladder(self, t, input)
+		return old_check_action_ladder(self, t, input, ...)
 	end
 
 	local pos = self._ext_movement:ghost_position()
@@ -42,9 +42,9 @@ function PlayerStandardVR:_check_action_ladder(t, input)
 end
 
 local old_start_action_ladder = PlayerStandardVR._start_action_ladder
-function PlayerStandardVR:_start_action_ladder(t, ladder_unit)
+function PlayerStandardVR:_start_action_ladder(t, ladder_unit, ...)
 	if not VRPlusMod._data.movement_locomotion then
-		return old_start_action_ladder(self, t, ladder_unit)
+		return old_start_action_ladder(self, t, ladder_unit, ...)
 	end
 
 	self._state_data.on_ladder = true
@@ -57,9 +57,9 @@ function PlayerStandardVR:_start_action_ladder(t, ladder_unit)
 end
 
 local old_end_action_ladder = PlayerStandardVR._end_action_ladder
-function PlayerStandardVR:_end_action_ladder(t, input)
+function PlayerStandardVR:_end_action_ladder(t, input, ...)
 	if not VRPlusMod._data.movement_locomotion then
-		return old_end_action_ladder(self, t, input)
+		return old_end_action_ladder(self, t, input, ...)
 	end
 
 	if not self._state_data.on_ladder then
