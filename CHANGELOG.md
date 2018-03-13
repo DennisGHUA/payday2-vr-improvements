@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.4.8
+- Fix crash bug triggeded by teleporting up ladders with mod locomotion disabled - Fixes #94
+
 ## V0.4.7
 - If you fire a bullet on the same frame as being tased, your guns break - weapons on automatic mode will fire
 at the maximum possible ROF of once per frame, and semiautomatic weapons will not fire at all - Fixes #87. Many thanks
