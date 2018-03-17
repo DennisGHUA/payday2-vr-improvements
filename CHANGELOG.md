@@ -1,5 +1,10 @@
 # Changelog
 
+## V0.5.0
+- Initial compatibility with the non-beta version of PAYDAY 2 VR
+- Fixes the crash bug when loading a heist with trigger-based interaction enabled
+- Don't remove the DLL update when used with SuperBLT
+
 ## V0.4.8
 - Fix crash bug triggeded by teleporting up ladders with mod locomotion disabled - Fixes #94
 
