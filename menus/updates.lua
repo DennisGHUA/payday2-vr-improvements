@@ -83,7 +83,8 @@ local function reload_updates()
 			end
 		end
 
-		if dll_id then
+		-- Don't stuff with the updates if SuperBLT is loaded, as it has a VR-compatible DLL
+		if dll_id and not _G.XAudio then
 			table.remove(mod.updates, dll_id)
 		end
 	end
