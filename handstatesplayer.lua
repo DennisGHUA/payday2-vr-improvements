@@ -23,7 +23,13 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, h
 
 	if VRPlusMod._data.comfort.interact_mode ~= VRPlusMod.C.INTERACT_GRIP then
 		-- TODO should we just override it completely?
-		table.insert(key_map["trigger_" .. hand_name], "interact_" .. nice_name)
+		local key = "trigger_" .. hand_name
+
+		if not key_map[key] then
+			key_map[key] = {}
+		end
+
+		table.insert(key_map[key], "interact_" .. nice_name)
 	end
 
 	if VRPlusMod._data.comfort.interact_mode == VRPlusMod.C.INTERACT_TRIGGER then
