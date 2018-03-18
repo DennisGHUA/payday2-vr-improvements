@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.5.1
+- Fix the bug preventing the player from accessing their tablet - Fixes #96
+
 ## V0.5.0
 - Initial compatibility with the non-beta version of PAYDAY 2 VR
 - Fixes the crash bug when loading a heist with trigger-based interaction enabled
