@@ -22,6 +22,22 @@ function PlayerHand:_update_controllers(t, dt)
 	local ghost_position = self._unit_movement_ext:ghost_position()
 
 	if self._vr_controller then
+		local precision_mode = self._precision_mode
+
+		if precision_mode then
+			self._precision_mode_t = self._precision_mode_t or t
+		elseif self._precision_mode_t and t - self._precision_mode_t > 0.7 then
+			self._precision_mode_t = nil
+		end
+
+		precision_mode = precision_mode and t - self._precision_mode_t > 0.7 and not self._precision_mode_block_t
+
+		if self._precision_mode_block_t and t - self._precision_mode_block_t > 0.7 then
+			self._precision_mode_block_t = nil
+		end
+
+		local max_speed = 0
+
 		for i, controller in ipairs(self._hand_data) do
 			local pos, rot = self._vr_controller:pose(i - 1)
 			self._unit_movement_ext:__affect_vrobj_position(pos) -- Move the hands if in crouch mode
@@ -30,8 +46,22 @@ function PlayerHand:_update_controllers(t, dt)
 
 			mvector3.rotate_with(pos, self._base_rotation)
 
-			pos = pos + ghost_position
+			if precision_mode then
+				local deg = math.acos(math.abs(mrotation.dot(rot, controller.prev_rotation)))
 
+				if math.abs(deg) < 0.0001 then
+					deg = 0.0001
+				end
+
+				if deg < 2 then
+					local t_slerp = math.min((math.lerp(2, 5, self._precision_mode_length) * 20 * dt) / deg, 1)
+
+					mrotation.slerp(rot, controller.prev_rotation, rot, t_slerp)
+				end
+			end
+
+			mrotation.set_zero(controller.prev_rotation)
+			mrotation.multiply(controller.prev_rotation, rot)
 			mrotation.set_zero(controller.rotation_raw)
 			mrotation.multiply(controller.rotation_raw, rot)
 			mrotation.multiply(controller.rotation_raw, controller.base_rotation_controller)
@@ -39,10 +69,24 @@ function PlayerHand:_update_controllers(t, dt)
 
 			controller.rotation = rot
 			pos = pos + controller.base_position:rotate_with(controller.rotation)
-			controller.position = pos
+			local dir = pos - controller.prev_position
+			local len = mvector3.normalize(dir)
+			local speed = len / dt
+			max_speed = math.max(max_speed, speed)
+
+			if precision_mode then
+				pos = controller.prev_position + math.lerp(0.15, 0.2, self._precision_mode_length) * dir * speed * dt
+			end
+
+			controller.prev_position = pos
+			pos = pos + ghost_position
 			local forward = Vector3(0, 1, 0)
 			controller.forward = forward:rotate_with(controller.rotation)
+			controller.position = pos
 
+			mvector3.set(controller.finger_position, controller.base_position_finger)
+			mvector3.rotate_with(controller.finger_position, controller.rotation)
+			mvector3.add(controller.finger_position, pos)
 			controller.unit:set_position(pos)
 			controller.unit:set_rotation(rot)
 			controller.state_machine:set_position(pos)
@@ -56,6 +100,10 @@ function PlayerHand:_update_controllers(t, dt)
 					controller.unit:damage():run_sequence_simple(self:current_hand_state(i)._sequence)
 				end
 			end
+		end
+
+		if max_speed > 110 or self._precision_mode_block_t and max_speed > 20 then
+			self._precision_mode_block_t = t
 		end
 
 		for _, controller in ipairs(self._hand_data) do
@@ -107,20 +155,33 @@ function PlayerHand:_update_controllers(t, dt)
 	self._belt_unit:set_position(ghost_position + belt_offset)
 	self._belt_unit:set_rotation(belt_rot)
 
+	local wanted_float_rot = Rotation(rot:yaw())
+
+	local float_pos = Vector3(0, 0, current_height + 40)
+	self._unit_movement_ext:__affect_vrobj_position(float_pos)
+
+	self._float_unit:set_position(ghost_position + float_pos + self._float_unit:rotation():y() * 10)
+	self._float_unit:set_rotation(self._float_unit:rotation():slerp(wanted_float_rot, dt * 8))
+
 	local look_dot = math.clamp(mvector3.dot(rot:y(), Vector3(0, 0, -1)), 0, 1) - 0.6
 
 	managers.hud:belt():set_alpha(look_dot * 1.5)
 
 	for i = 1, 2, 1 do
-		local closest = math.huge
+		local found = nil
 
 		if managers.hud:belt():visible() then
 			for _, interact_name in ipairs(managers.hud:belt():valid_interactions()) do
 				local interact_pos = managers.hud:belt():get_interaction_point(interact_name)
-				closest = math.min(closest, mvector3.distance_sq(self:hand_unit(i):position(), interact_pos))
+				local dis = mvector3.distance_sq(self:hand_unit(i):position(), interact_pos)
+				local height_diff = self:hand_unit(i):position().z - interact_pos.z
+
+				if managers.hud:belt():interacting(interact_name, self:hand_unit(i):position()) and height_diff < 10 and height_diff > -60 then
+					found = true
+				end
 			end
 		end
 
-		self:set_belt_active(closest < 100, i)
+		self:set_belt_active(found, i)
 	end
 end
