@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.5.3
+- Fix crash on radio use when no other mods use XAudio - Fixes #98
+
 ## V0.5.2
 - Add belt-mounted push-to-talk radio - Implements #95
 
