@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.5.2
+- Add belt-mounted push-to-talk radio - Implements #95
+
 ## V0.5.1
 - Fix the bug preventing the player from accessing their tablet - Fixes #96
 
