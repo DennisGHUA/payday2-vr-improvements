@@ -13,6 +13,15 @@
 			"callback": "vrplus_watch_health_wheel",
 			"value": "watch_health_wheel",
 			"priority": 99
+		},
+		{
+			"type": "toggle",
+			"id": "vrplus_belt_radio",
+			"title": "vrplus_belt_radio",
+			"description": "vrplus_belt_radio_desc",
+			"callback": "vrplus_belt_radio",
+			"value": "belt_radio",
+			"priority": 98
 		}
 	]
 }

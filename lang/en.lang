@@ -85,6 +85,9 @@
 	"vrplus_menu_hud_desc": "Configure User Interface settings",
 	"vrplus_watch_health_wheel": "Wristwatch Health Display",
 	"vrplus_watch_health_wheel_desc": "Move you're health indicator to you're wristwatch (requires restart)",
+	"vrplus_belt_radio": "Belt-mounted Radio",
+	"vrplus_belt_radio_desc": "Add a radio to your belt, with which you can use voicechat",
+	"menu_vr_belt_vrplus_radio": "Radio",
 
 	"vrplus_menu_tweaks": "Tweaks",
 	"vrplus_menu_tweaks_desc": "Random, unimportant options",

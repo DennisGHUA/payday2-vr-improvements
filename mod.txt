@@ -81,6 +81,22 @@
 		{
 			"hook_id": "lib/units/beings/player/handmelee",
 			"script_path": "handmelee.lua"
+		},
+		{
+			"hook_id": "lib/managers/hud/vr/hudbelt",
+			"script_path": "hud/hudbelt.lua"
+		},
+		{
+			"hook_id": "lib/units/beings/player/states/vr/hand/playerhandstatebelt",
+			"script_path": "hud/playerhandstatebelt.lua"
+		},
+		{
+			"hook_id": "lib/units/beings/player/states/vr/hand/playerhandstateitem",
+			"script_path": "hud/playerhandstateitem.lua"
+		},
+		{
+			"hook_id": "lib/managers/menu/vrcustomizationgui",
+			"script_path": "hud/vrcustomizationgui.lua"
 		}
 	],
 	"updates" : [
