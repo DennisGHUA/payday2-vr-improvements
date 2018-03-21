@@ -38,6 +38,7 @@ local function set_ptt(state, unit)
 
 	-- Check the hiss sound is loaded
 	if not hiss_buffer then
+		blt.xaudio.setup()
 		hiss_buffer = XAudio.Buffer:new(hiss_path)
 	end
 
