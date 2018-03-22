@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.5.4
+- Fix crash on startup when used with the new WSOCK32.dll-based hook
+
 ## V0.5.3
 - Fix crash on radio use when no other mods use XAudio - Fixes #98
 
