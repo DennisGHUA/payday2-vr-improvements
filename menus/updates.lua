@@ -16,7 +16,9 @@ local old_update_check = BLTModManager._RunAutoCheckForUpdates
 function BLTModManager:_RunAutoCheckForUpdates()
 	old_update_check(self)
 
-	local dll_hash = file.FileHash("IPHLPAPI.dll")
+	-- Don't bother checking if we're using SuperBLT, as we might not
+	--   be using IPHLPAPI in which case this will cause a crash otherwise
+	local dll_hash = XAudio and "SuperBLT" or file.FileHash("IPHLPAPI.dll")
 
 	local outdated = {
 		"8b110f1cf2802f7eb28a179871998e57dd5b053c1304187a7aa4cb40449cb5fc", -- 2.0VR5
