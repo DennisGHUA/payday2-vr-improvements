@@ -118,13 +118,24 @@ end
 
 -- HUDBelt
 
-Hooks:PostHook(HUDBelt, "init", "VRPlusAddCustomHudElements", function(self, ws)
-	for id, val in pairs(hb.items) do
-		self._interactions[id] = val:setup(ws)
+-- This is run during HUDBelt setup, registering all new belt items
+-- Being run directly before the first time the belt items are used, it
+-- fixes the issue of the player's belt resetting each time the game is loaded.
+Hooks:PreHook(HUDBelt, "verify_belt_ids", "VRPlusAddCustomBeltElements", function(self, ws)
+	-- Only run this once, as it's run twice during setup and in later versions of PD2
+	-- may be run in the future, though that doesn't seem to likely.
+	if self.__vrplus_added_belt_items then
+		return
 	end
+	self.__vrplus_added_belt_items = true
 
-	self:layout_grid(managers.vr:get_setting("belt_layout"))
-	self:set_box_sizes(managers.vr:get_setting("belt_box_sizes"))
+	-- Register all the custom items currently enabled.
+	-- TODO maybe add some way to reload this while in-game?
+	for id, val in pairs(hb.items) do
+		-- If a new item in PAYDAY 2 is added and by some chance has the same ID,
+		-- don't overwrite it.
+		self._interactions[id] = val:setup(self._ws) or self._interactions[id]
+	end
 end)
 
 -- Don't try to set the position or size for something that doesn't exist, and
