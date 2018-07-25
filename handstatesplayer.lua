@@ -18,6 +18,8 @@ end
 -- Note EmptyHandState deals with everything for your non-weapon hand.
 -- including shouting down civs, bagging loot, etc.
 Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, hand, key_map)
+	if self.vrplus_config_marker then return end
+
 	local hand_name = hand == 1 and "r" or "l"
 	local nice_name = hand == 1 and "right" or "left"
 
@@ -45,6 +47,8 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, h
 end)
 
 Hooks:PostHook(PointHandState, "apply", "VRPlusPointingHandActions", function(self, hand, key_map)
+	if self.vrplus_config_marker then return end
+
 	local hand_name = hand == 1 and "r" or "l"
 
 	if VRPlusMod._data.movement_locomotion then
@@ -56,6 +60,8 @@ Hooks:PostHook(PointHandState, "apply", "VRPlusPointingHandActions", function(se
 end)
 
 Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, hand, key_map)
+	if self.vrplus_config_marker then return end
+
 	if VRPlusMod._data.turning_mode == VRPlusMod.C.TURNING_OFF then return end
 
 	local hand_name = hand == 1 and "r" or "l"
@@ -64,6 +70,8 @@ Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, ha
 end)
 
 Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand, key_map)
+	if self.vrplus_config_marker then return end
+
 	local weapon_hand = managers.vr:get_setting("default_weapon_hand"):sub(1,1)
 	local hand_name = hand == 1 and "r" or "l"
 
@@ -77,6 +85,8 @@ Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand,
 end)
 
 Hooks:PostHook(WeaponHandState, "apply", "VRPlusMoveGadgetFiremode", function(self, hand, key_map)
+	if self.vrplus_config_marker then return end
+
 	if VRPlusMod._data.turning_mode == VRPlusMod.C.TURNING_OFF then
 		return
 	end

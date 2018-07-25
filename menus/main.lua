@@ -225,6 +225,10 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod:AskHMDType(true)
 	end
 
+	function MenuCallbackHandler:vrplus_controls_manager()
+		managers.menu:open_node("vrplus_controls_manager")
+	end
+
 	-- Checkboxes
 	add_inputs("_G", true, {
 		"movement_controller_direction",

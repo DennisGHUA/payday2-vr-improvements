@@ -97,6 +97,10 @@
 		{
 			"hook_id": "lib/managers/menu/vrcustomizationgui",
 			"script_path": "hud/vrcustomizationgui.lua"
+		},
+		{
+			"hook_id" : "lib/managers/menu/menucomponentmanager",
+			"script_path" : "menus/controls/ControlsManager.lua"
 		}
 	],
 	"updates" : [

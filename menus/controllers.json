@@ -93,6 +93,14 @@
 			"callback": "vrplus_teleport_on_release",
 			"value": "teleport_on_release",
 			"priority": 93
+		},
+		{
+			"type": "button",
+			"id": "vrplus_controls_manager",
+			"title": "vrplus_controls_manager",
+			"description": "vrplus_controls_manager_desc",
+			"callback": "vrplus_controls_manager",
+			"priority": 92
 		}
 	]
 }
