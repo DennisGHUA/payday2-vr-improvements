@@ -137,7 +137,7 @@ function ControlsManager:clbk_open_panel(state)
 	for _, button in ipairs(self._bind_buttons) do
 		local id = button:control_id()
 
-		button:set(Data.defaults[state], settings and settings[id], 1)
+		button:set(Data.defaults[state], settings and settings[id])
 	end
 end
 

@@ -111,17 +111,18 @@ function BindButton:_save_changes()
 	end
 end
 
-function BindButton:set(defaults, data, hand)
+function BindButton:set(defaults, data)
 	if type(data) ~= "table" then
 		data = nil
 	end
 
 	self._enabled = data ~= nil
 
-	local hand_name = hand == 1 and "r" or "l"
 	self._defaults = {}
 
-	local handed_control_id = self._control_id .. "_" .. hand_name
+	-- Since all actions have both a left- and right-hand input, this isn't
+	-- a problem only looking for one of them
+	local handed_control_id = self._control_id .. "_r"
 
 	for action_id, action_data in pairs(defaults) do
 		-- TODO hand
@@ -130,13 +131,22 @@ function BindButton:set(defaults, data, hand)
 
 				local result_aid
 				for aid, adata in pairs(Data.actions) do
-					if (hand == 1 and adata.right or adata.left) == action_id or aid == action_id then
+					if aid == action_id or adata.right == action_id or adata.left == action_id then
 						result_aid = aid
 					end
 				end
 
+				-- If there are two inputs with the same ID, that's because
+				-- there are seperate left- and right-handed versions.
+				-- In this case, make them both-hand usable
 				if result_aid then
-					self._defaults[result_aid] = {}
+					if not self._defaults[result_aid] then
+						self._defaults[result_aid] = {
+							hand = action_data.hand
+						}
+					else
+						self._defaults[result_aid].hand = nil
+					end
 				end
 			end
 		end
