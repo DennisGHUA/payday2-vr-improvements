@@ -182,7 +182,7 @@ function BindButton:_setup_buttons()
 			y = y,
 			w = self._panel:w(),
 			h = self._panel:h() - y,
-			text = "Customize", -- TODO i18n
+			text = managers.localization:text("vrplus_controls_manager_customise"),
 			center_text = true,
 			callback = callback(self, self, "clbk_customize"),
 			layer = 1,
@@ -283,7 +283,7 @@ end
 
 function BindButton:_ask_for_action(clbk)
 	local dialog_data = {
-		title = "Select action TODO i18n",
+		title = managers.localization:text("vrplus_controls_manager_select_action"),
 		text = "",
 		button_list = {}
 	}
@@ -292,7 +292,7 @@ function BindButton:_ask_for_action(clbk)
 
 	for id, option in pairs(Data.actions) do
 		if not self._actions[id] and (option.analog_only or false) == is_analog then
-			-- TODO i18n
+			-- TODO (i18n) use real human names for these
 			local text = id --option
 
 			table.insert(dialog_data.button_list, {

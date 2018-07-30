@@ -102,6 +102,7 @@ function get_human_control_name(id)
 end
 
 -- Updates may require us to add to these
+-- TODO i18n?
 local states = {
 	"Empty",
 	"Point",
