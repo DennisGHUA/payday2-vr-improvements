@@ -202,11 +202,23 @@ function BindButton:_setup_buttons()
 		local button = BLTUIButton:new(self._panel, {
 			x = 0,
 			y = y, -- + (h + padding) * (i - 1)
-			w = self._panel:w() - h - padding / 2,
+			w = self._panel:w() - h * 2 - padding,
 			h = h,
 			text = id, -- TODO
 			center_text = true,
 			callback = callback(self, self, "clbk_edit_bind", id),
+			color = bttn_colour,
+		})
+		table.insert(self._btns, button)
+
+		local button = BLTUIButton:new(self._panel, {
+			x = self._panel:w() - h * 2 - padding / 2,
+			y = y, -- + (h + padding) * (i - 1)
+			w = h,
+			h = h,
+			text = data.hand and (data.hand == 1 and "R" or "L") or "-",
+			center_text = true,
+			callback = callback(self, self, "clbk_change_handiness", id),
 			color = bttn_colour,
 		})
 		table.insert(self._btns, button)
@@ -333,6 +345,48 @@ function BindButton:_ask_for_action(clbk)
 	dialog_data.text_formating_color = Color.white
 	dialog_data.text_formating_color_table = {}
 	--dialog_data.clamp_to_screen = true
+
+	managers.system_menu:show_buttons(dialog_data)
+end
+
+function BindButton:clbk_change_handiness(id)
+	local function set_hand(hid)
+		self._actions[id].hand = hid
+		self:_save_changes()
+	end
+
+	local dialog_data = {
+		title = managers.localization:text("vrplus_controls_manager_select_hand"),
+		text = "",
+		button_list = {
+			{
+				text = managers.localization:text("vrplus_right"),
+				callback_func = function()
+					set_hand(1)
+				end
+			},
+			{
+				text = managers.localization:text("vrplus_left"),
+				callback_func = function()
+					set_hand(2)
+				end
+			},
+			{
+				text = managers.localization:text("vrplus_both_hands"),
+				callback_func = function()
+					set_hand(nil)
+				end
+			},
+			{ -- divider
+				no_text = true,
+				no_selection = true
+			},
+			{ -- cancel
+				text = managers.localization:text("dialog_cancel"),
+				cancel_button = true
+			}
+		}
+	}
 
 	managers.system_menu:show_buttons(dialog_data)
 end

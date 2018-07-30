@@ -51,6 +51,7 @@
 	"vrplus_controls_manager_reset_desc": "Do you want to reset the bindings for this control to the default values?",
 	"vrplus_controls_manager_customise": "Customise",
 	"vrplus_controls_manager_select_action": "Select Action",
+	"vrplus_controls_manager_select_hand": "Select Hand",
 
 	"vrplus_dll_out_of_date": "IPHLPAPI.dll Out Of Date",
 	"vrplus_dll_out_of_date_message": "Your IPHLPAPI.dll file is out of date. This may cause crashes, and automatic updates will not work (you will always be told you're up to date).",
@@ -113,6 +114,10 @@
 	"vrplus_weapon_melee_enabled": "Yes (vanilla default)",
 	"vrplus_weapon_melee_loud": "Only in Loud, not in Stealth",
 	"vrplus_weapon_melee_disabled": "No",
+
+	"vrplus_left": "Left",
+	"vrplus_right": "Right",
+	"vrplus_both_hands": "Both Hands",
 
 	"vrplus_git_tag_end":""
 }
