@@ -6,6 +6,9 @@
 -- To change this template use File | Settings | File Templates.
 --
 
+-- This not only defines the player hand states, but via
+-- the handstatesplayer.lua hook, defines _handstatesplayerdata into
+-- our custom environment
 require("lib/input/HandStatesPlayer")
 
 -- TODO i18n
@@ -101,24 +104,6 @@ function get_human_control_name(id)
 	return texts[hmd_name .. "_left"] or texts[hmd_name] or texts["generic"]
 end
 
--- Updates may require us to add to these
--- TODO i18n?
-local states = {
-	"Empty",
-	"Point",
-	"Weapon",
-	"Akimbo",
-	"Mask",
-	"Item",
-	"Ability",
-	"Equipment",
-	"Tablet",
-	"Belt",
-	--"Repeater",
-	"Driving",
-	--"Arrow",
-}
-
 local function find_inst_defaults(self, hand, results)
 	if not self._connections then
 		return
@@ -175,7 +160,7 @@ local function find_defaults()
 	end
 
 	local result = {}
-	for _, state in ipairs(states) do
+	for _, state in ipairs(_handstatesplayerdata.states) do
 		local class = _G[state .. "HandState"]
 		local inst = class:new()
 
@@ -204,7 +189,7 @@ local defaults = find_defaults()
 Data = {
 	control_names = control_names,
 	actions = actions,
-	states = states,
+	states = _handstatesplayerdata.states, -- See handstatesplayer.lua
 	defaults = defaults
 }
 

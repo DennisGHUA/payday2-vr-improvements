@@ -92,3 +92,33 @@ Hooks:PostHook(WeaponHandState, "apply", "VRPlusMoveGadgetFiremode", function(se
 	key_map["d_up_" .. hand_name] = { "weapon_gadget" }
 	key_map["d_down_" .. hand_name] = { "weapon_firemode" }
 end)
+
+-----------------------------------------
+-- User-defined Control Customisations --
+-----------------------------------------
+
+-- List of the states the player can edit
+-- Some are disabled as they're not used in-game and their inclusion
+--  would be confusing to players.
+-- Updates may require us to add to these
+-- TODO i18n?
+local states = {
+	"Empty",
+	"Point",
+	"Weapon",
+	"Akimbo",
+	"Mask",
+	"Item",
+	"Ability",
+	"Equipment",
+	"Tablet",
+	"Belt",
+	--"Repeater",
+	"Driving",
+	--"Arrow",
+}
+
+-- Make these available to the control manager UI
+VRPlusMod._ControlManager._handstatesplayerdata = {
+	states = states
+}

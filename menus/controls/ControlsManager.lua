@@ -10,6 +10,7 @@
 -- AFAIK there are no side-effects of loading it that could be a problem
 
 local env = {}
+VRPlusMod._ControlManager = env
 setmetatable(env, {
 	__index = _G
 })
