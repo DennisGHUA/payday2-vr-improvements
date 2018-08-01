@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.6.0
+- Add the control customisation system
+
 ## V0.5.5
 - Fix belt constantly resetting to default when the radio is enabled in PD2 version U180 and later
 
