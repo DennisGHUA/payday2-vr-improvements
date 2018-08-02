@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.6.1
+- Fix the game crashing as soon as a level is loaded if no custom controls are set
+
 ## V0.6.0
 - Add the control customisation system
 
