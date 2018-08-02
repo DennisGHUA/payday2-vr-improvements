@@ -158,6 +158,11 @@ for _, state in ipairs(states) do
 	}
 }
 		--]]
+
+		-- If no controls are set, stop here
+		if not VRPlusMod._data.control_rebindings then return end
+
+		-- Grab the controls for this state
 		local rebindings = VRPlusMod._data.control_rebindings[state]
 		if not rebindings then return end
 
