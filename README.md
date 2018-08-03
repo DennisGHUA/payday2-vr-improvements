@@ -1,5 +1,5 @@
 # PAYDAY 2 VR: Improvements Mod
-The PD2VR Improvements mod (referred to as VRPlus in code, in case you run across that) is a mod for the VR Beta of PAYDAY 2, adding many quality-of-life fixes such as smooth locomotion, moving you're health wheel to you're wristwatch (as per the trailer), and snap-turning support, and fading the screen to red while on very low health.
+The PD2VR Improvements mod (referred to as VRPlus in code, in case you run across that) is a mod for the VR Beta of PAYDAY 2, adding many quality-of-life fixes such as smooth locomotion, moving you're health wheel to your wristwatch (as per the trailer), and snap-turning support, and fading the screen to red while on very low health.
 
 Most of these changes are disabled by default, and must be enabled in the mod settings. See below for a list of the settings, and what they do.
 
@@ -30,7 +30,7 @@ ZNixian - Coding
 blinkVR - Mod icon, helping find and replicate bugs
 Sergio - Russian translation
 
-## Licnece
+## Licence
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -45,7 +45,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Options
-This mod is extensively customizable, and by changing you're settings you'll get the most out of this mod. To open you're settings, open the game and click Options->Mod Options->VR Improvements. From there, you can customize the various aspects of the mod.
+This mod is extensively customizable, and by changing your settings you'll get the most out of this mod. To open your settings, open the game and click Options->Mod Options->VR Improvements. From there, you can customize the various aspects of the mod.
 
 Almost all of these options can be changed while playing and will take effect instantly - no need to restart PAYDAY or restart the heist (for those not aware of it, starting, restarting or stopping a heist will almost always have the same effect as restarting PAYDAY 2 - you can install a mod and then restart the heist to have it take effect, without restarting PAYDAY 2, or disable a mod while on the main menu and this takes effect when you next start a heist).
 
@@ -53,7 +53,7 @@ Almost all of these options can be changed while playing and will take effect in
 Therese settings are about the ingame user-interface.
 
 ### Wristwatch Health Display
-This moves you're health wheel to you're wristwatch, as seen in the trailer or seen [here](https://i.imgur.com/A9AmoKo.jpg). This does remove it, not duplicate it, but I'm looking into fixing that.
+This moves your health wheel to your wristwatch, as seen in the trailer or seen [here](https://i.imgur.com/A9AmoKo.jpg). This does remove it, not duplicate it, but I'm looking into fixing that.
 
 Changes to this option will not take effect until a new heist starts.
 
@@ -97,7 +97,7 @@ When this is enabled, the controls are as follows: The hand you'd normally telep
 Default: Enabled
 
 ### Turning Mode
-This can be used to switch between no turning, smooth turning, and snap turning. When it is enabled, you're firemode and gadget buttons will be remapped to up and down, respectively, on you're weapon-side thumbstick, and left-right will rotate your view.
+This can be used to switch between no turning, smooth turning, and snap turning. When it is enabled, your firemode and gadget buttons will be remapped to up and down, respectively, on your weapon-side thumbstick, and left-right will rotate your view.
 
 Note this works regardless of 'Enable Locomotion'.
 
@@ -135,14 +135,14 @@ This controls options for how the camera is handled in VR
 ### Fade options:
 When you put your head into (or close to) a wall in VR, your screen will fade to black. Once it has reached a certain percentage of blackness (vanilla: 95%), it starts a timer to teleport you out after an amount of time (vanilla: 1.5 seconds).
 
-Fade Distance: The minimum distance from an object you must be before you're screen will start fading. Vanilla: `13`. Default: `2`.
+Fade Distance: The minimum distance from an object you must be before your screen will start fading. Vanilla: `13`. Default: `2`.
 
 Camera Reset Percentage: The percentage blackness that your screen must fade to for the teleport-out timer to start. Vanilla: `95`%. Default: `95`%.
 
-Camera Reset Timer: The time in seconds that must pass while you're screen is over the reset percentage black before you will be teleported out. Vanilla: `1.5` seconds. Default: `0.25` seconds.
+Camera Reset Timer: The time in seconds that must pass while your screen is over the reset percentage black before you will be teleported out. Vanilla: `1.5` seconds. Default: `0.25` seconds.
 
 ### Redout options:
-Redout is where, when running low on health, you're screen will be tinted red in proportion to how close to going down you are as an indicaton. I've never tried this in game, so if you think making it fade out (or have any other suggestions) after a time would be useful, please post a comment on the Steam group or (preferrably) open an issue on the issuetracker.
+Redout is where, when running low on health, your screen will be tinted red in proportion to how close to going down you are as an indicaton. I've never tried this in game, so if you think making it fade out (or have any other suggestions) after a time would be useful, please post a comment on the Steam group or (preferrably) open an issue on the issuetracker.
 
 Redout %HP Start: When you're below this percentage of your health, your screen will begin it's fade to read.
 
