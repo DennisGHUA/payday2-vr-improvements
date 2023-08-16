@@ -92,11 +92,17 @@ local function do_rotation(self, t, dt)
 		-- Snap turning
 		-- TODO move to options GUI
 		local turn, nonturn = 0.75, 0.5
-		local delay = 0.25 -- Delay before turning
-		local rotation_amt = 30 -- Rotation in degrees
+		local delay = 0.15 -- Delay before turning -- was 0.25
+		local rotation_amt = 45 -- Rotation in degrees -- was 30
 
 		-- Apply cooldown
 		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
+
+		-- Sometimes the player keeps rotating for some unknown reason
+		-- controller = self._unit:base():controller()
+		-- axis = controller:get_input_axis("touchpad_primary")
+		-- rot = VRManager:hmd_rotation():yaw() + self._camera_base_rot:yaw()
+		-- if not axis then return end
 
 		if math.abs(axis.x) > turn and self.__snap_rotate_timer < 0 then
 			self.__snap_rotate_timer = delay
