@@ -1,5 +1,10 @@
 # Changelog
 
+
+## V0.6.6 - 2023 version
+- Lowered delay for turning from 0.25 to 0.15
+- Increased rotation amount from 30 to 45
+
 ## V0.6.5.R
 - Fixed another potential arm movements crash with akimbos
 
