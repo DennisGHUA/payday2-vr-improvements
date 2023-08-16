@@ -1,3 +1,8 @@
+This version is a continuation of the following repositories:
+Version 0.6.1
+https://gitlab.com/znixian/payday2-vr-improvements
+
+
 # PAYDAY 2 VR: Improvements Mod
 The PD2VR Improvements mod (referred to as VRPlus in code, in case you run across that) is a mod for the VR Beta of PAYDAY 2, adding many quality-of-life fixes such as smooth locomotion, moving you're health wheel to your wristwatch (as per the trailer), and snap-turning support, and fading the screen to red while on very low health.
 
