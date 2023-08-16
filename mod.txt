@@ -35,6 +35,14 @@
 			"script_path" : "playerhandstateweapon.lua"
 		},
 		{
+			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateakimbo",
+			"script_path" : "playerhandstateakimbo.lua"
+		},
+		{
+			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateitem",
+			"script_path" : "playerhandstateitem.lua"
+		},
+		{
 			"hook_id" : "lib/managers/menumanagervr",
 			"script_path" : "menumanagervr.lua"
 		},
@@ -101,16 +109,6 @@
 		{
 			"hook_id" : "lib/managers/menu/menucomponentmanager",
 			"script_path" : "menus/controls/ControlsManager.lua"
-		}
-	],
-	"updates" : [
-		{
-			"identifier": "vrplus",
-			"custom_urls": {
-				"check": "https://znix.xyz/paydaymods/updates/meta.php?id=",
-				"patchnotes": "https://znix.xyz/paydaymods/patchnotes/view.php?id=",
-				"download": "https://znix.xyz/paydaymods/download/get.php?src=mod&id="
-			}
 		}
 	]
 }

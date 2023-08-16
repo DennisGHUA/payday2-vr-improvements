@@ -18,7 +18,7 @@ local control_names = {
 		Rift_right = "B Button (upper)",
 		generic = "Menu Button",
 	},
-	b = {
+	a = {
 		Rift_left = "X Button (lower)",
 		Rift_right = "A Button (lower)",
 		Vive = "'B' button (not present)", -- TODO make this disappear on Vives?
@@ -85,6 +85,9 @@ local actions = {
 		analog_only = true,
 	},
 	touchpad_primary = {
+		analog_only = true,
+	},
+	move = {
 		analog_only = true,
 	},
 	unequip = {},

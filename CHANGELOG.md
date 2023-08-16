@@ -1,5 +1,19 @@
 # Changelog
 
+## V0.6.5.R
+- Fixed another potential arm movements crash with akimbos
+
+## V0.6.4.R
+- Added extra wrist tablet page for quick voice commands
+
+## V0.6.3.R
+- Fixed clients crashing on load, related to VR arm movements
+
+## V0.6.2.R
+- Fixed custom movement control not working
+- Fixed bottom A/X button on Oculus Touch not being rebindable
+- Removed bottom A/X button snap turning on Oculus Touch
+
 ## V0.6.1
 - Fix the game crashing as soon as a level is loaded if no custom controls are set
 

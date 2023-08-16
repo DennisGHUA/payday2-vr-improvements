@@ -19,6 +19,13 @@ function PlayerMovement:_update_vr(unit, t, dt)
 end
 
 function PlayerMovement:__affect_vrobj_position(pos)
+	-- Working around a vanilla crash, happens on load only and is possibly related to VR arm movements
+	-- Does not happen for the host, does not happen on late joiners
+	-- Does not happen for flat-screen clients
+	if not self:current_state() then
+		return
+	end
+	
 	if self:current_state().__bttn_ducking then
 		local height_mult = VRPlusMod._data.comfort.crouch_scale / 100
 		local crouch_dist = managers.vr:get_setting("height") * (1 - height_mult)

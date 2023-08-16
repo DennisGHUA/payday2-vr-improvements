@@ -107,6 +107,21 @@ local function do_rotation(self, t, dt)
 	end
 end
 
+-- Same as vanilla, but lacks the dedicated snap turn buttons on Oculus Touch
+function PlayerStandardVR:_check_vr_actions(t, dt)
+	local state = self._warp_state_machine:state()
+
+	if state.update then
+		state:update(t, dt)
+	end
+
+	self._warp_state_machine:transition()
+
+	if self._warp_state_machine:state():warp() and not self._state_data.warping then
+		self:_start_action_warp(t)
+	end
+end
+
 local old_update = PlayerStandardVR.update
 function PlayerStandardVR:update(t, dt)
 	do_rotation(self, t, dt) -- Handle smooth/snap rotation
