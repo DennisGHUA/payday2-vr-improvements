@@ -1,9 +1,12 @@
-This version is a continuation of the following repositories:
-Version 0.6.1 (2018)
-https://gitlab.com/znixian/payday2-vr-improvements
-Version 0.6.5R (2020)
-https://gitlab.com/HugoZink/payday2-vr-improvements
-
+**Recommended to be used with the updated version of the Unofficial VR Patch:**  
+https://github.com/DennisGHUA/PAYDAY-2-Unofficial-VR-Patch  
+  
+This version is a continuation of the following repositories:  
+Version 0.6.1 (2018)  
+https://gitlab.com/znixian/payday2-vr-improvements  
+Version 0.6.5R (2020)  
+https://gitlab.com/HugoZink/payday2-vr-improvements  
+  
 # PAYDAY 2 VR: Improvements Mod
 The PD2VR Improvements mod (referred to as VRPlus in code, in case you run across that) is a mod for the VR Beta of PAYDAY 2, adding many quality-of-life fixes such as smooth locomotion, moving you're health wheel to you're wristwatch (as per the trailer), and snap-turning support, and fading the screen to red while on very low health.
 
@@ -36,7 +39,7 @@ ZNixian - Coding
 blinkVR - Mod icon, helping find and replicate bugs
 Sergio - Russian translation
 
-## Licnece
+## Licence
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
