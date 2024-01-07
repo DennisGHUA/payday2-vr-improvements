@@ -1,5 +1,5 @@
-**Recommended to be used with the updated version of the Unofficial VR Patch:**  
-https://github.com/DennisGHUA/PAYDAY-2-Unofficial-VR-Patch  
+**This mod is also available on the mod workshop:**  
+https://modworkshop.net/mod/45143
   
 This version is a continuation of the following repositories:  
 Version 0.6.1 (2018)  
@@ -12,46 +12,31 @@ The PD2VR Improvements mod (referred to as VRPlus in code, in case you run acros
 
 Most of these changes are disabled by default, and must be enabled in the mod settings. See below for a list of the settings, and what they do.
 
-## Issuetracker
-The GitLab [issue tracker](https://gitlab.com/znixian/payday2-vr-improvements/issues) is the primary way to keep track of problems and suggestions for this project. If you don't have a GitLab account, you can use single-sign-in to from Google, Twitter, GitHub or BitBucket.
+## Reporting bugs / Requesting features
+The GitHub [issue tracker](https://github.com/DennisGHUA/payday2-vr-improvements/issues) is the primary way to keep track of problems and suggestions for this project. If you don't have a GitLab account, you can use single-sign-in to from Google, Twitter, GitHub or BitBucket.
 
 Please do not hesitate to post your issue (be it a bug report, or any kind of suggestion) on here. Preferrably look at the list of issues to see if any clearly match yours, but I don't have any problem with the occasional duplicate issue.
 
 If this is a crash bug, please pastebin your `crash.txt` file and include a link to it.
 
 ## Automatic Updates
-If you've installed the mod by downloading it from the Steam group, you're good to go. If you've got your copy straight from GitLab for some reason, you'll have to rename the mod folder 'payday2-vr-improvements-master-....' to 'vrplus' before it will work. The game will prompt you to do this, and in the future may be able to automatically correct this issue.
+As of this moment the mod does not support automatic updates. You can press the watch button on github top right and select Custom->Releases or follow the mod the [modworkshop](https://modworkshop.net/mod/45143).
 
-In the lower left-hand corner of your screen, you should see an indicator telling you if you have any available updates. If it says you do, click on it, then click 'Download Manager', and finally click the update button for VR Enhancements (the little radio in a circle button).
-
-In the past, there were issues where the IPHLPAPI.dll file (BLT Hook) would always appear in this list, and couldn't be updated. That has since been fixed.
-
-## Steam Group
-This mod has an [official Steam group](https://steamcommunity.com/groups/payday-2-vr-mod/). Not so much now there's automatic updates, but from time to time I post announcements that may be useful for users of this mod.
-
-It also contains the [main discussion thread](https://steamcommunity.com/groups/payday-2-vr-mod/discussions/0/2425614539579129482/), which contains instructions on how to download, install and set up this mod. Also, unless specificly instructed to do so, download the mod zip off that thread rather than from GitLab - not doing so breaks automatic updates (which the mod will warn you about).
+## Old Steam Group
+This mod has had an [Abandoned Steam group](https://steamcommunity.com/groups/payday-2-vr-mod/). But this no longer seems relevant. Use the github issue tracker or the modworkshop page for discussing.
 
 ## Changelog
-See [CHANGELOG.md](https://gitlab.com/znixian/payday2-vr-improvements/blob/master/CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/CHANGELOG.md).
 
 ## Credits
-ZNixian - Coding
-blinkVR - Mod icon, helping find and replicate bugs
-Sergio - Russian translation
+ZNixian - Coding\
+blinkVR - Mod icon, helping find and replicate bugs\
+Sergio - Russian translation\
+Hugo Zink - Coding
 
-## Licence
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+## License
+See [LICENSE](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/LICENSE).
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Options
 This mod is extensively customizable, and by changing you're settings you'll get the most out of this mod. To open you're settings, open the game and click Options->Mod Options->VR Improvements. From there, you can customize the various aspects of the mod.
