@@ -13,7 +13,7 @@ The PD2VR Improvements mod (referred to as VRPlus in code, in case you run acros
 Most of these changes are disabled by default, and must be enabled in the mod settings. See below for a list of the settings, and what they do.
 
 ## Reporting bugs / Requesting features
-The GitHub [issue tracker](https://github.com/DennisGHUA/payday2-vr-improvements/issues) is the primary way to keep track of problems and suggestions for this project. If you don't have a GitLab account, you can use single-sign-in to from Google, Twitter, GitHub or BitBucket.
+The GitHub [issue tracker](https://github.com/DennisGHUA/payday2-vr-improvements/issues) is the primary way to keep track of problems and suggestions for this project.
 
 Please do not hesitate to post your issue (be it a bug report, or any kind of suggestion) on here. Preferrably look at the list of issues to see if any clearly match yours, but I don't have any problem with the occasional duplicate issue.
 
