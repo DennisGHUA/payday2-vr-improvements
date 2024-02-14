@@ -29,10 +29,17 @@ This mod has had an [Abandoned Steam group](https://steamcommunity.com/groups/pa
 See [CHANGELOG.md](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/CHANGELOG.md).
 
 ## Credits
-ZNixian - Coding\
-blinkVR - Mod icon, helping find and replicate bugs\
-Sergio - Russian translation\
-Hugo Zink - Coding
+Original mod up to version 0.6.1:
+- ZNixian - Coding
+- blinkVR - Mod icon, helping find and replicate bugs
+- Sergio - Russian translation
+
+Onwards from 0.6.1 up to version 0.6.5R:
+- Hugo Zink - Continued coding contributions
+
+Onwards from version 0.6.5R:
+- LordiAnders - Fixing bugs
+- Jos Badpak - Minor tweaks / mod preservation
 
 ## License
 See [LICENSE](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/LICENSE).
