@@ -1,7 +1,11 @@
 # Changelog
 
+## V0.6.7
+These issues only apply when using the 'Wristwatch Health Display' option in the UI Options:
+- Fix crash when going into custody after using an ability.
+- Fix ability icon turning into just a white square.
 
-## V0.6.6 - 2023 version
+## V0.6.6
 - Lowered delay for turning from 0.25 to 0.15
 - Increased rotation amount from 30 to 45
 
