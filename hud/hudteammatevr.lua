@@ -40,7 +40,15 @@ function HUDTeammateVR:_create_radial_health(radial_health_panel)
 
 	radial_health_panel = get_health_panel(self)
 	self._radial_health_panel = radial_health_panel
-
+	local health_icon = radial_health_panel:bitmap({
+		blend_mode = "add",
+		name = "health_icon",
+		alpha = 0,
+		texture = "guis/textures/pd2/progress_health_icon",
+		layer = 1,
+		w = radial_health_panel:w(),
+		h = radial_health_panel:h()
+	})
 	local radial_bg = radial_health_panel:bitmap({
 		texture = "guis/textures/pd2/progress_warp_black",
 		name = "radial_bg",
@@ -128,6 +136,7 @@ function HUDTeammateVR:_create_radial_health(radial_health_panel)
 		blend_mode = "add",
 		name = "ability_icon",
 		alpha = 1,
+		texture = "guis/textures/pd2/add_icon",
 		layer = 5,
 		w = radial_size * 0.5,
 		h = radial_size * 0.5
