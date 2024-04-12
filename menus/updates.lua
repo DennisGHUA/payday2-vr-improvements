@@ -38,7 +38,7 @@ function BLTModManager:_RunAutoCheckForUpdates()
 				{
 					text = text("vrplus_dll_out_of_date_download"),
 					callback = function()
-						os.execute("cmd /c start http://steamcommunity.com/groups/payday-2-vr-mod/discussions/0/2425614361138298439/")
+						os.execute("cmd /c start https://superblt.znix.xyz")
 					end
 				},
 				{
