@@ -28,16 +28,28 @@ Hooks:PostHook(FPCameraPlayerBase, "set_parent_unit", "VRPlusInitRedout", functi
 end)
 
 Hooks:PostHook(FPCameraPlayerBase, "_update_fadeout", "VRPlusRedoutEffect", function(self, hmd_position, ghost_position, t, dt)
-	self.__redout.effect.color.alpha = 0
 	if VRPlusMod._data.cam_redout_enable then
 		local player = managers.player:player_unit()
 		if alive(player) then
+
 			local health = player:character_damage():health_ratio()
+
+			-- Check if the player is downed or in custody and set alpha to zero
+			local character_damage = player:character_damage()
+			if character_damage then
+				-- Check if the player is downed or in custody and set alpha to zero
+				if health <= 0 or character_damage:arrested() then
+					self.__redout.effect.color.alpha = 0
+					return
+				end
+			end
+
+
 			local opacity_max = VRPlusMod._data.cam_redout_fade_max / 100
 			local ratio_start = VRPlusMod._data.cam_redout_hp_start / 100
 
 			if opacity_max > 0 and ratio_start > 0 then
-				self.__redout.effect.color.alpha = (1-math.min(1, health / ratio_start)) * opacity_max
+				self.__redout.effect.color.alpha = (1 - math.min(1, health / ratio_start)) * opacity_max
 			end
 		end
 	end
