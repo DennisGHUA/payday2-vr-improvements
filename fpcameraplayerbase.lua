@@ -28,6 +28,7 @@ Hooks:PostHook(FPCameraPlayerBase, "set_parent_unit", "VRPlusInitRedout", functi
 end)
 
 Hooks:PostHook(FPCameraPlayerBase, "_update_fadeout", "VRPlusRedoutEffect", function(self, hmd_position, ghost_position, t, dt)
+
 	if VRPlusMod._data.cam_redout_enable then
 		local player = managers.player:player_unit()
 		if alive(player) then
@@ -51,6 +52,13 @@ Hooks:PostHook(FPCameraPlayerBase, "_update_fadeout", "VRPlusRedoutEffect", func
 			if opacity_max > 0 and ratio_start > 0 then
 				self.__redout.effect.color.alpha = (1 - math.min(1, health / ratio_start)) * opacity_max
 			end
+		else
+			-- Disable redout is player is not alive()
+			self.__redout.effect.color.alpha = 0
 		end
+	else
+		-- Disable redout if this settings is disabled
+		self.__redout.effect.color.alpha = 0
 	end
+
 end)
