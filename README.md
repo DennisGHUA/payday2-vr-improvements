@@ -37,9 +37,9 @@ Original mod up to version 0.6.1:
 Onwards from 0.6.1 up to version 0.6.5R:
 - Hugo Zink - Continued coding contributions
 
-Onwards from version 0.6.5R:
-- LordiAnders - Fixing bugs
-- Jos Badpak - Minor tweaks / mod preservation
+From version 0.6.6 onward:
+- LordiAnders - Bug fixing
+- Jos Badpak - Bug fixing, minor adjustments, and mod preservation
 
 ## License
 See [LICENSE](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/LICENSE).

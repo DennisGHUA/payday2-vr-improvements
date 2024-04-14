@@ -1,9 +1,9 @@
 # Changelog
 
-## V0.6.8_wip - main branch
-- Fix for permanent red screen effect after going into custody.
-- Disabled the red screen effect when downed.
-- Replaced the belt radio icon that looked like an ecm jammer with a microphone.
+## V0.6.8
+- Resolved issue causing a permanent red screen effect after entering custody.
+- Disabled the red screen effect when the player is downed.
+- Updated belt radio icon to a microphone for clearer distinction.
 
 ## V0.6.7
 These issues only apply when using the 'Wristwatch Health Display' option in the UI Options:
