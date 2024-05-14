@@ -2,7 +2,10 @@
 
 ## V0.7.0 -- Auto updates added
 **_Starting from this version you no longer need to manually update the mod_**
-- Added auto-updates through the main menu update screen. No manual updates needed.
+- Turned off the voice chat icon by default, since voice chat has been disabled since update 239 in the game.
+- Moved the jump button to the center of the trackpad on the dominant hand, instead of having it on the same hand used for locomotion.
+- Separated jump logic from sprint logic; you should now be able to sprint and jump at the same time.
+- Added auto-updates through the main menu update screen. From version 0.7.0, manual updates are no longer needed.
 
 ## V0.6.8
 - Resolved issue causing a permanent red screen effect after entering custody.
