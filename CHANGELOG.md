@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.7.0 -- Auto updates added
+**_Starting from this version you no longer need to manually update the mod_**
+- Added auto-updates through the main menu update screen. No manual updates needed.
+
 ## V0.6.8
 - Resolved issue causing a permanent red screen effect after entering custody.
 - Disabled the red screen effect when the player is downed.

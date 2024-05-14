@@ -3,10 +3,21 @@
 	"description": "Bunch of tweaks for VR",
 	"author": "",
 	"contact": "modworkshop.net/mod/45143",
-	"version": "0.6.8",
+	"version": "0.7.0",
 	"image" : "vrplus.png",
 	"color" : "255 255 255",
 	"blt_version": 2,
+    "is_library" : false,
+    "vr_disabled" : false,
+    "updates" : [
+      {
+        "identifier" : "vrimprovements-vrplus",
+        "host": {
+          "meta": "https://raw.githubusercontent.com/DennisGHUA/payday2-vr-improvements/master/updates_meta.json",
+          "patchnotes": "https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/CHANGELOG.md"
+        }
+      }
+    ],
 	"pre_hooks" : [
 		{
 			"hook_id" : "lib/entry",
