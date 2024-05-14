@@ -35,7 +35,7 @@ local default_data = {
 
 	hud = {
 		watch_health_wheel = true,
-		belt_radio = true,
+		belt_radio = false,
 	},
 
 	tweaks = {
