@@ -77,7 +77,7 @@ local actions = {
 	},
 	primary_attack = {},
 	reload = {},
-	run = {},
+	run = {}, -- was called sprint in code
 	tablet_interact = {},
 	throw_grenade = {},
 	toggle_menu = {},
@@ -97,6 +97,7 @@ local actions = {
 	warp_target = {},
 	weapon_firemode = {},
 	weapon_gadget = {},
+	--jump = {}, -- Add later
 }
 
 function get_human_control_name(id)

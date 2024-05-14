@@ -23,13 +23,21 @@ local function add_offhand_actions(hand_name, key_map)
 	end
 
 	if VRPlusMod._data.movement_locomotion then
+		-- Don't use 'warp' for running/jumping, as it seems somehow tied
+		-- to the Rift's 'Y' button.
+		-- Place jump function opposite from sprint/walk touchpad
+		if hand_name == "r" then
+			key_map["trackpad_button_" .. "l"] = { "jump" }
+		else
+			key_map["trackpad_button_" .. "r"] = { "jump" }
+		end
+
+		key_map["trackpad_button_" .. hand_name] = { "run" }
+
 		-- Shouldn't break warp, as dpad_ isn't used outside the weapon hand anymore
 		-- Still do it here, just to be safe
 		key_map["dpad_" .. hand_name] = { "move" }
 
-		-- Don't use 'warp' for running/jumping, as it seems somehow tied
-		-- to the Rift's 'Y' button.
-		key_map["trackpad_button_" .. hand_name] = { "jump" }
 	end
 end
 

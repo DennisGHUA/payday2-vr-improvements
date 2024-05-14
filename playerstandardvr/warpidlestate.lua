@@ -193,52 +193,62 @@ function WarpIdleState:update(t)
 	custom_move_direction(state, apply_smoothing(controller:get_input_axis("move")), forwards, fwd_vert, rotation)
 
 	-- Sprinting
-	local sprit_pressed = controller:get_input_bool("jump")
+	local sprint_pressed = controller:get_input_bool("run")
+	local jump_pressed = controller:get_input_bool("jump")
+
+	-- Disable jumping again if not pressed in the center of primary trackpad
+	local axis = controller:get_input_axis("touchpad_primary")
+	if jump_pressed and math.abs(axis.x) > 0.2 or jump_pressed and math.abs(axis.y) > 0.2 then
+		jump_pressed = false
+	end
 
 	-- For whatever reason, at least on the Rift, pressing the 'Y' button
 	-- also seems to trigger the warp input, even if it has been unbound.
-	-- TODO FIXME this doesn't always seem to work.
+	-- TODO FIXME this doesn't always seem to work. -- Variable name had a typo fixed in 0.7.0 sprit -> sprint and get trigger when ducking after a fall
 	if VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE and controller:get_input_bool("duck") then
+	--if controller:get_input_bool("duck") then
 		sprint_pressed = false
+		jump_pressed = false
 	end
 
-	if sprit_pressed and managers.player._messiah_charges > 0 and
+	if jump_pressed and managers.player._messiah_charges > 0 and
 			managers.player._current_state == "bleed_out" and managers.player._coroutine_mgr:is_running("get_up_messiah") then
-		managers.player:use_messiah_charge()
-		managers.player:send_message(Message.RevivePlayer, nil, nil)
-
+				managers.player:use_messiah_charge()
+				managers.player:send_message(Message.RevivePlayer, nil, nil)
 		return
 	end
 
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
 		-- FIXME this allows bunny-hopping - Should we disable it or keep it?
-		if sprit_pressed then
+		if jump_pressed then
 			ps_trigger_jump(state, t)
 		end
 
 		return
 	end
 
+	-- Changed this to allow jumping during sprinting just like on flat gameplay
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD_OUTER then
-		if sprit_pressed and not state._stick_move then
+		--if sprint_pressed and not state._stick_move then
+		if jump_pressed then
 			ps_trigger_jump(state, t)
 		end
 
-		state._running_wanted = state._stick_move and sprit_pressed
+		state._running_wanted = state._stick_move and sprint_pressed
 		state.__stop_running = not state._running_wanted
 
 		return
 	end
 
 	-- If the button is being held down, start the hold timer
-	if sprit_pressed and not self._click_time_start then
+	if jump_pressed and not self._click_time_start then
 		self._click_time_start = t
 	end
 
 	-- the clock is running, and more than _data.sprint_time seconds have elapsed
 	local held_down = self._click_time_start and (t - self._click_time_start) > VRPlusMod._data.sprint_time
 
-	if not sprit_pressed then
+	if not jump_pressed then
 		if self._click_time_start and not held_down then
 			ps_trigger_jump(state, t)
 			self._click_time_start = nil
