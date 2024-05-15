@@ -64,6 +64,7 @@
 	"vrplus_generic": "Generic",
 	"vrplus_rift": "Oculus Rift",
 	"vrplus_vive": "HTC Vive",
+	"vrplus_index": "Valve Index",
 	"vrplus_cancel": "Cancel",
 
 	"vrplus_menu_comfort": "Comfort Options",
