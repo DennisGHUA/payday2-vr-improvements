@@ -60,7 +60,7 @@
 	"vrplus_wrong_mod_name": "Bad mod filename",
 	"vrplus_wrong_mod_name_message": "The mod folder for the VR Improvements mod is incorrectly named - it should be called exactly 'vrplus'. While named incorrectly, any attempt to update this mod will leave the game hanging on 'Verifying'. Please go into your mods folder and rename this mod to 'vrplus'.",
 	"vrplus_ask_hmd_type": "Select Control Scheme",
-	"vrplus_ask_hmd_type_message": "This mod contains default settings that are different depending on which VR system you have. Either you manually reset your options, or the mod was unable to determine what type of HMD you have (this may be caused by an outdated hook DLL).\nPlease select your control scheme.",
+	"vrplus_ask_hmd_type_message": "Please select the control scheme that most closely resembles your device.",
 	"vrplus_generic": "Generic",
 	"vrplus_rift": "Oculus Rift",
 	"vrplus_vive": "HTC Vive",
