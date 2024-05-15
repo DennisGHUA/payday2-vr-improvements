@@ -196,6 +196,11 @@ function WarpIdleState:update(t)
 	local sprint_pressed = controller:get_input_bool("run")
 	local jump_pressed = controller:get_input_bool("jump")
 
+	-- Disable jump button if locomotion is not selected
+	if not VRPlusMod._data.movement_locomotion then
+		jump_pressed = false
+	end
+
 	-- Disable jumping again if not pressed in the center of primary trackpad
 	local axis = controller:get_input_axis("touchpad_primary")
 	if jump_pressed and math.abs(axis.x) > 0.2 or jump_pressed and math.abs(axis.y) > 0.2 then

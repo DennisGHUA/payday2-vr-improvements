@@ -20,7 +20,7 @@ function ControlsManager:setup()
 	local state_buttons = self:_setup_state_buttons(0, main_area_height)
 
 	-- Setup the control buttons
-	local state_buttons = self:_setup_control_buttons(state_buttons:w() + padding, main_area_height)
+	state_buttons = self:_setup_control_buttons(state_buttons:w() + padding, main_area_height)
 
 	-- Select the first item
 	self:clbk_open_panel(Data.states[1])

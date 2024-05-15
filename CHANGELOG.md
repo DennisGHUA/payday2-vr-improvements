@@ -1,18 +1,27 @@
 # Changelog
 
-## V0.7.0 -- Auto updates added
+## V0.7.0 *Auto updates added*
 **_Starting from this version you no longer need to manually update the mod_**
-- Added auto-updates through the main menu update screen. From version 0.7.0, manual updates are no longer needed.
-- Renamed belt radio to microphone to make it more clear what it is used for.
-- Turned off the microphone icon by default, since voice chat has been disabled since update 239 in the game.
-- Moved the jump button to the center of the trackpad on the dominant hand, instead of having it on the same hand used for locomotion.
-- Made the jump button mappable in the control manager.
-- Separated jump logic from sprint logic; you should now be able to sprint and jump at the same time.
-- Removed the setting 'Hold-click to sprint, click inside the deadzone to jump', now only the 'Hold-click to sprint' variation is available. The jump button can be remapped or removed in the control manager instead.
-- Added experimental Valve Index support. Needs to be tested by Valve Index users.
-- Updated various strings for more clarification.
-- Allow the VR fade to be disabled by setting VR fade to 0.
-- Disabled VR fade by default as it was being triggered too easily, especially when opening doors.
+
+**Major Update: Auto-Updates Enabled**
+- **Automatic Updates:** Starting with this version, the mod will update automatically through the main menu update screen. Manual updates are no longer required.
+
+**Minor Improvements and Adjustments:**
+- **Renamed Belt Radio:** The belt radio has been renamed to "microphone" to better reflect its functionality.
+- **Microphone Icon Default State:** The microphone icon is now turned off by default since voice chat has been disabled since update 239.
+
+**Control Enhancements:**
+- **Jump Button Placement:** The jump button has been relocated to the center of the trackpad on the dominant hand when locomotion is enabled. This change separates it from the locomotion controls.
+- **Separated Jump and Sprint Logic:** You can now sprint with one controller and jump with the other simultaneously.
+- **Simplified Sprint Settings:** The option "Hold-click to sprint, click inside the deadzone to jump" has been removed. Only the "Hold-click to sprint" variation is available now.
+
+**New Head-mounted display (HMD) support:**
+- **Experimental Valve Index Support:** Added initial support for the Valve Index. Users with Valve Index are encouraged to test and provide feedback.
+
+**Miscellaneous:**
+- **String Updates:** Various text strings have been updated for improved clarity.
+- **VR Fade Customization:** VR fade can now be disabled by setting the VR fade value to 0.
+- **Default VR Fade Setting:** VR fade is now disabled by default to prevent it from being triggered too easily, especially when opening doors.
 
 ## V0.6.8
 - Resolved issue causing a permanent red screen effect after entering custody.
