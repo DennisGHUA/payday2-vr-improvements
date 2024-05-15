@@ -44,7 +44,7 @@
 	"vrplus_sprint_mode_hold_outer": "REMOVED Hold-click to sprint, click inside the deadzone to jump",
 	"vrplus_teleport_on_release": "Teleport on untouch",
 	"vrplus_teleport_on_release_desc": "Teleport when the player un-touches their thumbstick/trackpad, rather than clicking it",
-	"vrplus_controls_manager": "Controls Manager / Rebind controllers (does not save yet!)",
+	"vrplus_controls_manager": "Controls Manager (does not save yet!)",
 	"vrplus_controls_manager_remove": "Remove binding",
 	"vrplus_controls_manager_remove_desc": "Do you want to remove this binding?",
 	"vrplus_controls_manager_reset": "Remove customization",

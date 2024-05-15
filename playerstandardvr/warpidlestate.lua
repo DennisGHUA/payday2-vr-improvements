@@ -251,6 +251,7 @@ function WarpIdleState:update(t)
 	--	return
 	--end
 
+
 	-- If the button is being held down, start the hold timer
 	if sprint_pressed and not self._click_time_start then
 		self._click_time_start = t
@@ -261,12 +262,13 @@ function WarpIdleState:update(t)
 
 	if not sprint_pressed then
 		if self._click_time_start and not held_down then
-			ps_trigger_jump(state, t)
+			--ps_trigger_jump(state, t)
 			self._click_time_start = nil
 		end
 
 		self._click_time_start = nil
 	end
+
 
 	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_STICKY then
 		if held_down then
