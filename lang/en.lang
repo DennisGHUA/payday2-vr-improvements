@@ -6,8 +6,8 @@
 
 	"vrplus_menu_camera": "Camera Options",
 	"vrplus_menu_camera_desc": "Configure camera behaviour",
-	"vrplus_cam_fade_distance": "Fade distance",
-	"vrplus_cam_fade_distance_desc": "The distance from an obsticle at which the view starts to fade to black",
+	"vrplus_cam_fade_distance": "Fade distance (0 to disable)",
+	"vrplus_cam_fade_distance_desc": "The distance from an obstacle at which the view begins to fade to black (set to 0 to disable)",
 	"vrplus_cam_reset_percent": "Camera reset percentage",
 	"vrplus_cam_reset_percent_desc": "The percentage that the screen has faded to black before the user will be teleported out of the wall",
 	"vrplus_cam_reset_timer": "Camera reset timer",

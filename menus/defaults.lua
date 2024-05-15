@@ -15,7 +15,7 @@ local default_data = {
 	teleport_on_release = false,
 
 	-- Camera fading parameters
-	cam_fade_distance = 2,
+	cam_fade_distance = 0,
 	cam_reset_percent = 95,
 	cam_reset_timer = 0.25,
 

@@ -107,7 +107,7 @@ Default: Disabled
 ### Sticky Sprinting
 When this is enabled, you only need to hold down on your trackpad/thumbstick to start running, then you can let go. When this is disabled, you have to hold your thumbstick down to continue sprinting.
 
-Note that as of v0.1.9.0, jumping is broken when this is disabled - see #30.
+Note that as of v0.1.9.0, jumping is broken when this is disabled - see #30. Should now be fixed in v0.7.0
 
 Default: Enabled
 

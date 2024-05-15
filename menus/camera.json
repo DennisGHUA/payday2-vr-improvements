@@ -13,7 +13,7 @@
 			"callback": "vrplus_cam_fade_distance",
 			"value": "cam_fade_distance",
 			"max": 13,
-			"min": 1,
+			"min": 0,
 			"step": 1,
 			"priority": 99
 		},
