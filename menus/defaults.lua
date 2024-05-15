@@ -7,13 +7,12 @@
 local default_data = {
 	deadzone = 10,
 	sprint_time = 0.25,
-	turning_mode = VRPlusMod.C.TURNING_OFF,
+	turning_mode = VRPlusMod.C.TURNING_SNAP,
 	sprint_mode = VRPlusMod.C.SPRINT_STICKY,
 	movement_controller_direction = true,
 	movement_locomotion = true,
 	movement_smoothing = true,
 	teleport_on_release = false,
-	turning_mode = VRPlusMod.C.TURNING_SNAP,
 
 	-- Camera fading parameters
 	cam_fade_distance = 0,
