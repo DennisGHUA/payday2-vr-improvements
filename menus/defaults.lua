@@ -13,6 +13,7 @@ local default_data = {
 	movement_locomotion = true,
 	movement_smoothing = true,
 	teleport_on_release = false,
+	turning_mode = VRPlusMod.C.TURNING_SNAP,
 
 	-- Camera fading parameters
 	cam_fade_distance = 0,
@@ -49,12 +50,10 @@ local default_data = {
 }
 
 local defaults_rift = {
-	turning_mode = VRPlusMod.C.TURNING_SNAP,
 	nil
 }
 
 local defaults_index = {
-	turning_mode = VRPlusMod.C.TURNING_SNAP,
 	nil
 }
 
