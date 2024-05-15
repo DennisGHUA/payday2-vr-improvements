@@ -218,37 +218,43 @@ function WarpIdleState:update(t)
 		return
 	end
 
-	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
+	--[[if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
 		-- FIXME this allows bunny-hopping - Should we disable it or keep it?
 		if jump_pressed then
 			ps_trigger_jump(state, t)
 		end
 
 		return
-	end
+	end]]--
+
+
 
 	-- Changed this to allow jumping during sprinting just like on flat gameplay
-	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD_OUTER then
-		--if sprint_pressed and not state._stick_move then
-		if jump_pressed then
-			ps_trigger_jump(state, t)
-		end
+	--if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD_OUTER then
+	--
+	--	state._running_wanted = state._stick_move and sprint_pressed
+	--	state.__stop_running = not state._running_wanted
+	--
+	--end
 
-		state._running_wanted = state._stick_move and sprint_pressed
-		state.__stop_running = not state._running_wanted
-
-		return
+	--if sprint_pressed and not state._stick_move then
+	if jump_pressed then
+		ps_trigger_jump(state, t)
 	end
 
+	--if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD_OUTER then
+	--	return
+	--end
+
 	-- If the button is being held down, start the hold timer
-	if jump_pressed and not self._click_time_start then
+	if sprint_pressed and not self._click_time_start then
 		self._click_time_start = t
 	end
 
 	-- the clock is running, and more than _data.sprint_time seconds have elapsed
 	local held_down = self._click_time_start and (t - self._click_time_start) > VRPlusMod._data.sprint_time
 
-	if not jump_pressed then
+	if not sprint_pressed then
 		if self._click_time_start and not held_down then
 			ps_trigger_jump(state, t)
 			self._click_time_start = nil

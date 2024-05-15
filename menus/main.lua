@@ -17,7 +17,7 @@ VRPlusMod.C = {
 	SPRINT_OFF = 1,
 	SPRINT_STICKY = 2,
 	SPRINT_HOLD = 3,
-	SPRINT_HOLD_OUTER = 4,
+	SPRINT_HOLD_OUTER = 3, -- Disabled was 4 will be replaced with SPRINT_HOLD, jump logic is now separated
 
 	INTERACT_GRIP = 1,
 	INTERACT_BOTH = 2,

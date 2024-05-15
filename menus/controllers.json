@@ -38,8 +38,7 @@
 			"items": [
 				"vrplus_sprint_mode_off",
 				"vrplus_sprint_mode_sticky",
-				"vrplus_sprint_mode_hold",
-				"vrplus_sprint_mode_hold_outer"
+				"vrplus_sprint_mode_hold"
 			],
 			"priority": 98
 		},
