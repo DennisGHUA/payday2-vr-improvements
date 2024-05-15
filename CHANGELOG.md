@@ -4,13 +4,13 @@
 **_Starting from this version you no longer need to manually update the mod_**
 - Turned off the voice chat icon by default, since voice chat has been disabled since update 239 in the game.
 - Moved the jump button to the center of the trackpad on the dominant hand, instead of having it on the same hand used for locomotion.
+- Made the jump button mappable in the control manager.
 - Separated jump logic from sprint logic; you should now be able to sprint and jump at the same time.
 - Renamed belt radio to microphone to make it more clear what it is used for.
 - Added experimental Valve Index support. Needs to be tested by Valve Index users.
 - Removed mappable 'B' button from control manager while using the HTC Vive, since the Vive does not have that button.
 - Allow the VR fade to be disabled by setting VR fade to 0.
 - Disabled VR fade by default as it was being triggered too easily, especially when opening doors.
-- Made the jump button mappable in the control manager.
 - Added auto-updates through the main menu update screen. From version 0.7.0, manual updates are no longer needed.
 
 ## V0.6.8
