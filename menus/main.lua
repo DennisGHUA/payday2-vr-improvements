@@ -134,6 +134,10 @@ function VRPlusMod:AskHMDType(cancellable)
 			callback = function() self:_ResetDefaultControls("Vive") end
 		},
 		{
+			text = text("vrplus_index"),
+			callback = function() self:_ResetDefaultControls("Index") end
+		},
+		{
 			text = text("vrplus_generic"),
 			callback = function() self:_ResetDefaultControls("generic") end
 		}

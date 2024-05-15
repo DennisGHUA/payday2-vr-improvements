@@ -16,12 +16,16 @@ local control_names = {
 	menu = {
 		Rift_left = "Y Button (upper)",
 		Rift_right = "B Button (upper)",
+		Index_left = "B Button (upper?)",
+		Index_right = "A Button (lower?)",
 		generic = "Menu Button",
 	},
 	a = {
 		Rift_left = "X Button (lower)",
 		Rift_right = "A Button (lower)",
-		Vive = "'B' button (not present)", -- TODO make this disappear on Vives?
+		Index_left = "B Button (upper?)",
+		Index_right = "A Button (lower?)",
+		--Vive = "'B' button (not present)", -- TODO make this disappear on Vives?
 		generic = "B button",
 	},
 	trigger = {
@@ -32,31 +36,37 @@ local control_names = {
 	},
 	trackpad_button = {
 		Rift = "Thumbstick Button",
+		Index = "Thumbstick Button?",
 		Vive = "Touchpad Button",
 		generic = "DPad Button",
 	},
 	dpad = {
 		Rift = "Thumbstick Analog",
+		Index = "Thumbstick Analog?",
 		Vive = "Touchpad Analog",
 		generic = "DPad Analog",
 	},
 	d_up = {
 		Rift = "Thumbstick Up",
+		Index = "Thumbstick Up",
 		Vive = "Touchpad Up",
 		generic = "DPad Up",
 	},
 	d_down = {
 		Rift = "Thumbstick Down",
+		Index = "Thumbstick Down",
 		Vive = "Touchpad Down",
 		generic = "DPad Down",
 	},
 	d_left = {
 		Rift = "Thumbstick Left",
+		Index = "Thumbstick Left",
 		Vive = "Touchpad Left",
 		generic = "DPad Left",
 	},
 	d_right = {
 		Rift = "Thumbstick Right",
+		Index = "Thumbstick Right",
 		Vive = "Touchpad Right",
 		generic = "DPad Right",
 	},

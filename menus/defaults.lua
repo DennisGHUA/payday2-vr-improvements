@@ -53,6 +53,11 @@ local defaults_rift = {
 	nil
 }
 
+local defaults_index = {
+	turning_mode = VRPlusMod.C.TURNING_SNAP,
+	nil
+}
+
 local defaults_vive = {
 	sprint_time = 0.15,
 
@@ -83,6 +88,7 @@ function VRPlusMod:_get_defaults(hmd_type)
 	if not hmd_type then
 		hmd_type = ({
 			["Oculus"] = "Rift",
+			["Index"] = "Index",
 			["HTC"] = "Vive"
 		})[brand]
 	end
@@ -96,6 +102,7 @@ function VRPlusMod:_get_defaults(hmd_type)
 	local hmd_defaults = ({
 		["generic"] = nil,
 		["Rift"] = defaults_rift,
+		["Index"] = defaults_index,
 		["Vive"] = defaults_vive
 	})[usable_hmd_type]
 
