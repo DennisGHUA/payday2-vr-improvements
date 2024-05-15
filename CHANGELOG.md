@@ -20,7 +20,7 @@
 
 **Miscellaneous:**
 - **String Updates:** Various text strings have been updated for improved clarity.
-- **VR Fade Customization:** VR fade can now be disabled by setting the VR fade value to 0.
+- **VR Fade Customization:** VR fade can now be lowered all the way down to 0.
 - **Default VR Fade Setting:** VR fade is now disabled by default to prevent it from being triggered too easily, especially when opening doors.
 
 ## V0.6.8
