@@ -16,16 +16,16 @@ local control_names = {
 	menu = {
 		Rift_left = "Y Button (upper)",
 		Rift_right = "B Button (upper)",
-		Index_left = "B Button (upper?)",
-		Index_right = "A Button (lower?)",
+		Index_left = "B Button? (Left)",
+		Index_right = "B Button? (Right)",
 		generic = "Menu Button",
 	},
 	a = {
 		Rift_left = "X Button (lower)",
 		Rift_right = "A Button (lower)",
-		Index_left = "B Button (upper?)",
-		Index_right = "A Button (lower?)",
-		--Vive = "'B' button (not present)", -- TODO make this disappear on Vives?
+		Index_left = "A Button? (Left)",
+		Index_right = "A Button? (Right)",
+		Vive = "'B' button (not present)", -- TODO make this disappear on Vives?
 		generic = "B button",
 	},
 	trigger = {

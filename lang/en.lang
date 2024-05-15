@@ -1,7 +1,7 @@
 {
 	"vrplus_menu_main": "VR Improvements / VRPlus",
 	"vrplus_menu_main_desc": "Settings for the VR Improvements Mod / VRPlus",
-	"vrplus_reset_options": "Reset Options",
+	"vrplus_reset_options": "Change VR headset / Reset Options",
 	"vrplus_reset_options_desc": "Reset options for this mod back to the default values",
 
 	"vrplus_menu_camera": "Camera Options",
@@ -41,7 +41,7 @@
 	"vrplus_sprint_mode_off": "Disable Sprinting",
 	"vrplus_sprint_mode_sticky": "Long-click to toggle sprinting",
 	"vrplus_sprint_mode_hold": "Hold-click to sprint",
-	"vrplus_sprint_mode_hold_outer": "Hold-click to sprint, click inside the deadzone to jump",
+	"vrplus_sprint_mode_hold_outer": "REMOVED Hold-click to sprint, click inside the deadzone to jump",
 	"vrplus_teleport_on_release": "Teleport on untouch",
 	"vrplus_teleport_on_release_desc": "Teleport when the player un-touches their thumbstick/trackpad, rather than clicking it",
 	"vrplus_controls_manager": "Controls Manager",

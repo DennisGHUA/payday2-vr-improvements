@@ -226,7 +226,7 @@ function BindButton:_setup_buttons()
 			y = y, -- + (h + padding) * (i - 1)
 			w = h,
 			h = h,
-			text = data.hand and (data.hand == 1 and "R" or "L") or "-",
+			text = data.hand and (data.hand == 1 and "R" or "L") or "B",
 			center_text = true,
 			callback = callback(self, self, "clbk_change_handiness", id),
 			color = bttn_colour,
