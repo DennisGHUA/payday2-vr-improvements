@@ -5,6 +5,8 @@
 - Turned off the voice chat icon by default, since voice chat has been disabled since update 239 in the game.
 - Moved the jump button to the center of the trackpad on the dominant hand, instead of having it on the same hand used for locomotion.
 - Separated jump logic from sprint logic; you should now be able to sprint and jump at the same time.
+- Renamed belt radio to microphone to make it more clear what it is used for.
+- Started adding support for the Valve Index
 - Added auto-updates through the main menu update screen. From version 0.7.0, manual updates are no longer needed.
 
 ## V0.6.8
