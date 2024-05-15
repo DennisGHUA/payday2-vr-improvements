@@ -107,7 +107,7 @@ local actions = {
 	warp_target = {},
 	weapon_firemode = {},
 	weapon_gadget = {},
-	--jump = {}, -- Add later
+	jump = {}, -- Add later
 }
 
 function get_human_control_name(id)
