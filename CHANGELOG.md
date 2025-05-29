@@ -1,27 +1,16 @@
 # Changelog
 
-## V0.7.0 *Auto updates added*
-**_Starting from this version you no longer need to manually update the mod_**
-
-**Major Update: Auto-Updates Enabled**
-- **Automatic Updates:** Starting with this version, the mod will update automatically through the main menu update screen. Manual updates are no longer required.
-
-**Minor Improvements and Adjustments:**
-- **Renamed Belt Radio:** The belt radio has been renamed to "microphone" to better reflect its functionality.
-- **Microphone Icon Default State:** The microphone icon is now turned off by default since voice chat has been disabled since update 239.
-
-**Control Enhancements:**
-- **Jump Button Placement:** The jump button has been relocated to the center of the trackpad on the dominant hand when locomotion is enabled. This change separates it from the locomotion controls.
-- **Separated Jump and Sprint Logic:** You can now sprint with one controller and jump with the other simultaneously.
-- **Simplified Sprint Settings:** The option "Hold-click to sprint, click inside the deadzone to jump" has been removed. Only the "Hold-click to sprint" variation is available now.
-
-**New Head-mounted display (HMD) support:**
-- **Experimental Valve Index Support:** Added initial support for the Valve Index. Users with Valve Index are encouraged to test and provide feedback.
-
-**Miscellaneous:**
-- **String Updates:** Various text strings have been updated for improved clarity.
-- **VR Fade Customization:** VR fade can now be lowered all the way down to 0.
-- **Default VR Fade Setting:** VR fade is now disabled by default to prevent it from being triggered too easily, especially when opening doors.
+## V0.7.0
+- Added automatic updates starting from this version you no longer need to manually update the mod
+- Added experimental Valve Index support
+- Changed belt radio to "microphone" to better reflect its functionality
+- Changed microphone icon to be turned off by default since voice chat has been disabled since update 239
+- Changed jump button location to the center of the trackpad on the dominant hand when locomotion is enabled
+- Changed jump and sprint logic so you can now sprint with one controller and jump with the other simultaneously
+- Simplified sprint settings by removing "Hold-click to sprint, click inside the deadzone to jump" option
+- Changed VR fade so it can now be lowered all the way down to 0
+- Changed VR fade to be set to 0 by default to prevent it from being triggered too easily
+- Updated various text strings for improved clarity
 
 ## V0.6.8
 - Resolved issue causing a permanent red screen effect after entering custody.
