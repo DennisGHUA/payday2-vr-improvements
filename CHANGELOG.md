@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.7.1
+- Fixed an issue where player movement speed would remain slow after uncrouching in VR
+- Fixed an issue where player movement speed would remain slow after taking fall damage
+
 ## V0.7.0
 - Added automatic updates starting from this version you no longer need to manually update the mod
 - Added experimental Valve Index support
