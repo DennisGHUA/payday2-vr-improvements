@@ -23,13 +23,13 @@ end
 
 function PlayerStandard:_check_action_run(t, input)
 	-- Don't read input for _running_wanted - this is updated on the hand controller.
-	
+
 	-- Don't do anything if we're not moving. Saves on crashes, eg when downed.
 	if not self._move_dir then
 		self._running_wanted = false
 		self.__stop_running = false
 	end
-	
+
 	if self._running and self.__stop_running then
 		self:_end_action_running(t)
 	elseif not self._running and self._running_wanted then
@@ -133,7 +133,7 @@ function PlayerStandardVR:update(t, dt)
 	do_rotation(self, t, dt) -- Handle smooth/snap rotation
 
 	old_update(self, t, dt)
-	
+
 	-- Reset all movement-related stuff so nothing blows up
 	-- if the idle controller disappears (both hands are busy)
 	-- Very important we do this after everything else is done updating.
@@ -141,6 +141,7 @@ function PlayerStandardVR:update(t, dt)
 		self._move_dir = nil
 		self._normal_move_dir = nil
 	end
+	
 end
 
 -- Prevent _calculate_standard_variables from changing our velocity. Fixes #51
@@ -165,7 +166,7 @@ local function inject_movement(self, t, dt, pos_new)
 	local weapon_tweak_data = weapon_id and tweak_data.weapon[weapon_id]
 	self._target_headbob = self._target_headbob or 0
 	self._headbob = self._headbob or 0
-	
+
 	mvector3.set(mvec_prev_pos, pos_new)
 
 	if self._state_data.on_zipline and self._state_data.zipline_data.position then
@@ -297,7 +298,7 @@ function PlayerStandardVR:_update_movement(t, dt)
 		mvector3.rotate_with(hmd_delta, self._camera_base_rot)
 		mvector3.add(pos_new, hmd_delta)
 	end
-	
+
 	-- only start tracking velocity from here - the HMD movement doesn't count.
 	mvector3.set(init_pos_ghost, pos_new)
 
@@ -370,6 +371,8 @@ end)
 
 Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", function(self, t, input)
 	local mode = VRPlusMod._data.comfort.crouching
+	local was_ducking = self.__bttn_ducking
+
 	if mode == VRPlusMod.C.CROUCH_TOGGLE then
 		if input.btn_duck_press then
 			self.__bttn_ducking = not self.__bttn_ducking
@@ -382,6 +385,19 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 		end
 	else
 		self.__bttn_ducking = false
+	end
+
+	-- Update the game's internal ducking state to match our custom state
+	if was_ducking ~= self.__bttn_ducking then
+		if self.__bttn_ducking then
+			if not self._state_data.ducking then
+				self:_start_action_ducking(t)
+			end
+		else
+			if self._state_data.ducking then
+				self:_end_action_ducking(t)
+			end
+		end
 	end
 end)
 
