@@ -141,7 +141,26 @@ function PlayerStandardVR:update(t, dt)
 		self._move_dir = nil
 		self._normal_move_dir = nil
 	end
-	
+
+	-- Fix for movement speed not resetting after being downed or taking fall damage
+	-- Check if we're actually on the ground but the game thinks we're in the air
+	if self._state_data.in_air and self._unit:mover() and self._unit:mover():standing() then
+		self._state_data.in_air = false
+	end
+
+	-- Also reset any slowdown that might have been applied
+	if self._slowdown_mul then
+		self._slowdown_mul = nil
+		self._slowdown_run_prevent = nil
+	end
+
+	-- Fix for ducking state not being reset after fall damage
+	-- If the game thinks we're ducking but our custom ducking state says we're not,
+	-- end the ducking action to ensure the states are in sync
+	if self._state_data.ducking and not self.__bttn_ducking then
+		self:_end_action_ducking(t)
+	end
+
 end
 
 -- Prevent _calculate_standard_variables from changing our velocity. Fixes #51
