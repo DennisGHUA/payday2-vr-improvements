@@ -239,6 +239,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"cam_redout_enable",
 		"movement_smoothing",
 		"teleport_on_release",
+		"rotation_requires_press",
 	})
 
 	add_inputs("_G", true, {

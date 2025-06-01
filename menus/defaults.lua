@@ -13,6 +13,7 @@ local default_data = {
 	movement_locomotion = true,
 	movement_smoothing = true,
 	teleport_on_release = false,
+	rotation_requires_press = false,
 
 	-- Camera fading parameters
 	cam_fade_distance = 0,
@@ -58,6 +59,7 @@ local defaults_index = {
 
 local defaults_vive = {
 	sprint_time = 0.15,
+	rotation_requires_press = true,
 
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,

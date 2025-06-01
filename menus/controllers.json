@@ -94,6 +94,15 @@
 			"priority": 93
 		},
 		{
+			"type": "toggle",
+			"id": "vrplus_rotation_requires_press",
+			"title": "vrplus_rotation_requires_press",
+			"description": "vrplus_rotation_requires_press_desc",
+			"callback": "vrplus_rotation_requires_press",
+			"value": "rotation_requires_press",
+			"priority": 92
+		},
+		{
 			"type": "button",
 			"id": "vrplus_controls_manager",
 			"title": "vrplus_controls_manager",

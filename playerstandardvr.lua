@@ -75,6 +75,18 @@ local function do_rotation(self, t, dt)
 	local rot = VRManager:hmd_rotation():yaw() + self._camera_base_rot:yaw()
 
 	if not axis then return end
+	
+	-- Check if we need to require a button press for rotation
+	local requires_press = VRPlusMod._data.rotation_requires_press
+	local button_pressed = not requires_press or 
+		controller:get_input_bool("d_left_r") or 
+		controller:get_input_bool("d_right_r") or 
+		controller:get_input_bool("d_left_l") or 
+		controller:get_input_bool("d_right_l")
+		
+	if not button_pressed then
+		return
+	end
 
 	if mode == VRPlusMod.C.TURNING_SMOOTH then
 		local deadzone = 0.75 -- TODO add option

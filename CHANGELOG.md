@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.7.2
+- Added option to require pressing (not just touching) the touchpad edges for rotation
+- Enabled this option by default for HTC Vive users
+
 ## V0.7.1
 - Fixed an issue where player movement speed would remain slow after uncrouching in VR
 - Fixed an issue where player movement speed would remain slow after taking fall damage
