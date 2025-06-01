@@ -245,13 +245,11 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("_G", true, {
 		"movement_locomotion",
 	}, reload_hands)
-
 	-- Sliders and multiselectors
 	add_inputs("_G", false, {
 		"deadzone",
 		"sprint_time",
 		"rotation_delay",
-		"rotation_amount",
 		"turning_mode",
 
 		"cam_fade_distance",
@@ -263,6 +261,18 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 		"sprint_mode"
 	})
+	
+	-- Special case for rotation_amount to enforce step of 5
+	MenuCallbackHandler["vrplus_rotation_amount"] = function(self, item)
+		local options = VRPlusMod:_GetOptionTable("_G")
+		-- Round to nearest step of 5
+		local value = item:value()
+		local rounded_value = math.floor((value + 2.5) / 5) * 5
+		options["rotation_amount"] = rounded_value
+		-- Update the UI to show the rounded value
+		item:set_value(rounded_value)
+		VRPlusMod:Save()
+	end
 
 	-- Comfort options
 	add_inputs("comfort", true, {

@@ -116,11 +116,12 @@ local function do_rotation(self, t, dt)
 			local delta = dt * 360 / 2 * -amt
 			self:set_base_rotation(Rotation(rot + delta, 0, 0))
 		end
-	else
-		-- Snap turning
+	else		-- Snap turning
 		local turn, nonturn = 0.75, 0.5
 		local delay = VRPlusMod._data.rotation_delay or 0.50 -- Delay before turning from settings
-		local rotation_amt = VRPlusMod._data.rotation_amount or 45 -- Rotation in degrees from settings
+		-- Get rotation amount and enforce step of 5 degrees
+		local raw_amt = VRPlusMod._data.rotation_amount or 45
+		local rotation_amt = math.floor((raw_amt + 2.5) / 5) * 5 -- Round to nearest increment of 5
 
 		-- Apply cooldown
 		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
