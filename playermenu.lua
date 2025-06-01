@@ -2,6 +2,7 @@
 	HUDManagerVR
 
 	Make the laser pointer in the menu have a configurable colour, with a disco mode
+	Also implement rotation in the main menu
 --]]
 
 -- From https://gist.github.com/GigsD4X/8513963
@@ -52,7 +53,6 @@ Hooks:PreHook(PlayerMenu, "update", "VRPlusUpdateLaserColour", function(self, t,
 		hue = (last + delta) % 1
 		self.__laser_last_hue = hue
 	end
-
 	-- don't constantly update if we don't need to
 	self.__laser_is_updated = not VRPlusMod._data.tweaks.laser_disco
 
@@ -60,4 +60,72 @@ Hooks:PreHook(PlayerMenu, "update", "VRPlusUpdateLaserColour", function(self, t,
 	local colour = Color(0.15, r, g, b)
 	self._brush_laser:set_color(colour)
 	self._brush_laser_dot:set_color(colour)
+	
+	-- Apply rotation in main menu if enabled
+	if VRPlusMod._data.turning_mode ~= VRPlusMod.C.TURNING_OFF then
+		self:handle_menu_rotation(t, dt)
+	end
 end)
+
+-- Add rotation handling for the main menu
+function PlayerMenu:handle_menu_rotation(t, dt)
+	local mode = VRPlusMod._data.turning_mode
+	local controller = managers.controller:get_vr_controller()
+	if not controller then return end
+	
+	local axis = controller:get_input_axis("touchpad_primary")
+	local baseRot = self._camera_base_rot or Rotation()
+	local rot = VRManager:hmd_rotation():yaw() + baseRot:yaw()
+
+	if not axis then return end
+	
+	-- Check if we need to require a button press for rotation
+	local requires_press = VRPlusMod._data.rotation_requires_press
+	local button_pressed = not requires_press or 
+		controller:get_input_bool("d_left_r") or 
+		controller:get_input_bool("d_right_r") or 
+		controller:get_input_bool("d_left_l") or 
+		controller:get_input_bool("d_right_l")
+		
+	if not button_pressed then
+		return
+	end
+
+	if mode == VRPlusMod.C.TURNING_SMOOTH then
+		local deadzone = 0.75
+		if math.abs(axis.x) > deadzone then
+			-- Scale from nothing to 100% over the course of the active zone
+			local amt = (axis.x > 0) and (axis.x - deadzone) or (axis.x + deadzone)
+			amt = amt * 1/(1-deadzone)
+
+			-- One full revolution per second on maxed stick
+			local delta = dt * 360 / 2 * -amt
+			if managers.player and managers.player._menu_unit and alive(managers.player._menu_unit) then
+				local menu_unit = managers.player._menu_unit
+				if menu_unit.set_base_rotation then
+					menu_unit:set_base_rotation(Rotation(rot + delta, 0, 0))
+				end
+			end
+		end
+	else
+		-- Snap turning
+		local turn, nonturn = 0.75, 0.5
+		local delay = 0.15
+		local rotation_amt = 45
+		
+		-- Store the last rotation time in the player menu object
+		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
+
+		if math.abs(axis.x) > turn and self.__snap_rotate_timer < 0 then
+			self.__snap_rotate_timer = delay
+			local amt = ((axis.x > 0) and 1 or -1) * rotation_amt
+
+			if managers.player and managers.player._menu_unit and alive(managers.player._menu_unit) then
+				local menu_unit = managers.player._menu_unit
+				if menu_unit.set_base_rotation then
+					menu_unit:set_base_rotation(Rotation(rot - amt, 0, 0))
+				end
+			end
+		end
+	end
+end

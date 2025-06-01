@@ -120,6 +120,10 @@
 		{
 			"hook_id" : "lib/managers/menu/menucomponentmanager",
 			"script_path" : "menus/controls/ControlsManager.lua"
+		},
+		{
+			"hook_id" : "lib/input/handstate",
+			"script_path" : "meleerotation.lua"
 		}
 	]
 }

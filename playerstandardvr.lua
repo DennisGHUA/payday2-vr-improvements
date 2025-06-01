@@ -65,7 +65,7 @@ function PlayerStandardVR:init(unit)
 	self.__last_movement_xy = Vector3()
 end
 
--- TODO remove when basegame rotation is confirmed to work
+-- Make this function accessible for all player states
 local function do_rotation(self, t, dt)
 	local mode = VRPlusMod._data.turning_mode
 	if mode == VRPlusMod.C.TURNING_OFF then return end
@@ -139,6 +139,20 @@ function PlayerStandardVR:_check_vr_actions(t, dt)
 		self:_start_action_warp(t)
 	end
 end
+
+-- Make the do_rotation function available for use by other modules
+function PlayerStandardVR:do_melee_rotation(t, dt)
+	do_rotation(self, t, dt)
+end
+
+-- Add hook to expose the rotation functionality to other states
+Hooks:PostHook(PlayerStandardVR, "init", "VRPlusExposeRotation", function(self)
+	-- Make the do_rotation function accessible to the global table
+	if not PlayerStandardVR._rotation_exposed then
+		PlayerStandardVR._do_rotation_function = do_rotation
+		PlayerStandardVR._rotation_exposed = true
+	end
+end)
 
 local old_update = PlayerStandardVR.update
 function PlayerStandardVR:update(t, dt)
