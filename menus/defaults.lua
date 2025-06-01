@@ -14,7 +14,7 @@ local default_data = {
 	movement_smoothing = true,
 	teleport_on_release = false,
 	rotation_requires_press = false,
-	rotation_delay = 0.15,
+	rotation_delay = 0.50,
 	rotation_amount = 45,
 
 	-- Camera fading parameters

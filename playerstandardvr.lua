@@ -119,7 +119,7 @@ local function do_rotation(self, t, dt)
 	else
 		-- Snap turning
 		local turn, nonturn = 0.75, 0.5
-		local delay = VRPlusMod._data.rotation_delay or 0.15 -- Delay before turning from settings
+		local delay = VRPlusMod._data.rotation_delay or 0.50 -- Delay before turning from settings
 		local rotation_amt = VRPlusMod._data.rotation_amount or 45 -- Rotation in degrees from settings
 
 		-- Apply cooldown
