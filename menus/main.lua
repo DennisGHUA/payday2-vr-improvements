@@ -250,7 +250,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("_G", false, {
 		"deadzone",
 		"sprint_time",
-		"sprint_time",
+		"rotation_delay",
+		"rotation_amount",
 		"turning_mode",
 
 		"cam_fade_distance",

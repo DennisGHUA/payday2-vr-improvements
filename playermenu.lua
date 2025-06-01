@@ -110,8 +110,8 @@ function PlayerMenu:handle_menu_rotation(t, dt)
 	else
 		-- Snap turning
 		local turn, nonturn = 0.75, 0.5
-		local delay = 0.15
-		local rotation_amt = 45
+		local delay = VRPlusMod._data.rotation_delay or 0.15
+		local rotation_amt = VRPlusMod._data.rotation_amount or 45
 		
 		-- Store the last rotation time in the player menu object
 		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
