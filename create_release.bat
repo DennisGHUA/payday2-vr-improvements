@@ -8,6 +8,8 @@ SET "OUTPUT_SUBDIR=release"
 SET "TEMP_DIR=%OUTPUT_SUBDIR%\__vrplus_temp__"
 SET "EXCLUDE_DIRS=.git .idea .vscode PD2SRC release %TEMP_DIR%"
 SET "EXCLUDE_FILES=.gitignore create_release.bat" 
+SET "GITHUB_META_URL=https://raw.githubusercontent.com/DennisGHUA/payday2-vr-improvements/master/updates_meta.json"
+SET "TEMP_GITHUB_META=%OUTPUT_SUBDIR%\__vrplus_temp__github_meta.json"
 REM --- End Configuration ---
 
 REM Create output directory
@@ -23,12 +25,50 @@ REM Get version from mod.txt
 FOR /F "tokens=2 delims=:, " %%V IN ('findstr /C:"\"version\"" mod.txt') DO (
     SET VERSION=%%V
     SET VERSION=!VERSION:"=!
-    ECHO Version: !VERSION!
+    ECHO Local version from mod.txt: !VERSION!
 )
 
 IF "!VERSION!"=="" (
     ECHO No version found in mod.txt
     GOTO END_SCRIPT
+)
+
+REM Create temp directory for GitHub version check
+IF NOT EXIST "!TEMP_DIR!" MKDIR "!TEMP_DIR!" 2>nul
+IF ERRORLEVEL 1 (
+    ECHO Failed to create temp directory. Exiting.
+    GOTO END_SCRIPT
+)
+
+REM Download GitHub updates_meta.json to check version
+ECHO Checking GitHub version...
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
+    "Invoke-WebRequest -Uri '!GITHUB_META_URL!' -OutFile '!TEMP_GITHUB_META!'" 2>nul
+
+IF ERRORLEVEL 1 (
+    ECHO Warning: Failed to download GitHub version information.
+    ECHO Building with local version: !VERSION!
+) ELSE (
+    REM Extract GitHub version
+    FOR /F "tokens=2 delims=:, " %%G IN ('findstr /C:"\"version\"" "!TEMP_GITHUB_META!"') DO (
+        SET GITHUB_VERSION=%%G
+        SET GITHUB_VERSION=!GITHUB_VERSION:"=!
+        SET GITHUB_VERSION=!GITHUB_VERSION: =!
+        ECHO GitHub version: !GITHUB_VERSION!
+    )
+      IF "!GITHUB_VERSION!"=="" (
+        ECHO Warning: Could not find version in GitHub metadata.
+        ECHO Building with local version: !VERSION!
+    ) ELSE IF "!VERSION!" EQU "!GITHUB_VERSION!" (
+        ECHO ERROR: Version match detected!
+        ECHO Local version:  !VERSION!
+        ECHO GitHub version: !GITHUB_VERSION!
+        ECHO The version in mod.txt must be different than the one in GitHub updates_meta.json
+        ECHO Build failed.
+        GOTO CLEANUP_AND_EXIT
+    ) ELSE (
+        ECHO Version check passed: !VERSION! is different from GitHub version.
+    )
 )
 
 SET "ARCHIVE_NAME=vrplus_!VERSION!.zip"
@@ -91,6 +131,7 @@ IF ERRORLEVEL 1 (
 :CLEANUP_AND_EXIT
 ECHO Cleaning up...
 IF EXIST "!TEMP_DIR!" RMDIR /S /Q "!TEMP_DIR!" 2>nul
+IF EXIST "!TEMP_GITHUB_META!" DEL /F /Q "!TEMP_GITHUB_META!" 2>nul
 
 :END_SCRIPT
 ECHO ====== Done! ======
