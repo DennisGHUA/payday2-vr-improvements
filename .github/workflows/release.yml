@@ -1,0 +1,105 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:  # Only run when manually triggered
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for changelog generation
+          
+      - name: Get version from mod.txt
+        id: get_version
+        shell: powershell
+        run: |
+          $version = Select-String -Path mod.txt -Pattern '"version":\s*"([^"]+)"' | ForEach-Object { $_.Matches.Groups[1].Value }
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "ZIP_NAME=vrplus_$version.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "Found version: $version"
+      
+      - name: Run create_release.bat
+        shell: cmd
+        run: create_release.bat
+        
+      - name: Verify release zip was created
+        id: check_zip
+        shell: powershell
+        run: |
+          $zipPath = "release/${{ env.ZIP_NAME }}"
+          if (Test-Path $zipPath) {
+            echo "ZIP_EXISTS=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            echo "ZIP file found at $zipPath"
+          } else {
+            echo "ZIP_EXISTS=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            echo "ZIP file not found: $zipPath"
+            exit 1
+          }
+          
+      - name: Generate changelog
+        id: changelog
+        if: env.ZIP_EXISTS == 'true'
+        shell: powershell
+        run: |
+          if (Test-Path "CHANGELOG.md") {
+            $changelog = Get-Content -Path "CHANGELOG.md" -Raw
+            $version = $env:VERSION
+            
+            # Handle case sensitivity for the version in changelog (V0.7.1 vs v0.7.1)
+            $pattern = "(?i)## [vV]$version(.*?)(?=\n\n## |$)"
+            
+            if ($changelog -match $pattern) {
+              $changelogContent = $matches[1].Trim()
+              
+              # Create the full changelog entry with proper formatting
+              $fullEntry = "## v$version`n$changelogContent"
+              
+              # Set the multiline environment variable
+              echo 'CHANGELOG<<EOF' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+              echo "$fullEntry" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+              echo 'EOF' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+              
+              Write-Host "Found changelog content for v$version"
+            } else {
+              echo "CHANGELOG=Release v$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+              Write-Host "No specific changelog found for v$version"
+            }
+          } else {
+            echo "CHANGELOG=Release v$env:VERSION" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            Write-Host "No CHANGELOG.md file found"
+          }
+          
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        if: env.ZIP_EXISTS == 'true'
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: VR Plus v${{ env.VERSION }}
+          body: ${{ env.CHANGELOG }}
+          files: release/${{ env.ZIP_NAME }}
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Update updates_meta.json
+        if: steps.create_release.outcome == 'success'
+        shell: powershell
+        run: |
+          $metaFile = "updates_meta.json"
+          $content = Get-Content $metaFile -Raw | ConvertFrom-Json
+          $content[0].version = "${{ env.VERSION }}"
+          $content[0].download_url = "https://github.com/${{ github.repository }}/releases/download/v${{ env.VERSION }}/vrplus_${{ env.VERSION }}.zip"
+          $content | ConvertTo-Json -Depth 10 | Set-Content -Path $metaFile -Encoding UTF8
+          
+      - name: Commit updates_meta.json changes
+        if: steps.create_release.outcome == 'success'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: Update updates_meta.json for v${{ env.VERSION }} [skip ci]"
+          file_pattern: updates_meta.json
