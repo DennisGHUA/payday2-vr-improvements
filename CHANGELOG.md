@@ -2,11 +2,8 @@
 
 ## V0.7.2
 - Added option to require pressing (not just touching) the touchpad edges for rotation
-- Enabled this option by default for HTC Vive users
 - Added settings to customize rotation delay and rotation amount
-- Fixed rotation logic not working in the main menu
 - Fixed rotation logic not working when holding a melee weapon
-- Improved rotation accessibility across different player states
 
 ## V0.7.1
 - Fixed an issue where player movement speed would remain slow after uncrouching in VR

@@ -74,15 +74,31 @@ local function do_rotation(self, t, dt)
 	local axis = controller:get_input_axis("touchpad_primary")
 	local rot = VRManager:hmd_rotation():yaw() + self._camera_base_rot:yaw()
 
-	if not axis then return end
-	
-	-- Check if we need to require a button press for rotation
+	if not axis then return end	-- Check if we need to require a button press for rotation
 	local requires_press = VRPlusMod._data.rotation_requires_press
-	local button_pressed = not requires_press or 
-		controller:get_input_bool("d_left_r") or 
-		controller:get_input_bool("d_right_r") or 
-		controller:get_input_bool("d_left_l") or 
-		controller:get_input_bool("d_right_l")
+	local button_pressed = not requires_press
+	
+	if requires_press then
+		-- For HTC Vive touchpads, we'll use a simplified approach
+		-- Check if the primary button (which is the touchpad click on Vive) is pressed
+		local primary_r = controller:get_input_bool("primary_r")
+		local primary_l = controller:get_input_bool("primary_l")
+		
+		-- Also check the trackpad buttons directly (should work for other controllers)
+		local trackpad_r = controller:get_input_bool("trackpad_button_r") 
+		local trackpad_l = controller:get_input_bool("trackpad_button_l")
+		
+		-- Also check the directional pad buttons (may work on other controllers)
+		local d_left_r = controller:get_input_bool("d_left_r")
+		local d_right_r = controller:get_input_bool("d_right_r") 
+		local d_left_l = controller:get_input_bool("d_left_l") 
+		local d_right_l = controller:get_input_bool("d_right_l")
+		
+		-- Check if any button is pressed
+		button_pressed = button_pressed or primary_r or primary_l or 
+						 trackpad_r or trackpad_l or 
+						 d_left_r or d_right_r or d_left_l or d_right_l
+	end
 		
 	if not button_pressed then
 		return

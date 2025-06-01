@@ -1,5 +1,4 @@
-{
-	"name": "VR Improvements / VR Plus",
+{	"name": "VR Improvements / VR Plus",
 	"description": "Bunch of tweaks for VR",
 	"author": "",
 	"contact": "modworkshop.net/mod/45143",
@@ -120,10 +119,6 @@
 		{
 			"hook_id" : "lib/managers/menu/menucomponentmanager",
 			"script_path" : "menus/controls/ControlsManager.lua"
-		},
-		{
-			"hook_id" : "lib/input/handstate",
-			"script_path" : "meleerotation.lua"
 		}
 	]
 }

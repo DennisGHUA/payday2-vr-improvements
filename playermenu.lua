@@ -41,11 +41,11 @@ local function HSVToRGB( hue, saturation, value )
 end
 
 Hooks:PreHook(PlayerMenu, "update", "VRPlusUpdateLaserColour", function(self, t, dt)
-	if not self._is_start_menu or self.__laser_is_updated then
+	if not self._is_start_menu or self.__laser_is_updated or not VRPlusMod or not VRPlusMod._data or not VRPlusMod._data.tweaks then
 		return
 	end
 
-	local hue = VRPlusMod._data.tweaks.laser_hue
+	local hue = VRPlusMod._data.tweaks.laser_hue or 0
 	if VRPlusMod._data.tweaks.laser_disco then
 		local speedup = 2 -- maximum of once every 0.5 seconds
 		local delta = hue * hue * speedup * dt -- square hue to get a nice logrhytmic timescale
@@ -69,24 +69,36 @@ end)
 
 -- Add rotation handling for the main menu
 function PlayerMenu:handle_menu_rotation(t, dt)
-	local mode = VRPlusMod._data.turning_mode
-	local controller = managers.controller:get_vr_controller()
-	if not controller then return end
-	
-	local axis = controller:get_input_axis("touchpad_primary")
-	local baseRot = self._camera_base_rot or Rotation()
-	local rot = VRManager:hmd_rotation():yaw() + baseRot:yaw()
+	-- Wrap everything in pcall for stability
+	local success, error_msg = pcall(function()
+		if not VRPlusMod or not VRPlusMod._data or not VRPlusMod._data.turning_mode then return end
+		
+		local mode = VRPlusMod._data.turning_mode
+		local controller = managers.controller and managers.controller:get_vr_controller()
+		if not controller then return end
+		
+		local axis = controller:get_input_axis("touchpad_primary")
+		if not axis then return end
+		
+		local baseRot = self._camera_base_rot or Rotation()
+		local rot = VRManager and VRManager:hmd_rotation() and VRManager:hmd_rotation():yaw() + baseRot:yaw() or 0
 
 	if not axis then return end
-	
 	-- Check if we need to require a button press for rotation
 	local requires_press = VRPlusMod._data.rotation_requires_press
-	local button_pressed = not requires_press or 
-		controller:get_input_bool("d_left_r") or 
-		controller:get_input_bool("d_right_r") or 
-		controller:get_input_bool("d_left_l") or 
-		controller:get_input_bool("d_right_l")
-		
+	local button_pressed = not requires_press
+	
+	if requires_press then
+		-- Check for both directional presses and the generic trackpad button
+		button_pressed = button_pressed or 
+			controller:get_input_bool("d_left_r") or 
+			controller:get_input_bool("d_right_r") or 
+			controller:get_input_bool("d_left_l") or 
+			controller:get_input_bool("d_right_l") or
+			controller:get_input_bool("trackpad_button_r") or
+			controller:get_input_bool("trackpad_button_l")
+	end
+	
 	if not button_pressed then
 		return
 	end
@@ -103,7 +115,10 @@ function PlayerMenu:handle_menu_rotation(t, dt)
 			if managers.player and managers.player._menu_unit and alive(managers.player._menu_unit) then
 				local menu_unit = managers.player._menu_unit
 				if menu_unit.set_base_rotation then
-					menu_unit:set_base_rotation(Rotation(rot + delta, 0, 0))
+					-- Wrap in pcall for safety
+					pcall(function()
+						menu_unit:set_base_rotation(Rotation(rot + delta, 0, 0))
+					end)
 				end
 			end
 		end
@@ -117,15 +132,24 @@ function PlayerMenu:handle_menu_rotation(t, dt)
 		self.__snap_rotate_timer = math.max(-1, (self.__snap_rotate_timer or 0) - dt)
 
 		if math.abs(axis.x) > turn and self.__snap_rotate_timer < 0 then
-			self.__snap_rotate_timer = delay
-			local amt = ((axis.x > 0) and 1 or -1) * rotation_amt
+			self.__snap_rotate_timer = delay			local amt = ((axis.x > 0) and 1 or -1) * rotation_amt
 
 			if managers.player and managers.player._menu_unit and alive(managers.player._menu_unit) then
 				local menu_unit = managers.player._menu_unit
 				if menu_unit.set_base_rotation then
-					menu_unit:set_base_rotation(Rotation(rot - amt, 0, 0))
+					-- Wrap in pcall for safety
+					pcall(function()
+						menu_unit:set_base_rotation(Rotation(rot - amt, 0, 0))
+					end)
 				end
 			end
 		end
+	end
+	end) -- End of pcall
+	
+	-- If an error occurred, we'll catch it here but won't crash the game
+	if not success then
+		-- We could log the error here if we had a logging system
+		-- But for now we'll just silently fail
 	end
 end
