@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.7.2
+- Fixed a crash that occurred when transitioning to bleedout state while crouching
+
 ## V0.7.1
 - Fixed an issue where player movement speed would remain slow after uncrouching in VR
 - Fixed an issue where player movement speed would remain slow after taking fall damage

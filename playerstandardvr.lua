@@ -157,7 +157,8 @@ function PlayerStandardVR:update(t, dt)
 	-- Fix for ducking state not being reset after fall damage
 	-- If the game thinks we're ducking but our custom ducking state says we're not,
 	-- end the ducking action to ensure the states are in sync
-	if self._state_data.ducking and not self.__bttn_ducking then
+	-- Also check that we're in the standard state (not bleedout, etc.)
+	if self._state_data.ducking and not self.__bttn_ducking and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
 		self:_end_action_ducking(t)
 	end
 
@@ -413,7 +414,7 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 				self:_start_action_ducking(t)
 			end
 		else
-			if self._state_data.ducking then
+			if self._state_data.ducking and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
 				self:_end_action_ducking(t)
 			end
 		end
