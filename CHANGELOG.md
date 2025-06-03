@@ -1,9 +1,7 @@
 # Changelog
 
 ## V0.7.2
-- Added option to require pressing (not just touching) the touchpad edges for rotation
-- Added settings to customize rotation delay and rotation amount
-- Fixed rotation logic not working when holding a melee weapon
+- Fixed a crash that occurred when transitioning to bleedout state while crouching
 
 ## V0.7.1
 - Fixed an issue where player movement speed would remain slow after uncrouching in VR
