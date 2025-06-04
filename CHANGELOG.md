@@ -1,5 +1,10 @@
 # Changelog
 
+## V0.7.3
+- Added option to require pressing (not just touching) the touchpad edges for rotation
+- Added settings to customize rotation delay and rotation amount
+- Fixed rotation logic not working when holding a melee weapon
+
 ## V0.7.2
 - Fixed a crash that occurred when transitioning to bleedout state while crouching
 
