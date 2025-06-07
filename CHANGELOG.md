@@ -1,6 +1,9 @@
 # Changelog
 
-## V0.7.3
+## V0.7.3 - Beta2
+- Fixed rotation delay max slider being too low
+
+## V0.7.3 - Beta
 - Added option to require pressing (not just touching) the touchpad edges for rotation
 - Added settings to customize rotation delay and rotation amount
 - Fixed rotation logic not working when holding a melee weapon
