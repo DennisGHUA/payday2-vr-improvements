@@ -2,7 +2,7 @@
 	"description": "Bunch of tweaks for VR",
 	"author": "",
 	"contact": "modworkshop.net/mod/45143",
-	"version": "0.7.3",
+	"version": "0.7.3-beta",
 	"image" : "vrplus.png",
 	"color" : "255 255 255",
 	"blt_version": 2,
