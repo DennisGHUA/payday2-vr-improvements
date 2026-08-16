@@ -149,8 +149,8 @@ function PlayerHand:_update_controllers(t, dt)
 	self._unit_movement_ext:__affect_vrobj_position(belt_offset)
 
 	-- More sanity check workarounds
-	if self._unit_movement_ext and self._unit_movement_ext:current_state() then
-		if self._unit_movement_ext:current_state().__bttn_ducking then
+	if self._unit_movement_ext and self._unit_movement_ext._state_data then
+		if self._unit_movement_ext._state_data.__vrplus_duck then
 			mvector3.set_z(belt_offset, 15)
 		end
 	end

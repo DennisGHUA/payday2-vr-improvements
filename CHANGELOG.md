@@ -3,7 +3,7 @@
 ## V0.8.0
 - Added: "Extra Heist Info on the Main Tablet" HUD panel (default on; toggle in Options > Mod Options > VR Plus > UI Options)
   - Shows pagers used, body bags, guards with pagers, and unbagged/bagged/secured loot on the main tablet page
-  - Based on VR Wrist Panel+ / VR Improvements Mod Hud Addons - credit to IssaStorm (https://modworkshop.net/mod/56553)
+  - Based on "VR Wrist Panel+ / VR Improvements Mod Hud Addons" - credit to IssaStorm (https://modworkshop.net/mod/56553)
 - Added: Customizable button mappings (new "Button Mappings" menu)
   - Jump: Default B button (right hand, requires locomotion enabled)
   - Crouch: Default A button (both hands, requires artificial crouch enabled)

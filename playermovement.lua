@@ -26,7 +26,9 @@ function PlayerMovement:__affect_vrobj_position(pos)
 		return
 	end
 	
-	if self:current_state().__bttn_ducking then
+	-- Artificial crouch flag lives on the shared _state_data table so it applies
+	-- consistently across movement state transitions (e.g. standard <-> carry).
+	if self._state_data.__vrplus_duck then
 		local height_mult = VRPlusMod._data.comfort.crouch_scale / 100
 		local crouch_dist = managers.vr:get_setting("height") * (1 - height_mult)
 		mvector3.set_z(pos, pos.z - crouch_dist)

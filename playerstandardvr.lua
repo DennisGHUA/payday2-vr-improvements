@@ -158,7 +158,7 @@ function PlayerStandardVR:update(t, dt)
 	-- If the game thinks we're ducking but our custom ducking state says we're not,
 	-- end the ducking action to ensure the states are in sync
 	-- Also check that we're in the standard state (not bleedout, etc.)
-	if self._state_data.ducking and not self.__bttn_ducking and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
+	if self._state_data.ducking and not self._state_data.__vrplus_duck and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
 		self:_end_action_ducking(t)
 	end
 
@@ -389,27 +389,33 @@ Hooks:PreHook(PlayerStandard, "_check_action_interact", "VRPlusLockInteration", 
 	end
 end)
 
+-- The artificial crouch flag is stored on the shared _state_data table instead of
+-- on the individual movement state object. Standard and carry are separate state
+-- objects, so a per-state flag is "remembered" separately, which forced the player
+-- to stand up when grabbing or releasing a bag. Storing it on _state_data keeps a
+-- single persistent crouch state across state transitions. Fixes #3.
 Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", function(self, t, input)
 	local mode = VRPlusMod._data.comfort.crouching
-	local was_ducking = self.__bttn_ducking
+	local state_data = self._state_data
+	local was_ducking = state_data.__vrplus_duck
 
 	if mode == VRPlusMod.C.CROUCH_TOGGLE then
 		if input.btn_duck_press then
-			self.__bttn_ducking = not self.__bttn_ducking
+			state_data.__vrplus_duck = not state_data.__vrplus_duck
 		end
 	elseif mode == VRPlusMod.C.CROUCH_HOLD then
 		if input.btn_duck_release then
-			self.__bttn_ducking = false
+			state_data.__vrplus_duck = false
 		elseif input.btn_duck_press then
-			self.__bttn_ducking = true
+			state_data.__vrplus_duck = true
 		end
 	else
-		self.__bttn_ducking = false
+		state_data.__vrplus_duck = false
 	end
 
 	-- Update the game's internal ducking state to match our custom state
-	if was_ducking ~= self.__bttn_ducking then
-		if self.__bttn_ducking then
+	if was_ducking ~= state_data.__vrplus_duck then
+		if state_data.__vrplus_duck then
 			if not self._state_data.ducking then
 				self:_start_action_ducking(t)
 			end
@@ -420,6 +426,19 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 		end
 	end
 end)
+
+-- The carry movement state (PlayerCarryVR) extends the flat PlayerCarry state, not
+-- PlayerStandardVR, so it never runs the artificial-crouch hook above. Carrying a
+-- bag uses the vanilla duck handling (_state_data.ducking). Keep our shared
+-- artificial crouch flag in sync with it, so crouching while holding a bag keeps the
+-- same persistent crouch state once the bag is released. Fixes #3.
+if PlayerCarryVR then
+	Hooks:PostHook(PlayerCarryVR, "update", "VRPlusSyncCarryDuck", function(self, t, dt)
+		if VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE and self._state_data then
+			self._state_data.__vrplus_duck = self._state_data.ducking or false
+		end
+	end)
+end
 
 -- Respect _can_duck, to prevent ducking during mask-off
 local old_start_action_ducking = PlayerStandardVR._start_action_ducking
