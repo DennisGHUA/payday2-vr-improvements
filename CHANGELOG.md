@@ -1,6 +1,6 @@
 # Changelog
 
-## V0.8.0
+## V0.7.3
 - Fixed: Laser chronometer (Espionage DLC) no longer holsters instead of firing when triggered. Credit to Shoshana for the fix.
 
 ## V0.7.2
