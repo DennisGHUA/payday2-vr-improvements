@@ -94,12 +94,70 @@
 			"priority": 93
 		},
 		{
+			"type": "multiple_choice",
+			"id": "vrplus_rotation_delay",
+			"title": "vrplus_rotation_delay",
+			"description": "vrplus_rotation_delay_desc",
+			"callback": "vrplus_rotation_delay",
+			"value": "rotation_delay",
+			"items": [
+				"vrplus_rotation_delay_005",
+				"vrplus_rotation_delay_010",
+				"vrplus_rotation_delay_015",
+				"vrplus_rotation_delay_020",
+				"vrplus_rotation_delay_025",
+				"vrplus_rotation_delay_030",
+				"vrplus_rotation_delay_035",
+				"vrplus_rotation_delay_040",
+				"vrplus_rotation_delay_045",
+				"vrplus_rotation_delay_050",
+				"vrplus_rotation_delay_055",
+				"vrplus_rotation_delay_060",
+				"vrplus_rotation_delay_065",
+				"vrplus_rotation_delay_070",
+				"vrplus_rotation_delay_075",
+				"vrplus_rotation_delay_080",
+				"vrplus_rotation_delay_085",
+				"vrplus_rotation_delay_090",
+				"vrplus_rotation_delay_095",
+				"vrplus_rotation_delay_100"
+			],
+			"priority": 92
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_rotation_amount",
+			"title": "vrplus_rotation_amount",
+			"description": "vrplus_rotation_amount_desc",
+			"callback": "vrplus_rotation_amount",
+			"value": "rotation_amount",
+			"items": [
+				"vrplus_rotation_amount_15",
+				"vrplus_rotation_amount_20",
+				"vrplus_rotation_amount_25",
+				"vrplus_rotation_amount_30",
+				"vrplus_rotation_amount_35",
+				"vrplus_rotation_amount_40",
+				"vrplus_rotation_amount_45",
+				"vrplus_rotation_amount_50",
+				"vrplus_rotation_amount_55",
+				"vrplus_rotation_amount_60",
+				"vrplus_rotation_amount_65",
+				"vrplus_rotation_amount_70",
+				"vrplus_rotation_amount_75",
+				"vrplus_rotation_amount_80",
+				"vrplus_rotation_amount_85",
+				"vrplus_rotation_amount_90"
+			],
+			"priority": 91
+		},
+		{
 			"type": "button",
 			"id": "vrplus_controls_manager",
 			"title": "vrplus_controls_manager",
 			"description": "vrplus_controls_manager_desc",
 			"callback": "vrplus_controls_manager",
-			"priority": 92
+			"priority": 90
 		}
 	]
 }

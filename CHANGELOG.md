@@ -1,6 +1,8 @@
 # Changelog
 
 ## V0.7.3
+- Added: Setting to customize rotation delay
+- Added: Setting to customize rotation amount
 - Fixed: Laser chronometer (Espionage DLC) no longer holsters instead of firing when triggered. Credit to Shoshana for the fix.
 
 ## V0.7.2
