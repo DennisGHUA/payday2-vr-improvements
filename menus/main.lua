@@ -416,10 +416,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod._data.controller_type = controller_types[index]
 		VRPlusMod:Save()
 		
-		-- Reload hand states to apply new controller bindings
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected controller bindings
+		reload_hands()
 	end
 
 	-- Helper function to check for button mapping conflicts
