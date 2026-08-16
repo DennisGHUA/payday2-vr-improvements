@@ -509,45 +509,40 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod._data.button_jump = item:value()
 		VRPlusMod:Save()
 		check_button_conflicts()
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected button bindings
+		reload_hands()
 	end
 
 	function MenuCallbackHandler:vrplus_button_crouch(item)
 		VRPlusMod._data.button_crouch = item:value()
 		VRPlusMod:Save()
 		check_button_conflicts()
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected button bindings
+		reload_hands()
 	end
 
 	function MenuCallbackHandler:vrplus_button_pause(item)
 		VRPlusMod._data.button_pause = item:value()
 		VRPlusMod:Save()
 		check_button_conflicts()
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected button bindings
+		reload_hands()
 	end
 
 	function MenuCallbackHandler:vrplus_button_gadget(item)
 		VRPlusMod._data.button_gadget = item:value()
 		VRPlusMod:Save()
 		check_button_conflicts()
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected button bindings
+		reload_hands()
 	end
 
 	function MenuCallbackHandler:vrplus_button_firemode(item)
 		VRPlusMod._data.button_firemode = item:value()
 		VRPlusMod:Save()
 		check_button_conflicts()
-		if managers.menu._player then
-			managers.menu._player:reload_hand_states()
-		end
+		-- Reload hand states to apply the newly selected button bindings
+		reload_hands()
 	end
 
 	-- Comfort options
