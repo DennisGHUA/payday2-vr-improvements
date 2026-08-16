@@ -1,0 +1,122 @@
+{
+	"menu_id": "vrplus_menu_buttonmappings",
+	"parent_menu_id": "vrplus_menu_main",
+	"title": "vrplus_menu_buttonmappings",
+	"priority": 98,
+	"description": "vrplus_menu_buttonmappings_desc",
+	"items": [
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_button_jump",
+			"title": "vrplus_button_jump",
+			"description": "vrplus_button_jump_desc",
+			"callback": "vrplus_button_jump",
+			"value": "button_jump",
+			"items": [
+				"vrplus_button_a",
+				"vrplus_button_b",
+				"vrplus_button_x",
+				"vrplus_button_y",
+				"vrplus_button_menu",
+				"vrplus_button_dpad_down",
+				"vrplus_button_dpad_left",
+				"vrplus_button_dpad_right"
+			],
+			"item_values": [ 1, 2, 3, 4, 5, 7, 8, 9 ],
+			"priority": 99
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_button_crouch",
+			"title": "vrplus_button_crouch",
+			"description": "vrplus_button_crouch_desc",
+			"callback": "vrplus_button_crouch",
+			"value": "button_crouch",
+			"items": [
+				"vrplus_button_a",
+				"vrplus_button_b",
+				"vrplus_button_x",
+				"vrplus_button_y",
+				"vrplus_button_menu",
+				"vrplus_button_dpad_down",
+				"vrplus_button_dpad_left",
+				"vrplus_button_dpad_right"
+			],
+			"item_values": [ 1, 2, 3, 4, 5, 7, 8, 9 ],
+			"priority": 98
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_button_pause",
+			"title": "vrplus_button_pause",
+			"description": "vrplus_button_pause_desc",
+			"callback": "vrplus_button_pause",
+			"value": "button_pause",
+			"items": [
+				"vrplus_button_a",
+				"vrplus_button_b",
+				"vrplus_button_x",
+				"vrplus_button_y",
+				"vrplus_button_menu",
+				"vrplus_button_dpad_down",
+				"vrplus_button_dpad_left",
+				"vrplus_button_dpad_right"
+			],
+			"item_values": [ 1, 2, 3, 4, 5, 7, 8, 9 ],
+			"priority": 97
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_button_gadget",
+			"title": "vrplus_button_gadget",
+			"description": "vrplus_button_gadget_desc",
+			"callback": "vrplus_button_gadget",
+			"value": "button_gadget",
+			"items": [
+				"vrplus_button_a",
+				"vrplus_button_b",
+				"vrplus_button_x",
+				"vrplus_button_y",
+				"vrplus_button_menu",
+				"vrplus_button_dpad_down",
+				"vrplus_button_dpad_left",
+				"vrplus_button_dpad_right"
+			],
+			"item_values": [ 1, 2, 3, 4, 5, 7, 8, 9 ],
+			"priority": 96
+		},
+		{
+			"type": "multiple_choice",
+			"id": "vrplus_button_firemode",
+			"title": "vrplus_button_firemode",
+			"description": "vrplus_button_firemode_desc",
+			"callback": "vrplus_button_firemode",
+			"value": "button_firemode",
+			"items": [
+				"vrplus_button_a",
+				"vrplus_button_b",
+				"vrplus_button_x",
+				"vrplus_button_y",
+				"vrplus_button_menu",
+				"vrplus_button_dpad_down",
+				"vrplus_button_dpad_left",
+				"vrplus_button_dpad_right"
+			],
+			"item_values": [ 1, 2, 3, 4, 5, 7, 8, 9 ],
+			"priority": 95
+		},
+		{
+			"type": "divider",
+			"size": 16,
+			"priority": 94
+		},
+		{
+			"type": "button",
+			"id": "vrplus_controls_manager",
+			"title": "vrplus_controls_manager",
+			"description": "vrplus_controls_manager_warning",
+			"callback": "vrplus_controls_manager",
+			"priority": 93
+		}
+	]
+}

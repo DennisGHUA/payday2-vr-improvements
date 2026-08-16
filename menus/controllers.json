@@ -6,13 +6,34 @@
 	"description": "vrplus_menu_controllers_desc",
 	"items": [
 		{
+			"type": "multiple_choice",
+			"id": "vrplus_controller_type",
+			"title": "vrplus_controller_type",
+			"description": "vrplus_controller_type_desc",
+			"callback": "vrplus_controller_type",
+			"value": "controller_type",
+			"items": [
+				"vrplus_controller_type_auto",
+				"vrplus_controller_type_vive",
+				"vrplus_controller_type_touch",
+				"vrplus_controller_type_knuckles",
+				"vrplus_controller_type_frame"
+			],
+			"priority": 101
+		},
+		{
+			"type": "divider",
+			"size": 16,
+			"priority": 100
+		},
+		{
 			"type": "toggle",
 			"id": "vrplus_movement_locomotion",
 			"title": "vrplus_movement_locomotion",
 			"description": "vrplus_movement_locomotion_desc",
 			"callback": "vrplus_movement_locomotion",
 			"value": "movement_locomotion",
-			"priority": 100
+			"priority": 90
 		},
 		{
 			"type": "multiple_choice",
@@ -26,7 +47,7 @@
 				"vrplus_turning_mode_smooth",
 				"vrplus_turning_mode_snap"
 			],
-			"priority": 99
+			"priority": 94
 		},
 		{
 			"type": "multiple_choice",
@@ -40,7 +61,7 @@
 				"vrplus_sprint_mode_sticky",
 				"vrplus_sprint_mode_hold"
 			],
-			"priority": 98
+			"priority": 93
 		},
 		{
 			"type": "toggle",
@@ -49,7 +70,7 @@
 			"description": "vrplus_movement_controller_direction_desc",
 			"callback": "vrplus_movement_controller_direction",
 			"value": "movement_controller_direction",
-			"priority": 97
+			"priority": 92
 		},
 		{
 			"type": "slider",
@@ -61,7 +82,7 @@
 			"max": 100,
 			"min": 0,
 			"step": 1,
-			"priority": 96
+			"priority": 91
 		},
 		{
 			"type": "toggle",
@@ -70,7 +91,7 @@
 			"description": "vrplus_movement_smoothing_desc",
 			"callback": "vrplus_movement_smoothing",
 			"value": "movement_smoothing",
-			"priority": 95
+			"priority": 90
 		},
 		{
 			"type": "slider",
@@ -122,6 +143,10 @@
 				"vrplus_rotation_delay_095",
 				"vrplus_rotation_delay_100"
 			],
+			"item_values": [
+				0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50,
+				0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00
+			],
 			"priority": 92
 		},
 		{
@@ -149,6 +174,9 @@
 				"vrplus_rotation_amount_85",
 				"vrplus_rotation_amount_90"
 			],
+			"item_values": [
+				15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90
+			],
 			"priority": 91
 		},
 		{
@@ -170,15 +198,10 @@
 				"vrplus_smooth_rotation_speed_300",
 				"vrplus_smooth_rotation_speed_360"
 			],
+			"item_values": [
+				60, 90, 120, 150, 180, 210, 240, 270, 300, 360
+			],
 			"priority": 90
-		},
-		{
-			"type": "button",
-			"id": "vrplus_controls_manager",
-			"title": "vrplus_controls_manager",
-			"description": "vrplus_controls_manager_desc",
-			"callback": "vrplus_controls_manager",
-			"priority": 89
 		}
 	]
 }

@@ -1,5 +1,23 @@
 # Changelog
 
+## V0.8.0
+- Added: Customizable button mappings (new "Button Mappings" menu)
+  - Jump: Default B button (right hand, requires locomotion enabled)
+  - Crouch: Default A button (both hands, requires artificial crouch enabled)
+  - Pause: Default Y button (non-weapon hand to avoid combat interruption)
+  - Gadget Toggle: Default D-Pad Right (weapon hand only)
+  - Fire Mode Switch: Default D-Pad Left (weapon hand only, switches semi/burst/auto)
+  - All buttons can be remapped to A/B/X/Y/Menu/D-Pad Down/Left/Right (D-Pad Up is hardcoded to "Switch Hands")
+  - Expanded support for Oculus Touch/Quest, Valve Index Knuckles, Steam Frame, HTC Vive
+- Added: "Controller Type" setting in Motion Controller Options menu
+  - Settings: Auto-Detect, HTC Vive, Oculus Touch/Quest, Valve Index Knuckles, Steam Frame
+- Fixed: Controls Manager now saves correctly
+- Fixed: Quest and Index users can now jump when using locomotion mode
+- Fixed: Crouch button now properly works for button-based controllers
+- Fixed: Vive touchpad no longer has conflicting jump+sprint mappings on same button
+- Fixed: Mod settings menu not showing up when the config file is empty or corrupt
+- Changed: Unknown/generic headsets now default to Touch controller layout (A/B buttons) instead of Vive
+
 ## V0.7.3
 - Added: Setting to customize snap rotation delay
 - Added: Setting to customize snap rotation amount

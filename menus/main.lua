@@ -8,6 +8,9 @@ local LANG_KOREAN = false
 ]]
 _G.VRPlusMod = _G.VRPlusMod or {}
 
+-- Conflict warning timer (debounced, shown immediately after selection)
+VRPlusMod._conflict_timer = nil
+
 -- Constants
 VRPlusMod.C = {
 	TURNING_OFF = 1,
@@ -31,6 +34,23 @@ VRPlusMod.C = {
 	WEAPON_MELEE_LOUD = 2,
 	WEAPON_MELEE_DISABLED = 3,
 
+	-- Controller types
+	CONTROLLER_VIVE = 1,      -- HTC Vive wands (touchpad-based)
+	CONTROLLER_TOUCH = 2,     -- Oculus Touch (button-based: A/B/X/Y)
+	CONTROLLER_KNUCKLES = 3,  -- Valve Index Knuckles (button-based: A/B)
+	CONTROLLER_FRAME = 4,     -- Steam Frame controllers (button-based: A/B, expected similar to Knuckles)
+
+	-- Button mapping options (for button-based controllers)
+	BUTTON_A = 1,
+	BUTTON_B = 2,
+	BUTTON_X = 3,
+	BUTTON_Y = 4,
+	BUTTON_MENU = 5,
+	BUTTON_DPAD_UP = 6,
+	BUTTON_DPAD_DOWN = 7,
+	BUTTON_DPAD_LEFT = 8,
+	BUTTON_DPAD_RIGHT = 9,
+
 	nil
 }
 
@@ -43,12 +63,79 @@ VRPlusMod._data = {}
 VRPlusMod._menu_ids = {}
 
 --[[
-	A simple save function that json encodes our _data table and saves it to a file.
+	Recursively pretty-prints a Lua table as JSON with indentation.
+	Used so the save file is human-readable instead of one long line.
+]]
+local function json_encode_pretty(value, indent)
+	indent = indent or 0
+	local pad = string.rep( "\t", indent )
+	local pad_inner = string.rep( "\t", indent + 1 )
+
+	local value_type = type(value)
+
+	if value_type == "table" then
+		local is_array = true
+		local count = 0
+		for k in pairs(value) do
+			count = count + 1
+			if type(k) ~= "number" then
+				is_array = false
+			end
+		end
+		if is_array then
+			for i = 1, count do
+				if value[i] == nil then
+					is_array = false
+					break
+				end
+			end
+		end
+
+		if count == 0 then
+			return is_array and "[]" or "{}"
+		end
+
+		local parts = {}
+		if is_array then
+			for i = 1, count do
+				table.insert( parts, pad_inner .. json_encode_pretty( value[i], indent + 1 ) )
+			end
+			return "[\n" .. table.concat( parts, ",\n" ) .. "\n" .. pad .. "]"
+		else
+			local keys = {}
+			for k in pairs(value) do
+				table.insert( keys, k )
+			end
+			table.sort( keys, function(a, b) return tostring(a) < tostring(b) end )
+
+			for _, k in ipairs(keys) do
+				local key_str = string.format( "%q", tostring(k) )
+				table.insert( parts, pad_inner .. key_str .. ": " .. json_encode_pretty( value[k], indent + 1 ) )
+			end
+			return "{\n" .. table.concat( parts, ",\n" ) .. "\n" .. pad .. "}"
+		end
+
+	elseif value_type == "string" then
+		return string.format( "%q", value )
+	elseif value_type == "number" or value_type == "boolean" then
+		return tostring( value )
+	else
+		return "null"
+	end
+end
+
+--[[
+	A simple save function that json encodes our _data table and saves it to a file,
+	pretty-printed for readability.
 ]]
 function VRPlusMod:Save()
+	local save_data = {}
+	for k, v in pairs(self._data) do
+		save_data[k] = v
+	end
 	local file = io.open( self._data_path, "w+" )
 	if file then
-		file:write( json.encode( self._data ) )
+		file:write( json_encode_pretty( save_data ) )
 		file:close()
 	end
 end
@@ -68,12 +155,24 @@ end
 
 --[[
 	A simple load function that decodes the saved json _data table if it exists.
+	If the save file is missing, empty, or corrupt (invalid JSON / not an object),
+	fall back to a fresh config and re-run the first-time HMD setup so the settings
+	menu still shows up instead of the mod failing to load.
 ]]
 function VRPlusMod:Load()
 	local file = io.open( self._data_path, "r" )
 	if file then
-		self._data = json.decode( file:read("*all") )
+		local contents = file:read("*all")
 		file:close()
+
+		local ok, decoded = pcall( json.decode, contents )
+		if ok and type(decoded) == "table" then
+			self._data = decoded
+		else
+			log("[VRPlus] Config file is empty or corrupt - creating a new settings file and starting first-time setup.")
+			self._data = {}
+			self._need_to_select_hmd = true
+		end
 	end
 	
 	-- Copy in any new properties'
@@ -85,7 +184,7 @@ function VRPlusMod:Load()
 		self:Save()
 	end
 
-	self._need_to_select_hmd = not selected
+	self._need_to_select_hmd = self._need_to_select_hmd or not selected
 end
 
 function VRPlusMod:_GetOptionTable(name)
@@ -110,40 +209,6 @@ function VRPlusMod:_ResetDefaultControls(hmd)
 
 				if item._type == "toggle" then
 					item:set_value( value and "on" or "off" )
-				elseif val_name == "rotation_delay" then
-					-- Find the index for the rotation_delay value
-					local rotation_delay_values = {
-						0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50,
-						0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00
-					}
-					for i, v in ipairs(rotation_delay_values) do
-						if math.abs(v - value) < 0.001 then
-							item:set_value(i)
-							break
-						end
-					end
-				elseif val_name == "rotation_amount" then
-					-- Find the index for the rotation_amount value
-					local rotation_amount_values = {
-						15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90
-					}
-					for i, v in ipairs(rotation_amount_values) do
-						if v == value then
-							item:set_value(i)
-							break
-						end
-					end
-				elseif val_name == "smooth_rotation_speed" then
-					-- Find the index for the smooth_rotation_speed value
-					local smooth_rotation_speed_values = {
-						60, 90, 120, 150, 180, 210, 240, 270, 300, 360
-					}
-					for i, v in ipairs(smooth_rotation_speed_values) do
-						if v == value then
-							item:set_value(i)
-							break
-						end
-					end
 				else
 					item:set_value( value )
 				end
@@ -170,6 +235,10 @@ function VRPlusMod:AskHMDType(cancellable)
 		{
 			text = text("vrplus_index"),
 			callback = function() self:_ResetDefaultControls("Index") end
+		},
+		{
+			text = text("vrplus_frame"),
+			callback = function() self:_ResetDefaultControls("Frame") end
 		},
 		{
 			text = text("vrplus_generic"),
@@ -264,7 +333,26 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	end
 
 	function MenuCallbackHandler:vrplus_controls_manager()
-		managers.menu:open_node("vrplus_controls_manager")
+		-- Show deprecation warning dialog using PAYDAY 2's native system
+		local dialog_data = {
+			title = "Controls Manager",
+			text = "Simple button remapping is now available in the new 'Button Mappings' menu instead.\n" ..
+					"Button Mappings always take priority over the Controls Manager\n" ..
+			        "The Controls Manager is intended for advanced users who need finer control.",
+			button_list = {
+				{
+					text = "Continue to Advanced Controls Manager",
+					callback_func = function()
+						managers.menu:open_node("vrplus_controls_manager")
+					end
+				},
+				{
+					text = "Cancel",
+					cancel_button = true
+				}
+			}
+		}
+		managers.system_menu:show(dialog_data)
 	end
 
 	-- Checkboxes
@@ -297,34 +385,152 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	})
 
 	-- Rotation delay, amount, and smooth speed - custom handlers for multiple_choice controls
-	-- Multiple choice controls return the 1-based index, not the value
-	local rotation_delay_values = {
-		0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50,
-		0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00
-	}
-	local rotation_amount_values = {
-		15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90
-	}
-	local smooth_rotation_speed_values = {
-		60, 90, 120, 150, 180, 210, 240, 270, 300, 360
-	}
-
+	-- Each option carries its real numeric value via "item_values", so item:value() already
+	-- returns the actual value (e.g. 0.15, 45, 180) rather than a list index.
 	function MenuCallbackHandler:vrplus_rotation_delay(item)
-		local index = item:value()  -- This is the 1-based index
-		VRPlusMod._data.rotation_delay = rotation_delay_values[index]
+		VRPlusMod._data.rotation_delay = item:value()
 		VRPlusMod:Save()
 	end
 
 	function MenuCallbackHandler:vrplus_rotation_amount(item)
-		local index = item:value()  -- This is the 1-based index
-		VRPlusMod._data.rotation_amount = rotation_amount_values[index]
+		VRPlusMod._data.rotation_amount = item:value()
 		VRPlusMod:Save()
 	end
 
 	function MenuCallbackHandler:vrplus_smooth_rotation_speed(item)
-		local index = item:value()  -- This is the 1-based index
-		VRPlusMod._data.smooth_rotation_speed = smooth_rotation_speed_values[index]
+		VRPlusMod._data.smooth_rotation_speed = item:value()
 		VRPlusMod:Save()
+	end
+	
+	-- Controller type selection - with auto-detect option
+	function MenuCallbackHandler:vrplus_controller_type(item)
+		local index = item:value()  -- This is the 1-based index
+		-- Map: 1=Auto, 2=Vive, 3=Touch, 4=Knuckles, 5=Frame
+		local controller_types = {
+			nil,  -- Auto-detect
+			VRPlusMod.C.CONTROLLER_VIVE,
+			VRPlusMod.C.CONTROLLER_TOUCH,
+			VRPlusMod.C.CONTROLLER_KNUCKLES,
+			VRPlusMod.C.CONTROLLER_FRAME
+		}
+		VRPlusMod._data.controller_type = controller_types[index]
+		VRPlusMod:Save()
+		
+		-- Reload hand states to apply new controller bindings
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
+	end
+
+	-- Helper function to check for button mapping conflicts
+	local function check_button_conflicts()
+		local mappings = {
+			{name = "Jump", value = VRPlusMod._data.button_jump, hand = "right"},
+			{name = "Crouch", value = VRPlusMod._data.button_crouch, hand = "both"},
+			{name = "Pause", value = VRPlusMod._data.button_pause, hand = "left"},
+			{name = "Gadget", value = VRPlusMod._data.button_gadget, hand = "weapon"},
+			{name = "Fire Mode", value = VRPlusMod._data.button_firemode, hand = "weapon"}
+		}
+		
+		local conflicts = {}
+		for i = 1, #mappings do
+			for j = i + 1, #mappings do
+				local a, b = mappings[i], mappings[j]
+				-- Check if same button value
+				if a.value == b.value then
+					-- Check if hands can conflict
+					local can_conflict = false
+					if a.hand == "both" or b.hand == "both" then
+						can_conflict = true
+					elseif a.hand == b.hand then
+						can_conflict = true
+					elseif (a.hand == "right" and b.hand == "weapon") or (b.hand == "right" and a.hand == "weapon") then
+						can_conflict = true  -- Weapon hand is typically right
+					elseif (a.hand == "left" and b.hand == "weapon") or (b.hand == "left" and a.hand == "weapon") then
+						-- Only conflict if user changed weapon hand to left (rare)
+						can_conflict = false
+					end
+					
+					if can_conflict then
+						table.insert(conflicts, a.name .. " and " .. b.name)
+					end
+				end
+			end
+		end
+		
+		if #conflicts > 0 then
+			local msg = "Button conflict: " .. table.concat(conflicts, ", ") .. " use the same button on overlapping hands"
+			-- Show warning in console
+			log("[VRPlus] WARNING: " .. msg)
+			
+			-- Cancel any existing timer
+			if VRPlusMod._conflict_timer then
+				VRPlusMod._conflict_timer:stop()
+				VRPlusMod._conflict_timer = nil
+			end
+			
+			-- Show visual popup warning immediately (next tick, no delay)
+			if managers and managers.menu then
+				VRPlusMod._conflict_timer = DelayedCalls:Add("vrplus_conflict_warning", 0, function()
+					local dialog_data = {
+						title = "VRPlus: Button Conflict Detected",
+						text = msg .. ".\n\nSome functions may not work as expected. Consider remapping to different buttons.",
+						button_list = {
+							{text = "OK", is_cancel_button = true}
+						},
+						id = "vrplus_button_conflict_warning"
+					}
+					managers.system_menu:show(dialog_data)
+					VRPlusMod._conflict_timer = nil
+				end)
+			end
+		end
+	end
+
+	-- Button mapping callbacks
+	function MenuCallbackHandler:vrplus_button_jump(item)
+		VRPlusMod._data.button_jump = item:value()
+		VRPlusMod:Save()
+		check_button_conflicts()
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
+	end
+
+	function MenuCallbackHandler:vrplus_button_crouch(item)
+		VRPlusMod._data.button_crouch = item:value()
+		VRPlusMod:Save()
+		check_button_conflicts()
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
+	end
+
+	function MenuCallbackHandler:vrplus_button_pause(item)
+		VRPlusMod._data.button_pause = item:value()
+		VRPlusMod:Save()
+		check_button_conflicts()
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
+	end
+
+	function MenuCallbackHandler:vrplus_button_gadget(item)
+		VRPlusMod._data.button_gadget = item:value()
+		VRPlusMod:Save()
+		check_button_conflicts()
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
+	end
+
+	function MenuCallbackHandler:vrplus_button_firemode(item)
+		VRPlusMod._data.button_firemode = item:value()
+		VRPlusMod:Save()
+		check_button_conflicts()
+		if managers.menu._player then
+			managers.menu._player:reload_hand_states()
+		end
 	end
 
 	-- Comfort options
@@ -400,6 +606,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 	addmenu("camera",		"vrplus_menu_camera",		"_G" )
 	addmenu("controllers",	"vrplus_menu_controllers",	"_G" )
+	addmenu("buttonmappings",	"vrplus_menu_buttonmappings",	"_G" )
 	addmenu("comfort",		"vrplus_menu_comfort",		"comfort" )
 	addmenu("hud",			"vrplus_menu_hud",			"hud" )
 	addmenu("tweaks",		"vrplus_menu_tweaks",		"tweaks" )

@@ -16,6 +16,18 @@ local default_data = {
 	rotation_delay = 0.15,
 	rotation_amount = 45,
 	smooth_rotation_speed = 180,
+	
+	-- Controller type - auto-detected by default
+	controller_type = nil,
+	
+	-- Button mappings for all controllers
+	-- Users can customize these; defaults: B=jump, A=crouch, Y=pause
+	-- Note: D-Pad Up is reserved for "switch hands" (hardcoded by game)
+	button_jump = VRPlusMod.C.BUTTON_B,
+	button_crouch = VRPlusMod.C.BUTTON_A,
+	button_pause = VRPlusMod.C.BUTTON_Y,
+	button_gadget = VRPlusMod.C.BUTTON_DPAD_RIGHT,
+	button_firemode = VRPlusMod.C.BUTTON_DPAD_LEFT,
 
 	-- Camera fading parameters
 	cam_fade_distance = 0,
@@ -52,20 +64,28 @@ local default_data = {
 }
 
 local defaults_rift = {
+	controller_type = VRPlusMod.C.CONTROLLER_TOUCH,
 	nil
 }
 
 local defaults_index = {
+	controller_type = VRPlusMod.C.CONTROLLER_KNUCKLES,
 	nil
 }
 
 local defaults_vive = {
 	sprint_time = 0.15,
+	controller_type = VRPlusMod.C.CONTROLLER_VIVE,
 
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
 	},
 	
+	nil
+}
+
+local defaults_frame = {
+	controller_type = VRPlusMod.C.CONTROLLER_FRAME,
 	nil
 }
 
@@ -90,7 +110,8 @@ function VRPlusMod:_get_defaults(hmd_type)
 		hmd_type = ({
 			["Oculus"] = "Rift",
 			["Index"] = "Index",
-			["HTC"] = "Vive"
+			["HTC"] = "Vive",
+			["Valve"] = "Frame"  -- Steam Frame detection
 		})[brand]
 	end
 	
@@ -104,7 +125,8 @@ function VRPlusMod:_get_defaults(hmd_type)
 		["generic"] = nil,
 		["Rift"] = defaults_rift,
 		["Index"] = defaults_index,
-		["Vive"] = defaults_vive
+		["Vive"] = defaults_vive,
+		["Frame"] = defaults_frame
 	})[usable_hmd_type]
 
 	local output = {
