@@ -78,6 +78,13 @@ local defaults_vive = {
 	sprint_time = 0.15,
 	controller_type = VRPlusMod.C.CONTROLLER_VIVE,
 
+	-- Vive wands have no A/B/X/Y buttons, so use the touchpad/menu layout.
+	button_jump = VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT,
+	button_crouch = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF,
+	button_pause = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT,
+	button_gadget = VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT,
+	button_firemode = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT,
+
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
 	},

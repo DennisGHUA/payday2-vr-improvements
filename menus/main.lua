@@ -51,6 +51,22 @@ VRPlusMod.C = {
 	BUTTON_DPAD_LEFT = 8,
 	BUTTON_DPAD_RIGHT = 9,
 
+	-- Vive wand touchpad mapping options
+	-- "(Offhand)" = the hand that is not holding the weapon
+	BUTTON_TOUCHPAD_UP_OFF = 10,
+	BUTTON_TOUCHPAD_DOWN_OFF = 11,
+	BUTTON_TOUCHPAD_LEFT_OFF = 12,
+	BUTTON_TOUCHPAD_RIGHT_OFF = 13,
+	BUTTON_TOUCHPAD_CENTER_OFF = 14, -- touchpad center click
+	BUTTON_TOUCHPAD_MENU_OFF = 15,   -- menu button on the offhand
+	-- "(Dominant hand)" = the hand currently holding the weapon
+	BUTTON_TOUCHPAD_UP_DOMINANT = 16,
+	BUTTON_TOUCHPAD_DOWN_DOMINANT = 17,
+	BUTTON_TOUCHPAD_LEFT_DOMINANT = 18,
+	BUTTON_TOUCHPAD_RIGHT_DOMINANT = 19,
+	BUTTON_TOUCHPAD_CENTER_DOMINANT = 20, -- touchpad center click
+	BUTTON_TOUCHPAD_MENU_DOMINANT = 21,   -- menu button on the dominant hand
+
 	nil
 }
 
@@ -423,11 +439,14 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	-- Helper function to check for button mapping conflicts
 	local function check_button_conflicts()
 		local mappings = {
-			{name = "Jump", value = VRPlusMod._data.button_jump, hand = "right"},
+			-- With the unified value set (A/B/X/Y, D-Pad, and touchpad options
+			-- for both offhand and dominant hand), any two equal values bind
+			-- the same physical input, so every pair can conflict.
+			{name = "Jump", value = VRPlusMod._data.button_jump, hand = "both"},
 			{name = "Crouch", value = VRPlusMod._data.button_crouch, hand = "both"},
-			{name = "Pause", value = VRPlusMod._data.button_pause, hand = "left"},
-			{name = "Gadget", value = VRPlusMod._data.button_gadget, hand = "weapon"},
-			{name = "Fire Mode", value = VRPlusMod._data.button_firemode, hand = "weapon"}
+			{name = "Pause", value = VRPlusMod._data.button_pause, hand = "both"},
+			{name = "Gadget", value = VRPlusMod._data.button_gadget, hand = "both"},
+			{name = "Fire Mode", value = VRPlusMod._data.button_firemode, hand = "both"}
 		}
 		
 		local conflicts = {}

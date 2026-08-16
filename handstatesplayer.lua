@@ -41,7 +41,6 @@ local function get_controller_type()
 	return VRPlusMod.C.CONTROLLER_TOUCH
 end
 
--- Helper function to get button key name based on button constant
 local function get_button_key(button_const, hand_name)
 	local button_map = {
 		[VRPlusMod.C.BUTTON_A] = "a_",
@@ -52,18 +51,70 @@ local function get_button_key(button_const, hand_name)
 		[VRPlusMod.C.BUTTON_DPAD_UP] = "d_up_",
 		[VRPlusMod.C.BUTTON_DPAD_DOWN] = "d_down_",
 		[VRPlusMod.C.BUTTON_DPAD_LEFT] = "d_left_",
-		[VRPlusMod.C.BUTTON_DPAD_RIGHT] = "d_right_"
+		[VRPlusMod.C.BUTTON_DPAD_RIGHT] = "d_right_",
+
+		-- Vive touchpad buttons
+		[VRPlusMod.C.BUTTON_TOUCHPAD_UP_OFF] = "d_up_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_OFF] = "d_down_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_OFF] = "d_left_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_OFF] = "d_right_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_OFF] = "trackpad_button_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF] = "menu_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT] = "d_up_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT] = "d_down_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_DOMINANT] = "d_left_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_DOMINANT] = "d_right_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT] = "trackpad_button_",
+		[VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT] = "menu_"
 	}
 	return (button_map[button_const] or "b_") .. hand_name
 end
 
-local function add_offhand_actions(hand_name, key_map)
+local function value_to_hand(button_const, hand_name, weapon_hand, offhand)
+	if button_const >= VRPlusMod.C.BUTTON_TOUCHPAD_UP_OFF and button_const <= VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF then
+		return offhand
+	elseif button_const >= VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT and button_const <= VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT then
+		return weapon_hand
+	end
+	return hand_name
+end
+
+-- Resolve the current dominant hand and offhand
+local function get_hand_context()
+	local weapon_hand = managers.vr and managers.vr:get_setting("default_weapon_hand"):sub(1,1) or "r"
+	local offhand = weapon_hand == "r" and "l" or "r"
+	return weapon_hand, offhand
+end
+
+local function has_user_override(state, input_id)
+	local rebindings = VRPlusMod._data.control_rebindings
+	return rebindings and rebindings[state] and rebindings[state][input_id] ~= nil
+end
+
+local function has_override(state, key_name)
+	if get_controller_type() ~= VRPlusMod.C.CONTROLLER_VIVE then
+		return false
+	end
+
+	-- Strip the hand suffix ("menu_r" -> "menu") to get the bare input id
+	local input_id = key_name:match("^(.-)_[lr]$")
+	return input_id and has_user_override(state, input_id)
+end
+
+local function add_offhand_actions(hand_name, key_map, state)
 	local controller_type = get_controller_type()
-	
+	local weapon_hand, offhand = get_hand_context()
+
 	if VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE then
 		if controller_type == VRPlusMod.C.CONTROLLER_VIVE then
-			-- Vive: Use menu button for crouch
-			key_map["menu_" .. hand_name] = { "duck" }
+			-- Vive: user-mappable crouch (default: menu button on the offhand,
+			-- matching the 0.7.3 layout)
+			local crouch_button = VRPlusMod._data.button_crouch or VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF
+			local crouch_hand = value_to_hand(crouch_button, hand_name, weapon_hand, offhand)
+			local button_key = get_button_key(crouch_button, crouch_hand)
+			if not has_override(state, button_key) then
+				key_map[button_key] = { "duck" }
+			end
 		elseif controller_type == VRPlusMod.C.CONTROLLER_TOUCH or 
 		       controller_type == VRPlusMod.C.CONTROLLER_KNUCKLES or 
 		       controller_type == VRPlusMod.C.CONTROLLER_FRAME then
@@ -85,6 +136,26 @@ local function add_offhand_actions(hand_name, key_map)
 			key_map[button_key] = key_map[button_key] or {}
 			table.insert(key_map[button_key], "menu")
 		end
+	elseif controller_type == VRPlusMod.C.CONTROLLER_VIVE then
+		local pause_button = VRPlusMod._data.button_pause or VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT
+		local pause_hand = value_to_hand(pause_button, hand_name, weapon_hand, offhand)
+
+		local should_bind = pause_hand == hand_name
+		if not should_bind and pause_hand == weapon_hand then
+			should_bind = hand_name == offhand
+		end
+
+		if should_bind then
+			local button_key = get_button_key(pause_button, pause_hand)
+			if not has_override(state, button_key) then
+				if not key_map[button_key] then
+					key_map[button_key] = {}
+				end
+				if not table.contains(key_map[button_key], "menu") then
+					table.insert(key_map[button_key], "menu")
+				end
+			end
+		end
 	end
 
 	if VRPlusMod._data.movement_locomotion then
@@ -93,14 +164,15 @@ local function add_offhand_actions(hand_name, key_map)
 		
 		-- Handle jump based on controller type
 		if controller_type == VRPlusMod.C.CONTROLLER_VIVE then
-			-- Vive: Place jump function opposite from sprint/walk touchpad
-			if hand_name == "r" then
-				key_map["trackpad_button_" .. "l"] = { "jump" }
-			else
-				key_map["trackpad_button_" .. "r"] = { "jump" }
+			local jump_button = VRPlusMod._data.button_jump or VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT
+			local jump_hand = value_to_hand(jump_button, hand_name, weapon_hand, offhand)
+			local jump_key = get_button_key(jump_button, jump_hand)
+			if not has_override(state, "trackpad_button_" .. hand_name) then
+				key_map["trackpad_button_" .. hand_name] = { "run" }
 			end
-			-- For Vive, only assign run to the current hand's trackpad (not the opposite hand with jump)
-			key_map["trackpad_button_" .. hand_name] = { "run" }
+			if not has_override(state, jump_key) then
+				key_map[jump_key] = { "jump" }
+			end
 		elseif controller_type == VRPlusMod.C.CONTROLLER_TOUCH or 
 		       controller_type == VRPlusMod.C.CONTROLLER_KNUCKLES or 
 		       controller_type == VRPlusMod.C.CONTROLLER_FRAME then
@@ -116,7 +188,9 @@ local function add_offhand_actions(hand_name, key_map)
 
 		-- Only map dpad to move for Vive (button-based controllers may use dpad for other actions)
 		if controller_type == VRPlusMod.C.CONTROLLER_VIVE then
-			key_map["dpad_" .. hand_name] = { "move" }
+			if not has_override(state, "dpad_" .. hand_name) then
+				key_map["dpad_" .. hand_name] = { "move" }
+			end
 		end
 
 	end
@@ -227,23 +301,29 @@ Hooks:PostHook(EmptyHandState, "apply", "VRPlusOffHandActions", function(self, h
 		-- TODO should we just override it completely?
 		local key = "trigger_" .. hand_name
 
-		if not key_map[key] then
-			key_map[key] = {}
-		end
+		if not has_override("Empty", key) then
+			if not key_map[key] then
+				key_map[key] = {}
+			end
 
-		table.insert(key_map[key], "interact_" .. nice_name)
+			table.insert(key_map[key], "interact_" .. nice_name)
+		end
 	end
 
 	if VRPlusMod._data.comfort.interact_mode == VRPlusMod.C.INTERACT_TRIGGER then
-		key_map["grip_" .. hand_name][1] = nil
+		if not has_override("Empty", "grip_" .. hand_name) then
+			key_map["grip_" .. hand_name][1] = nil
+		end
 	end
 
 	if VRPlusMod._data.movement_locomotion then
 		-- Prevent moving forwards from jumping for Rift users
-		key_map["d_up_" .. hand_name] = nil
+		if not has_override("Empty", "d_up_" .. hand_name) then
+			key_map["d_up_" .. hand_name] = nil
+		end
 	end
 
-	add_offhand_actions(hand_name, key_map)
+	add_offhand_actions(hand_name, key_map, "Empty")
 end)
 
 Hooks:PostHook(PointHandState, "apply", "VRPlusPointingHandActions", function(self, hand, key_map)
@@ -251,10 +331,12 @@ Hooks:PostHook(PointHandState, "apply", "VRPlusPointingHandActions", function(se
 
 	if VRPlusMod._data.movement_locomotion then
 		-- Prevent moving forwards from jumping for Rift users
-		key_map["d_up_" .. hand_name] = nil
+		if not has_override("Point", "d_up_" .. hand_name) then
+			key_map["d_up_" .. hand_name] = nil
+		end
 	end
 
-	add_offhand_actions(hand_name, key_map)
+	add_offhand_actions(hand_name, key_map, "Point")
 end)
 
 Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, hand, key_map)
@@ -262,7 +344,9 @@ Hooks:PostHook(MaskHandState, "apply", "VRPlusCasingRotation", function(self, ha
 
 	local hand_name = hand == 1 and "r" or "l"
 
-	key_map["dpad_" .. hand_name] = { "touchpad_primary" }
+	if not has_override("Mask", "dpad_" .. hand_name) then
+		key_map["dpad_" .. hand_name] = { "touchpad_primary" }
+	end
 end)
 
 Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand, key_map)
@@ -270,11 +354,13 @@ Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand,
 	local hand_name = hand == 1 and "r" or "l"
 
 	if VRPlusMod._data.turning_mode ~= VRPlusMod.C.TURNING_OFF and hand_name == weapon_hand then
-		key_map["dpad_" .. hand_name] = { "touchpad_primary" }
+		if not has_override("Belt", "dpad_" .. hand_name) then
+			key_map["dpad_" .. hand_name] = { "touchpad_primary" }
+		end
 	end
 
 	if hand_name ~= weapon_hand then
-		add_offhand_actions(hand_name, key_map)
+		add_offhand_actions(hand_name, key_map, "Belt")
 	end
 end)
 
@@ -283,20 +369,39 @@ Hooks:PostHook(WeaponHandState, "apply", "VRPlusMoveGadgetFiremode", function(se
 		return
 	end
 
-	-- By default:
-	-- switch_hands -> d_up (HARDCODED - cannot be changed)
-	-- weapon_firemode -> d_left (now customizable)
-	-- weapon_gadget -> d_right (now customizable)
-
 	local hand_name = hand == 1 and "r" or "l"
 	local controller_type = get_controller_type()
-	
-	-- Clear customizable d-pad mappings (but leave d_up for switch_hands)
+
+	if controller_type == VRPlusMod.C.CONTROLLER_VIVE then
+		local weapon_hand, offhand = get_hand_context()
+
+		local gadget_button = VRPlusMod._data.button_gadget or VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT
+		local firemode_button = VRPlusMod._data.button_firemode or VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT
+
+		local gadget_hand = value_to_hand(gadget_button, hand_name, weapon_hand, offhand)
+		local firemode_hand = value_to_hand(firemode_button, hand_name, weapon_hand, offhand)
+
+		local function apply(key, value)
+			if not has_override("Weapon", key) then
+				key_map[key] = value
+			end
+		end
+
+		apply("d_left_" .. hand_name, nil)
+		apply("d_right_" .. hand_name, nil)
+		apply("d_up_" .. hand_name, nil)
+		apply("d_down_" .. hand_name, nil)
+
+		apply(get_button_key(gadget_button, gadget_hand), { "weapon_gadget" })
+		apply(get_button_key(firemode_button, firemode_hand), { "weapon_firemode" })
+		return
+	end
+
+	-- Clear the d-pad mappings we own, so unbound directions do nothing
 	key_map["d_left_" .. hand_name] = nil
 	key_map["d_right_" .. hand_name] = nil
 	key_map["d_down_" .. hand_name] = nil
-	-- DO NOT clear d_up - it's hardcoded to "switch_hands" by the game
-	
+
 	-- Apply user-configured button mappings for gadget and fire mode
 	local gadget_button = VRPlusMod._data.button_gadget or VRPlusMod.C.BUTTON_DPAD_RIGHT
 	local firemode_button = VRPlusMod._data.button_firemode or VRPlusMod.C.BUTTON_DPAD_LEFT
@@ -304,13 +409,8 @@ Hooks:PostHook(WeaponHandState, "apply", "VRPlusMoveGadgetFiremode", function(se
 	local gadget_key = get_button_key(gadget_button, hand_name)
 	local firemode_key = get_button_key(firemode_button, hand_name)
 	
-	-- Only apply if the button isn't d_up (reserved for switch_hands)
-	if gadget_button ~= VRPlusMod.C.BUTTON_DPAD_UP then
-		key_map[gadget_key] = { "weapon_gadget" }
-	end
-	if firemode_button ~= VRPlusMod.C.BUTTON_DPAD_UP then
-		key_map[firemode_key] = { "weapon_firemode" }
-	end
+	key_map[gadget_key] = { "weapon_gadget" }
+	key_map[firemode_key] = { "weapon_firemode" }
 end)
 
 -----------------------------------------

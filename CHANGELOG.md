@@ -5,18 +5,22 @@
   - Shows pagers used, body bags, guards with pagers, and unbagged/bagged/secured loot on the main tablet page
   - Based on "VR Wrist Panel+ / VR Improvements Mod Hud Addons" - credit to IssaStorm (https://modworkshop.net/mod/56553)
 - Added: Customizable button mappings (new "Button Mappings" menu)
-  - Jump: Default B button (right hand, requires locomotion enabled)
-  - Crouch: Default A button (both hands, requires artificial crouch enabled)
-  - Pause: Default Y button (non-weapon hand to avoid combat interruption)
-  - Gadget Toggle: Default D-Pad Right (weapon hand only)
-  - Fire Mode Switch: Default D-Pad Left (weapon hand only, switches semi/burst/auto)
-  - All buttons can be remapped to A/B/X/Y/Menu/D-Pad Down/Left/Right (D-Pad Up is hardcoded to "Switch Hands")
+  - Jump: Default B button
+  - Crouch: Default A button
+  - Pause: Default Y button
+  - Gadget Toggle: Default D-Pad Right
+  - Fire Mode Switch: Default D-Pad Left
+  - All actions can be remapped to A/B/X/Y/Menu/D-Pad Up/Down/Left/Right
   - Expanded support for Oculus Touch/Quest, Valve Index Knuckles, Steam Frame, HTC Vive
+- Added: Vive wand remapping options to the Button Mappings menu
+  - New options: Touchpad Up/Down/Left/Right/Center and Menu, each for "Offhand" or "Dominant Hand"
+  - Vive defaults match the 0.7.3 layout: Jump = Touchpad Center (Dominant Hand), Crouch = Menu (Offhand),
+    Pause = Menu (Dominant Hand), Gadget = Touchpad Up (Dominant Hand), Fire Mode = Touchpad Down (Dominant Hand)
 - Added: "Controller Type" setting in Motion Controller Options menu
   - Settings: Auto-Detect, HTC Vive, Oculus Touch/Quest, Valve Index Knuckles, Steam Frame
-  Fixed: Crouch state resetting when grabbing bag
+- Fixed: Crouch state resetting when grabbing bag
 - Fixed: Controls Manager now saves correctly
-- Fixed: Quest and Index users can now jump when using locomotion mode
+- Fixed: Button-based controllers can now jump when using locomotion mode
 - Fixed: Crouch button now properly works for button-based controllers
 - Fixed: Vive touchpad no longer has conflicting jump+sprint mappings on same button
 - Fixed: Switching the Sprint Mode setting to "Off" no longer crashes the game
