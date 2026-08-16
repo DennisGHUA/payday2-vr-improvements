@@ -22,6 +22,15 @@
 			"callback": "vrplus_belt_radio",
 			"value": "belt_radio",
 			"priority": 98
+		},
+		{
+			"type": "toggle",
+			"id": "vrplus_tablet_heist_info",
+			"title": "vrplus_tablet_heist_info",
+			"description": "vrplus_tablet_heist_info_desc",
+			"callback": "vrplus_tablet_heist_info",
+			"value": "tablet_heist_info",
+			"priority": 97
 		}
 	]
 }

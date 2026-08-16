@@ -181,6 +181,8 @@
 	"vrplus_belt_radio": "Belt-mounted microphone",
 	"vrplus_belt_radio_desc": "Add a microphone to the top left of your belt, with which you can use voicechat",
 	"menu_vr_belt_vrplus_radio": "Microphone",
+	"vrplus_tablet_heist_info": "Extra Heist Info on the Main Tablet",
+	"vrplus_tablet_heist_info_desc": "Show pagers used, body bags, alerted guards and loot tracking on the main tablet page",
 
 	"vrplus_menu_tweaks": "Tweaks",
 	"vrplus_menu_tweaks_desc": "Random, unimportant options",

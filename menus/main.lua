@@ -555,6 +555,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	add_inputs("hud", true, {
 		"watch_health_wheel",
 		"belt_radio",
+		"tablet_heist_info",
 	})
 
 	-- Tweak options

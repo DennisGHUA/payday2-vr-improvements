@@ -51,6 +51,7 @@ local default_data = {
 	hud = {
 		watch_health_wheel = true,
 		belt_radio = false,
+		tablet_heist_info = true,
 	},
 
 	tweaks = {
