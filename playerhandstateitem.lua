@@ -48,6 +48,9 @@ function PlayerHandStateItem:at_enter(prev_state, params)
 			self._dynamic_geometry:set_visibility(true)
 		end
 
+		local projectile_entry = managers.blackmarket:equipped_projectile()
+		self._throwable_data = tweak_data.blackmarket.projectiles[projectile_entry]
+
 		local offset = tweak_data.vr:get_offset_by_id(managers.blackmarket:equipped_grenade())
 
 		if offset then
