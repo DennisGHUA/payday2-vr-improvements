@@ -152,12 +152,33 @@
 			"priority": 91
 		},
 		{
+			"type": "multiple_choice",
+			"id": "vrplus_smooth_rotation_speed",
+			"title": "vrplus_smooth_rotation_speed",
+			"description": "vrplus_smooth_rotation_speed_desc",
+			"callback": "vrplus_smooth_rotation_speed",
+			"value": "smooth_rotation_speed",
+			"items": [
+				"vrplus_smooth_rotation_speed_60",
+				"vrplus_smooth_rotation_speed_90",
+				"vrplus_smooth_rotation_speed_120",
+				"vrplus_smooth_rotation_speed_150",
+				"vrplus_smooth_rotation_speed_180",
+				"vrplus_smooth_rotation_speed_210",
+				"vrplus_smooth_rotation_speed_240",
+				"vrplus_smooth_rotation_speed_270",
+				"vrplus_smooth_rotation_speed_300",
+				"vrplus_smooth_rotation_speed_360"
+			],
+			"priority": 90
+		},
+		{
 			"type": "button",
 			"id": "vrplus_controls_manager",
 			"title": "vrplus_controls_manager",
 			"description": "vrplus_controls_manager_desc",
 			"callback": "vrplus_controls_manager",
-			"priority": 90
+			"priority": 89
 		}
 	]
 }

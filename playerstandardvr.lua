@@ -84,8 +84,9 @@ local function do_rotation(self, t, dt)
 			local amt = (axis.x > 0) and (axis.x - deadzone) or (axis.x + deadzone)
 			amt = amt * 1/(1-deadzone)
 
-			-- One full revolution per second on maxed stick
-			local delta = dt * 360 / 2 * -amt
+			-- User-configurable rotation speed (degrees per second at full stick)
+			local speed = VRPlusMod._data.smooth_rotation_speed or 180
+			local delta = dt * speed * -amt
 			self:set_base_rotation(Rotation(rot + delta, 0, 0))
 		end
 	else

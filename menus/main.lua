@@ -133,6 +133,17 @@ function VRPlusMod:_ResetDefaultControls(hmd)
 							break
 						end
 					end
+				elseif val_name == "smooth_rotation_speed" then
+					-- Find the index for the smooth_rotation_speed value
+					local smooth_rotation_speed_values = {
+						60, 90, 120, 150, 180, 210, 240, 270, 300, 360
+					}
+					for i, v in ipairs(smooth_rotation_speed_values) do
+						if v == value then
+							item:set_value(i)
+							break
+						end
+					end
 				else
 					item:set_value( value )
 				end
@@ -285,7 +296,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"sprint_mode"
 	})
 
-	-- Rotation delay and amount - custom handlers for multiple_choice controls
+	-- Rotation delay, amount, and smooth speed - custom handlers for multiple_choice controls
 	-- Multiple choice controls return the 1-based index, not the value
 	local rotation_delay_values = {
 		0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50,
@@ -293,6 +304,9 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	}
 	local rotation_amount_values = {
 		15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90
+	}
+	local smooth_rotation_speed_values = {
+		60, 90, 120, 150, 180, 210, 240, 270, 300, 360
 	}
 
 	function MenuCallbackHandler:vrplus_rotation_delay(item)
@@ -304,6 +318,12 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	function MenuCallbackHandler:vrplus_rotation_amount(item)
 		local index = item:value()  -- This is the 1-based index
 		VRPlusMod._data.rotation_amount = rotation_amount_values[index]
+		VRPlusMod:Save()
+	end
+
+	function MenuCallbackHandler:vrplus_smooth_rotation_speed(item)
+		local index = item:value()  -- This is the 1-based index
+		VRPlusMod._data.smooth_rotation_speed = smooth_rotation_speed_values[index]
 		VRPlusMod:Save()
 	end
 
