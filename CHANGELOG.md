@@ -18,6 +18,7 @@
 - Fixed: Quest and Index users can now jump when using locomotion mode
 - Fixed: Crouch button now properly works for button-based controllers
 - Fixed: Vive touchpad no longer has conflicting jump+sprint mappings on same button
+- Fixed: Switching the Sprint Mode setting to "Off" no longer crashes the game
 - Fixed: Mod settings menu not showing up when the config file is empty or corrupt
 - Changed: Unknown/generic headsets now default to Touch controller layout (A/B buttons) instead of Vive
 

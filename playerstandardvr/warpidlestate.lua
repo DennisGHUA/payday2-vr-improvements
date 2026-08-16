@@ -279,6 +279,8 @@ function WarpIdleState:update(t)
 		state._running_wanted = held_down
 		state.__stop_running = not state._running_wanted
 	else
-		error("Unknown sprint mode " .. tostring(VRPlusMod._data.sprint_mode))
+		-- Sprinting disabled (SPRINT_OFF, or any unknown value)
+		state._running_wanted = false
+		state.__stop_running = true
 	end
 end
