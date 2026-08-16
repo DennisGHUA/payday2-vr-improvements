@@ -416,7 +416,11 @@ Hooks:PostHook(HUDManager, "update", "VRPlusHeistInfo", function(self, t, dt)
 					local tweak_entry = tweak_data.carry[carry_id]
 					if tweak_entry and not tweak_entry.is_vehicle and not tweak_entry.skip_exit_secure then
 						if carry_id ~= "person" or (managers.job and managers.job:current_level_id() == "mad") then
-							if unit:interaction() and unit:interaction().tweak_data == "carry_drop" then
+							-- Bagged loot is any dropped carry bag that can be picked up again.
+							-- Standard bags use tweak_data "carry_drop", but some have their own variant
+							-- (e.g. paintings use "painting_carry_drop"), just match the common suffix.
+							local interact_id = unit:interaction() and unit:interaction().tweak_data
+							if interact_id and string.find(interact_id, "carry_drop", 1, true) then
 								total_bagged = total_bagged + 1
 							else
 								total_unbagged = total_unbagged + 1

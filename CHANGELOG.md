@@ -4,6 +4,7 @@
 - Added: "Extra Heist Info on the Main Tablet" HUD panel (default on; toggle in Options > Mod Options > VR Plus > UI Options)
   - Shows pagers used, body bags, guards with pagers, and unbagged/bagged/secured loot on the main tablet page
   - Based on "VR Wrist Panel+ / VR Improvements Mod Hud Addons" - credit to IssaStorm (https://modworkshop.net/mod/56553)
+    - Fixed a crash introduced in update 247; bag counts should now be accurate.
 - Added: Customizable button mappings (new "Button Mappings" menu)
   - Jump: Default B button
   - Crouch: Default A button
@@ -26,6 +27,8 @@
 - Fixed: Switching the Sprint Mode setting to "Off" no longer crashes the game
 - Fixed: Mod settings menu not showing up when the config file is empty or corrupt
 - Changed: Unknown/generic headsets now default to Touch controller layout (A/B buttons) instead of Vive
+
+**Note:** I develop and test on an original HTC Vive. Other headsets/controllers (Oculus Touch/Quest, Valve Index Knuckles, Steam Frame, etc.) are supported based on best-effort mapping, but they have not been personally tested.
 
 ## V0.7.3
 - Added: Setting to customize snap rotation delay
