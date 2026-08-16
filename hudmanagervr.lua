@@ -206,7 +206,7 @@ function HUDManagerVR:_init_vrplus_heist_panel(page_panel)
 		layer = 1
 	})
 	-- Unbagged (red) / Bagged (yellow) / Secured (green)
-	self._vrplus_loot_unbagged_text = self._vrplus_stealth_panel:text({
+	self._vrplus_loot_unbagged_text = self._vrplus_heist_panel:text({
 		name = "loot_unbagged",
 		text = "0",
 		font = tweak_data.hud.medium_font_noshadow,
@@ -226,7 +226,7 @@ function HUDManagerVR:_init_vrplus_heist_panel(page_panel)
 		y = 0,
 		layer = 1
 	})
-	self._vrplus_loot_bagged_text = self._vrplus_stealth_panel:text({
+	self._vrplus_loot_bagged_text = self._vrplus_heist_panel:text({
 		name = "loot_bagged",
 		text = "0",
 		font = tweak_data.hud.medium_font_noshadow,
@@ -246,7 +246,7 @@ function HUDManagerVR:_init_vrplus_heist_panel(page_panel)
 		y = 0,
 		layer = 1
 	})
-	self._vrplus_loot_secured_text = self._vrplus_stealth_panel:text({
+	self._vrplus_loot_secured_text = self._vrplus_heist_panel:text({
 		name = "loot_secured",
 		text = "0",
 		font = tweak_data.hud.medium_font_noshadow,
