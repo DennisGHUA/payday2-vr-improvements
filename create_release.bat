@@ -71,7 +71,8 @@ IF ERRORLEVEL 1 (
     )
 )
 
-SET "ARCHIVE_NAME=vrplus_!VERSION!.zip"
+SET "VERSION_UNDERSCORE=!VERSION:.=_!"
+SET "ARCHIVE_NAME=vrplus-!VERSION_UNDERSCORE!.zip"
 SET "ARCHIVE_FULL_PATH=!OUTPUT_SUBDIR!\!ARCHIVE_NAME!"
 
 REM Set up temp directory structure
@@ -124,8 +125,31 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Compress-Archive -Pa
 
 IF ERRORLEVEL 1 (
     ECHO ZIP creation failed. Files in: !TEMP_VRPLUS_DIR!
+    GOTO CLEANUP_AND_EXIT
 ) ELSE (
     ECHO Created: !ARCHIVE_FULL_PATH!
+)
+
+REM Update updates_meta.json
+ECHO Updating updates_meta.json...
+SET "META_FILE=updates_meta.json"
+SET "DOWNLOAD_URL=https://github.com/DennisGHUA/payday2-vr-improvements/releases/download/v!VERSION!/!ARCHIVE_NAME!"
+
+REM Create new updates_meta.json content
+(
+    ECHO [
+    ECHO   {
+    ECHO     "ident": "vrimprovements-vrplus",
+    ECHO     "version": "!VERSION!",
+    ECHO     "download_url": "!DOWNLOAD_URL!"
+    ECHO   }
+    ECHO ]
+) > "!META_FILE!"
+
+IF ERRORLEVEL 1 (
+    ECHO Warning: Failed to update updates_meta.json
+) ELSE (
+    ECHO Successfully updated updates_meta.json with version !VERSION!
 )
 
 :CLEANUP_AND_EXIT
