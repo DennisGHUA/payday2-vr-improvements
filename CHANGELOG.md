@@ -14,6 +14,7 @@
   - Expanded support for Oculus Touch/Quest, Valve Index Knuckles, Steam Frame, HTC Vive
 - Added: "Controller Type" setting in Motion Controller Options menu
   - Settings: Auto-Detect, HTC Vive, Oculus Touch/Quest, Valve Index Knuckles, Steam Frame
+  Fixed: Crouch state resetting when grabbing bag
 - Fixed: Controls Manager now saves correctly
 - Fixed: Quest and Index users can now jump when using locomotion mode
 - Fixed: Crouch button now properly works for button-based controllers

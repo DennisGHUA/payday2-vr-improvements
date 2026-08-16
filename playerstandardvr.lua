@@ -420,8 +420,15 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 				self:_start_action_ducking(t)
 			end
 		else
-			if self._state_data.ducking and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
-				self:_end_action_ducking(t)
+			if self._ext_movement and self._ext_movement:current_state_name() == "standard" and self._unit:mover() then
+				-- Player explicitly pressed the button to stand up, so always make
+				-- sure they actually do. Must not be gated on _state_data.ducking:
+				-- after carrying/throwing a bag that flag can desync from the real
+				-- body (mover left in duck while the flag already reads "standing"),
+				-- leaving the player stuck crouched until a warp force-stands them.
+				-- Matching warp/zipline, force the stand with skip_can_stand_check so
+				-- _end_action_ducking restores the standing mover regardless.
+				self:_end_action_ducking(t, true)
 			end
 		end
 	end
