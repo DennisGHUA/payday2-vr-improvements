@@ -1,164 +1,155 @@
-**This mod is also available on the mod workshop:**  
-https://modworkshop.net/mod/45143
-  
-This version is a continuation of the following repositories:  
-Version 0.6.1 (2018)  
-https://gitlab.com/znixian/payday2-vr-improvements  
-Version 0.6.5R (2020)  
-https://gitlab.com/HugoZink/payday2-vr-improvements  
-  
-# PAYDAY 2 VR: Improvements Mod
-The PD2VR Improvements mod (referred to as VRPlus in code, in case you run across that) is a mod for the VR Beta of PAYDAY 2, adding many quality-of-life fixes such as smooth locomotion, moving you're health wheel to you're wristwatch (as per the trailer), and snap-turning support, and fading the screen to red while on very low health.
+# VR: Improvements Mod / VR+ (VR Plus)
 
-Most of these changes are disabled by default, and must be enabled in the mod settings. See below for a list of the settings, and what they do.
+A comprehensive quality-of-life and enhancement mod for PAYDAY 2 VR that significantly improves the VR experience with better controls, comfort options, HUD improvements, and gameplay tweaks.
 
-## Reporting bugs / Requesting features
-The GitHub [issue tracker](https://github.com/DennisGHUA/payday2-vr-improvements/issues) is the primary way to keep track of problems and suggestions for this project.
+[![Playing modded PAYDAY 2 VR on the Proving Grounds](https://img.youtube.com/vi/Yz9BA0Oj0bk/0.jpg)](https://youtu.be/Yz9BA0Oj0bk)
 
-Please do not hesitate to post your issue (be it a bug report, or any kind of suggestion) on here. Preferrably look at the list of issues to see if any clearly match yours, but I don't have any problem with the occasional duplicate issue.
+## Features & Settings
 
-If this is a crash bug, please pastebin your `crash.txt` file and include a link to it.
+All settings accessible in-game via **Options → Mod Options → VR Improvements / VRPlus**. The sections below mirror the in-game menu layout and order.
 
-## Automatic Updates
-As of this moment the mod does not support automatic updates. You can press the watch button on github top right and select Custom->Releases or follow the mod the [modworkshop](https://modworkshop.net/mod/45143).
+<details>
+<summary><b>UI Options</b></summary>
 
-## Old Steam Group
-This mod has had an [Abandoned Steam group](https://steamcommunity.com/groups/payday-2-vr-mod/). But this no longer seems relevant. Use the github issue tracker or the modworkshop page for discussing.
+Configure User Interface settings.
 
-## Changelog
-See [CHANGELOG.md](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/CHANGELOG.md).
+- **Wristwatch Health Display**: Move your health indicator to your wristwatch (requires restart)
+- **Belt-mounted microphone**: Add a microphone to the top left of your belt, with which you can use voicechat
+- **Extra Heist Info on the Main Tablet**: Show pagers used, body bags, alerted guards and loot tracking on the main tablet page
+
+</details>
+
+<details>
+<summary><b>Comfort Options</b></summary>
+
+Options to increase physical comfort, by reducing motion sickness and remapping controls.
+
+- **Enable speed cap**: Enable movement speed cap
+- **Movement speed cap**: The maximum speed you will be able to walk/run at
+- **Interaction Input**: Which button should be used for interacting with objects (Grip Button, Either Grip or Trigger, Trigger Button)
+- **Lock Interactions**: Press to interact, press to cancel interaction
+- **Artificial Crouching**: Use your non-weapon hand menu/Y button to control crouching (Disabled, Toggle, Hold)
+- **Artificial Crouching Scale**: What percentage of your normal height you are when in crouch mode
+
+</details>
+
+<details>
+<summary><b>Button Mappings</b></summary>
+
+Customize button assignments for your controller.
+
+- **Jump**: Button for jumping (requires locomotion enabled)
+- **Crouch**: Button for crouching
+- **Pause**: Button for pause menu
+- **Gadget Toggle**: Button to toggle weapon gadget/laser
+- **Fire Mode**: Button to switch weapon fire mode
+
+Available buttons include A, B, X, Y, Menu, D-Pad directions, and Touchpad directions/center/menu for both the offhand and dominant hand.
+
+<details>
+<summary><b>Advanced Controls Manager</b></summary>
+
+Advanced controller mapping (Use Button Mappings above for simple remapping).
+
+> **WARNING**: The 'Button Mappings' settings take priority for Jump, Crouch, Pause, Gadget and Fire Mode. This is the advanced/legacy manager.
+
+</details>
+
+</details>
+
+<details>
+<summary><b>Motion Controller Options</b></summary>
+
+Configure the inputs for your motion controllers.
+
+- **Controller Type**: Select your VR controller type (Auto-Detect, HTC Vive, Oculus Touch / Quest, Valve Index Knuckles, Steam Frame). Change this if jump/crouch buttons don't work correctly.
+- **Turning mode**: Use the thumbstick/trackpad on your weapon hand to rotate your view
+  - Disable turning, keep default reload/gadget
+  - Smooth view rotation
+  - Snap view rotation
+- **Sprint timer**: The amount of time the sprint button must be held to make the player sprint, rather than jump
+- **Sprinting**: What method of using the thumbstick/trackpad click button should be used for sprinting
+  - Disable Sprinting
+  - Long-click to toggle sprinting
+  - Hold-click to sprint
+- **Teleport on untouch**: Teleport when the player un-touches their thumbstick/trackpad, rather than clicking it
+- **Controller-Relative Movement**: Move relative to the direction of the active motion controller, not the HMD
+- **Snap Rotation Delay**: The delay in seconds between snap rotations (0.05s – 1.00s)
+- **Deadzone**: Percentage of the thumbstick/trackpad below which movement will be ignored
+- **Snap Rotation Amount**: The amount in degrees to rotate when using snap rotation (15° – 90°)
+- **Enable Locomotion**: Use thumbstick/trackpad motion to walk around, rather than warping/teleporting
+- **Apply movement smoothing**: Apply a smoothing factor to make movement easier
+- **Smooth Rotation Speed**: Rotation speed for smooth turning mode (60°/s – 360°/s at full stick)
+
+</details>
+
+<details>
+<summary><b>Camera Options</b></summary>
+
+Configure camera behaviour.
+
+- **Fade distance (0 to disable)**: The distance from an obstacle at which the view begins to fade to black (set to 0 to disable)
+- **Camera reset percentage**: The percentage that the screen has faded to black before the user will be teleported out of the wall
+- **Camera reset timer**: How long (in seconds) after the reset percentage has been reached will the user be teleported out of the wall
+- **Enable Redout**: When your health gets below a set threshold, the screen starts to turn red
+- **Redout %HP Start**: The percentage of your health at which the screen begins to turn red
+- **Redout Max Fade**: The maximum percentage of opacity for the redout effect
+
+</details>
+
+<details>
+<summary><b>Change VR headset / Reset Options</b></summary>
+
+- **Change VR headset / Reset Options**: Reset options for this mod back to the default values
+
+</details>
+
+<details>
+<summary><b>Tweaks</b></summary>
+
+Random, unimportant options.
+
+- **Laser hue**: The hue of the laser in the main menu
+- **Laser Disco**: Constantly make the laser fade through all possible hues, at the speed specified above
+- **Endscreen Speedup**: Speed multiplier for the end-heist screen (same effect as holding space)
+- **Force graphics quality**: Force-set the desktop window resolution
+- **Graphics Quality**: The desktop window resolution, not visible when wearing a headset (HMD)
+- **Weapon-hand Melee**: Use your weapon hand as a melee weapon (Yes (vanilla default), Only in Loud not in Stealth, No)
+
+</details>
+
 
 ## Credits
-Original mod up to version 0.6.1:
-- ZNixian - Coding
-- blinkVR - Mod icon, helping find and replicate bugs
-- Sergio - Russian translation
 
-Onwards from 0.6.1 up to version 0.6.5R:
-- Hugo Zink - Continued coding contributions
+**Version 0.6.6 onward:**
+- **Jos Badpak** - Continued coding contributions and mod preservation
+- **IssaStorm** - VR Wrist Panel+ | VR Improvements Mod Hud Addons
+- **LordiAnders** - Bug fixing
 
-From version 0.6.6 onward:
-- LordiAnders - Bug fixing
-- Jos Badpak - Bug fixing, minor adjustments, and mod preservation
+**Versions 0.6.1–0.6.5R:**
+- **Hugo Zink** - Continued coding contributions
+
+**Original mod, up to version 0.6.1:**
+- **ZNixian** - Coding
+- **blinkVR** - Mod icon, helping find and replicate bugs
+- **Sergio** - Russian translation
+
+## Note from Maintainer
+
+I mainly use an HTC Vive with this mod, so that's the headset I test against. I sometimes go long stretches without playing PAYDAY 2, so I'm not actively maintaining it on a regular schedule, but it's not abandoned either. I mostly fix things for myself and share those fixes here.
+
+Since I can only test on a Vive, I can't personally verify that every fix works correctly on other headsets. Pull requests improving support for other headsets are very welcome, since I'm not able to test those issues myself.
+
+## Support
+
+- Report issues on [GitHub](https://github.com/DennisGHUA/payday2-vr-improvements/issues)
+- Discuss on [ModWorkshop](https://modworkshop.net/mod/45143)
 
 ## License
-See [LICENSE](https://github.com/DennisGHUA/payday2-vr-improvements/blob/master/LICENSE).
 
+See [LICENSE](LICENSE) file for details.
 
-## Options
-This mod is extensively customizable, and by changing you're settings you'll get the most out of this mod. To open you're settings, open the game and click Options->Mod Options->VR Improvements. From there, you can customize the various aspects of the mod.
+## Contributing
 
-Almost all of these options can be changed while playing and will take effect instantly - no need to restart PAYDAY or restart the heist (for those not aware of it, starting, restarting or stopping a heist will almost always have the same effect as restarting PAYDAY 2 - you can install a mod and then restart the heist to have it take effect, without restarting PAYDAY 2, or disable a mod while on the main menu and this takes effect when you next start a heist).
-
-## UI Options
-Therese settings are about the ingame user-interface.
-
-### Wristwatch Health Display
-This moves you're health wheel to you're wristwatch, as seen in the trailer or seen [here](https://i.imgur.com/A9AmoKo.jpg). This does remove it, not duplicate it, but I'm looking into fixing that.
-
-Changes to this option will not take effect until a new heist starts.
-
-Default: Enabled
-
-## Comfort Options
-For those affected by simulator sickness, smooth locomotion is usually worse than teleporting in this regard. These options help try to mitigate this.
-
-Also, they can adjust some controls that some Vive users may find painful over time.
-
-### Speed Cap
-Enabling this will artifically limit the player's walking and running speeds, to an adjustable amount.
-
-Default: Disabled
-
-### Interaction Input
-This allows you to select, when using an empty hand, which buttons on the motion controller can be used to interract with
-items (pick locks, start drills, answer pagers, etc). For Vive users who find their grip button uncomfortable, this may
-be extremely useful.
-
-It allows you to either select the Grip button, Trigger button or both as possible inputs.
-
-Default: `Either Grip or Trigger`. Vanilla: `Grip Button`.
-
-### Lock Interactions
-Once you start interacting with something (same as above - locks, drills, pagers, etc) you can release the
-button you used to start interacting with it, and the interacton will continue.
-
-You can interrupt an interaction by pressing the interact input a second time.
-
-Default: Disabled
-
-## Motion Controller Options
-These options adjust how input is taken from the motion controllers
-
-### Enable Locomotion
-Enabling this uses trackpad/thumbstick locomotion to move around in-game, while disabling it uses the vanilla warp/teleport system.
-
-When this is enabled, the controls are as follows: The hand you'd normally teleport with is changed to moving you around using the thumbstick/trackpad. Briefly clicking the trackpad/thumbstick will cause you to jump, holding down for longer will make you start running.
-
-Default: Enabled
-
-### Turning Mode
-This can be used to switch between no turning, smooth turning, and snap turning. When it is enabled, you're firemode and gadget buttons will be remapped to up and down, respectively, on you're weapon-side thumbstick, and left-right will rotate your view.
-
-Note this works regardless of 'Enable Locomotion'.
-
-Default: Disabled
-
-### Sticky Sprinting
-When this is enabled, you only need to hold down on your trackpad/thumbstick to start running, then you can let go. When this is disabled, you have to hold your thumbstick down to continue sprinting.
-
-Note that as of v0.1.9.0, jumping is broken when this is disabled - see #30. Should now be fixed in v0.7.0
-
-Default: Enabled
-
-### Controller-Relative Movement
-When this is enabled, you move in the direction you're pointing with the hand whoose thumbstick/trackpad you're using to move around. When this is disabled, you move in the direction you're looking.
-
-As an example, if you're looking forwards and are holding your hand out towards something off to your side. When this is enabled, moving the thumbstick/trackpad forwards will move you in the direction of what you're pointing at, while when disabled you will move in the direction you're looking.
-
-Default: Enabled
-
-### Deadzone
-In percent, how much of the trackpad between the center and the edge is considered a deadzone - you will not move while your thumb/thumbstick is in that zone.
-
-Default: `10`%
-
-### Sprint Timer
-How long, in seconds, you have to hold down the thumbstick/trackpad to start sprinting, as opposed to jumping.
-
-If you find you're unable to jump, ensure you did not set this to some very low value.
-
-Default: `0.25` Seconds
-
-## Camera Options
-This controls options for how the camera is handled in VR
-
-### Fade options:
-When you put your head into (or close to) a wall in VR, your screen will fade to black. Once it has reached a certain percentage of blackness (vanilla: 95%), it starts a timer to teleport you out after an amount of time (vanilla: 1.5 seconds).
-
-Fade Distance: The minimum distance from an object you must be before you're screen will start fading. Vanilla: `13`. Default: `2`.
-
-Camera Reset Percentage: The percentage blackness that your screen must fade to for the teleport-out timer to start. Vanilla: `95`%. Default: `95`%.
-
-Camera Reset Timer: The time in seconds that must pass while you're screen is over the reset percentage black before you will be teleported out. Vanilla: `1.5` seconds. Default: `0.25` seconds.
-
-### Redout options:
-Redout is where, when running low on health, you're screen will be tinted red in proportion to how close to going down you are as an indicaton. I've never tried this in game, so if you think making it fade out (or have any other suggestions) after a time would be useful, please post a comment on the Steam group or (preferrably) open an issue on the issuetracker.
-
-Redout %HP Start: When you're below this percentage of your health, your screen will begin it's fade to read.
-
-Redout Max Fade: At zero health, what percentage opacity is the red tint?
-
-## Tweaks
-Random, misc options that probably aren't very important.
-
-### Laser pointer options
-The laser pointer options allow you to set the colour of the laser pointer in the main menu. The hue slider lets you adjust the
-hue of the beam, and disco mode makes the pointer fade through the colours of the rainbow at a speed determined by the hue option.
-
-Note that disco mode uses a logarithmic scale, so while setting the hue slider to 100% will do two rainbows per second, at 10% it will
-only do two rainbows every 100 seconds (10%=0.1, 0.1^2=0.01, 1/0.01=100).
-
-Default (hue): `33.3`%. Vanilla: `33.3`%
-Default (disco): Disabled
-
+If you're a modder and want to contribute, feel free to open a pull request on the GitHub page. I actively check my GitHub, so if you have any fixes, improvements, or new features, you're welcome to submit them here:
+[https://github.com/DennisGHUA/payday2-vr-improvements](https://github.com/DennisGHUA/payday2-vr-improvements)
