@@ -445,6 +445,35 @@ if PlayerCarryVR then
 			self._state_data.__vrplus_duck = self._state_data.ducking or false
 		end
 	end)
+
+	-- Fix player being unable to stand up while carrying a bag when crouching
+	Hooks:PreHook(PlayerCarryVR, "_check_action_duck", "VRPlusCarryDuckPreCapture", function(self, t, input)
+		self._vrplus_carry_pre_ducking = (self._state_data and self._state_data.ducking) or false
+	end)
+
+	Hooks:PostHook(PlayerCarryVR, "_check_action_duck", "VRPlusForceCarryStand", function(self, t, input)
+		local mode = VRPlusMod._data.comfort.crouching
+		local pre_ducking = self._vrplus_carry_pre_ducking
+		self._vrplus_carry_pre_ducking = nil
+
+		if mode == VRPlusMod.C.CROUCH_NONE or not self._state_data or not self._unit:mover() then
+			return
+		end
+
+		-- Did the player press the button to stand up, and is the body still ducked
+		local want_stand
+		if mode == VRPlusMod.C.CROUCH_TOGGLE then
+			-- Toggle: a press while already ducking means "stand up".
+			want_stand = input.btn_duck_press and pre_ducking
+		else
+			-- Hold: letting the button go means "stand up".
+			want_stand = input.btn_duck_release
+		end
+
+		if want_stand and self._state_data.ducking then
+			self:_end_action_ducking(t, true)
+		end
+	end)
 end
 
 -- Respect _can_duck, to prevent ducking during mask-off
