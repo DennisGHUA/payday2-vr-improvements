@@ -474,7 +474,72 @@ if PlayerCarryVR then
 			self:_end_action_ducking(t, true)
 		end
 	end)
+
+	-- When grabbing a bag while artificial-crouched, the pickup (animation, hand
+	-- carry setup) can stand the body up while our persistent __vrplus_duck intent
+	-- stays true. That leaves the player visually crouched (HMD lowered) but the game
+	-- treating them as standing (taller capsule, more crouch room), which then shows
+	-- up as an instant "uncrouch" once they warp. Re-engage the body duck right at
+	-- entry so the game logic matches the visual crouch from the moment of pickup.
+	Hooks:PostHook(PlayerCarryVR, "enter", "VRPlusCarryEnterRestoreDuck", function(self, state_data, enter_data)
+		if VRPlusMod._data.comfort.crouching == VRPlusMod.C.CROUCH_NONE then
+			return
+		end
+
+		local sd = self._state_data or state_data
+
+		-- Only force a duck if the artificial-crouch intent says crouch but the body
+		-- was stood up. Leave standing players (intent off) alone.
+		if sd and sd.__vrplus_duck and not sd.ducking and self._unit:mover() and not sd.warping then
+			self:_start_action_ducking(managers.player:player_timer():time())
+		end
+	end)
+
+	-- PlayerCarry's _start_action_warp also calls _interupt_action_ducking(t, true),
+	-- which would stand the body and desync the crouch. The base PlayerCarry class has
+	-- no _end_action_warp (warp completion happens silently in _upd_attention), so we
+	-- can't restore after. Instead, prevent the uncrouch by replacing the method call.
+	local original_carry_interrupt_duck = PlayerCarryVR._interupt_action_ducking
+	function PlayerCarryVR:_interupt_action_ducking(t, skip_sync)
+		if VRPlusMod._data.comfort.crouching == VRPlusMod.C.CROUCH_NONE then
+			return original_carry_interrupt_duck(self, t, skip_sync)
+		end
+
+		local sd = self._state_data
+
+		-- If called with skip_sync=true (warp's "force stand" call) while artificial-
+		-- crouched, block it. Let normal ducking interrupts (button release, etc) through.
+		if skip_sync and sd and sd.__vrplus_duck and sd.ducking then
+			return
+		end
+
+		return original_carry_interrupt_duck(self, t, skip_sync)
+	end
+
 end
+-- [[Warp restores the artificial crouch]]
+-- _start_action_warp calls _interupt_action_ducking internally, which stands the
+-- body up even when the player was using the artificial crouch. That clears the
+-- body's ducking flag while our persistent __vrplus_duck intent stays true, so the
+-- player ends up visually crouched (HMD lowered by __affect_vrobj_position) but the
+-- game treats them as standing (taller capsule, larger crouch room). This is most
+-- noticeable after grabbing a bag while crouched and then warping. Restore the body
+-- duck when the warp finishes and the artificial crouch intent is still active.
+Hooks:PostHook(PlayerStandardVR, "_end_action_warp", "VRPlusRestoreDuckAfterWarp", function(self, t)
+	if VRPlusMod._data.comfort.crouching == VRPlusMod.C.CROUCH_NONE then
+		return
+	end
+
+	local state_data = self._state_data
+
+	-- Only re-crouch when the artificial crouch intent survived the warp but the body
+	-- was stood up by it. Nop out when the player already stands (intent off) or the
+	-- warp machinery hasn't fully settled yet.
+	if state_data and state_data.__vrplus_duck and not state_data.ducking and self._unit:mover() and not state_data.warping and not state_data.warping_to_ladder then
+		self:_start_action_ducking(t)
+	end
+end)
+
 
 -- Respect _can_duck, to prevent ducking during mask-off
 local old_start_action_ducking = PlayerStandardVR._start_action_ducking
