@@ -407,6 +407,17 @@ Hooks:PostHook(HUDManager, "update", "VRPlusHeistInfo", function(self, t, dt)
 		end
 
 		-- Count unbagged / bagged loot on the map
+		-- Bagged loot is any dropped carry bag that can be picked up again.
+		-- Standard bags use tweak_data "carry_drop", but some have their own variant
+		-- (e.g. paintings use "painting_carry_drop"). Only count the known bag types so
+		-- that other carry_drop interactables (e.g. "parachute_carry_drop") aren't miscounted.
+		local carry_drop_whitelist = {
+			["carry_drop"] = true,
+			["painting_carry_drop"] = true,
+			["safe_carry_drop"] = true,
+			["goat_carry_drop"] = true,
+			["cg22_bag_carry_drop"] = true,
+		}
 		local total_unbagged = 0
 		local total_bagged = 0
 		if managers.interaction and managers.interaction._interactive_units then
@@ -418,9 +429,9 @@ Hooks:PostHook(HUDManager, "update", "VRPlusHeistInfo", function(self, t, dt)
 						if carry_id ~= "person" or (managers.job and managers.job:current_level_id() == "mad") then
 							-- Bagged loot is any dropped carry bag that can be picked up again.
 							-- Standard bags use tweak_data "carry_drop", but some have their own variant
-							-- (e.g. paintings use "painting_carry_drop"), just match the common suffix.
+							-- (e.g. paintings use "painting_carry_drop"). Others like "parachute_carry_drop" are not loot.
 							local interact_id = unit:interaction() and unit:interaction().tweak_data
-							if interact_id and string.find(interact_id, "carry_drop", 1, true) then
+							if interact_id and carry_drop_whitelist[interact_id] then
 								total_bagged = total_bagged + 1
 							else
 								total_unbagged = total_unbagged + 1
