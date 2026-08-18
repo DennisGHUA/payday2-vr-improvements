@@ -107,7 +107,7 @@ local actions = {
 	warp_target = {},
 	weapon_firemode = {},
 	weapon_gadget = {},
-	--jump = {}, -- Add later
+	-- jump = {}, -- use button mapping instead of action mapping for jump, since it's not a hand state action
 }
 
 function get_human_control_name(id)

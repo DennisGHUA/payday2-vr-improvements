@@ -78,6 +78,75 @@ VRPlusMod._data_path = SavePath .. "vr_improvements.conf"
 VRPlusMod._data = {}
 VRPlusMod._menu_ids = {}
 
+-- The mod version a config was written with, so old ones can be fixed up on load.
+-- Deliberately not in defaults.lua: those only fill in missing keys, which would
+-- stamp old configs as current and skip their migrations.
+local MOD_VERSION = ModInstance and ModInstance:GetVersion() or "0"
+
+-- ponytail: assumes version parts stay below 100. Swap for a part-by-part compare
+-- if that ever stops holding.
+local function version_number(version)
+	local major, minor, patch = tostring(version):match("(%d+)%.?(%d*)%.?(%d*)")
+	return (tonumber(major) or 0) * 10000 + (tonumber(minor) or 0) * 100 + (tonumber(patch) or 0)
+end
+
+-- Every button a mapping can be put on, in the order the picker lists them
+VRPlusMod.BUTTON_OPTIONS = {
+	{ value = VRPlusMod.C.BUTTON_A, text = "vrplus_button_a" },
+	{ value = VRPlusMod.C.BUTTON_B, text = "vrplus_button_b" },
+	{ value = VRPlusMod.C.BUTTON_X, text = "vrplus_button_x" },
+	{ value = VRPlusMod.C.BUTTON_Y, text = "vrplus_button_y" },
+	{ value = VRPlusMod.C.BUTTON_MENU, text = "vrplus_button_menu" },
+	{ value = VRPlusMod.C.BUTTON_DPAD_UP, text = "vrplus_button_dpad_up" },
+	{ value = VRPlusMod.C.BUTTON_DPAD_DOWN, text = "vrplus_button_dpad_down" },
+	{ value = VRPlusMod.C.BUTTON_DPAD_LEFT, text = "vrplus_button_dpad_left" },
+	{ value = VRPlusMod.C.BUTTON_DPAD_RIGHT, text = "vrplus_button_dpad_right" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_UP_OFF, text = "vrplus_button_touchpad_up_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_OFF, text = "vrplus_button_touchpad_down_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_OFF, text = "vrplus_button_touchpad_left_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_OFF, text = "vrplus_button_touchpad_right_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_OFF, text = "vrplus_button_touchpad_center_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF, text = "vrplus_button_touchpad_menu_off" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT, text = "vrplus_button_touchpad_up_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT, text = "vrplus_button_touchpad_down_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_DOMINANT, text = "vrplus_button_touchpad_left_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_DOMINANT, text = "vrplus_button_touchpad_right_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT, text = "vrplus_button_touchpad_center_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT, text = "vrplus_button_touchpad_menu_dominant" }
+}
+
+VRPlusMod.BUTTON_MAPPINGS = {
+	"button_jump",
+	"button_crouch",
+	"button_pause",
+	"button_gadget",
+	"button_firemode"
+}
+
+--[[
+	The button mapping items are buttons that open a picker, so the current binding
+	has to be part of their label. Registers "vrplus_<mapping>_label" for each one.
+]]
+function VRPlusMod:UpdateButtonLabels(loc)
+	loc = loc or managers.localization
+
+	local strings = {}
+
+	for _, name in ipairs(self.BUTTON_MAPPINGS) do
+		local bound = "-"
+
+		for _, option in ipairs(self.BUTTON_OPTIONS) do
+			if option.value == self._data[name] then
+				bound = loc:text(option.text)
+			end
+		end
+
+		strings["vrplus_" .. name .. "_label"] = loc:text("vrplus_" .. name) .. ": " .. bound
+	end
+
+	loc:add_localized_strings(strings)
+end
+
 --[[
 	Recursively pretty-prints a Lua table as JSON with indentation.
 	Used so the save file is human-readable instead of one long line.
@@ -196,6 +265,23 @@ function VRPlusMod:Load()
 	local defaults, selected = VRPlusMod:_get_defaults(self._data.defaults_hmd)
 	load_defaults(defaults, self._data)
 
+	local config_version = version_number(self._data.config_version)
+
+	if config_version < version_number("0.8.1") then
+		-- 0.8.0 defaulted gadget and fire mode onto the stick directions that turn the view
+		if self._data.button_gadget == VRPlusMod.C.BUTTON_DPAD_RIGHT then
+			self._data.button_gadget = VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT
+		end
+		if self._data.button_firemode == VRPlusMod.C.BUTTON_DPAD_LEFT then
+			self._data.button_firemode = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT
+		end
+	end
+
+	if self._data.config_version ~= MOD_VERSION then
+		self._data.config_version = MOD_VERSION
+		need_save = true
+	end
+
 	if need_save and selected then
 		self:Save()
 	end
@@ -212,6 +298,7 @@ function VRPlusMod:_ResetDefaultControls(hmd)
 	local defaults = VRPlusMod:_get_defaults(hmd)
 	self._data = {}
 	load_defaults(defaults, self._data)
+	self._data.config_version = MOD_VERSION
 	self:Save()
 
 	-- Set the values for the GUI controls
@@ -231,6 +318,8 @@ function VRPlusMod:_ResetDefaultControls(hmd)
 			end
 		end
 	end
+
+	self:UpdateButtonLabels()
 end
 
 function VRPlusMod:AskHMDType(cancellable)
@@ -307,6 +396,8 @@ Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInit_VRPlusMod"
 			loc:load_localization_file(VRPlusMod._path .. "lang/" .. code .. ".lang")
 		end
 	end
+
+	VRPlusMod:UpdateButtonLabels(loc)
 end)
 
 --[[
@@ -334,7 +425,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	local function reload_hands()
 		-- You can adjust settings on the flat version
 		-- this would crash in that case
-		if managers.vr then
+		-- The method check also catches the stub Data.lua installs while reading defaults
+		if managers.vr and managers.vr.hand_state_machine then
 			local hsm = managers.vr:hand_state_machine()
 			-- If we're in the main menu, this will be nil
 			if hsm then
@@ -352,14 +444,19 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		-- Show deprecation warning dialog using PAYDAY 2's native system
 		local dialog_data = {
 			title = "Controls Manager",
-			text = "Simple button remapping is now available in the new 'Button Mappings' menu instead.\n" ..
-					"Button Mappings always take priority over the Controls Manager\n" ..
-			        "The Controls Manager is intended for advanced users who need finer control.",
+			text = "Simple button remapping is available in the 'Button Mappings' menu instead.\n\n" ..
+					"This manager is applied after that menu, so an input you rebind here wins " ..
+					"over anything Button Mappings put on it.\n" ..
+					"It is meant for advanced users who need per hand state control.",
 			button_list = {
 				{
 					text = "Continue to Advanced Controls Manager",
 					callback_func = function()
-						managers.menu:open_node("vrplus_controls_manager")
+						-- Selecting the node from inside the dialog is undone when the
+						-- dialog closes, so open it on the next tick
+						DelayedCalls:Add("vrplus_open_controls_manager", 0, function()
+							managers.menu:open_node("vrplus_controls_manager")
+						end)
 					end
 				},
 				{
@@ -504,45 +601,42 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		end
 	end
 
-	-- Button mapping callbacks
-	function MenuCallbackHandler:vrplus_button_jump(item)
-		VRPlusMod._data.button_jump = item:value()
-		VRPlusMod:Save()
-		check_button_conflicts()
-		-- Reload hand states to apply the newly selected button bindings
-		reload_hands()
+	-- Each mapping is a button that opens this picker: 17 options is far too many to
+	-- cycle through one by one
+	local function show_button_picker(name)
+		local dialog_data = {
+			title = managers.localization:text("vrplus_" .. name .. "_label"),
+			text = managers.localization:text("vrplus_" .. name .. "_desc"),
+			button_list = {}
+		}
+
+		for _, option in ipairs(VRPlusMod.BUTTON_OPTIONS) do
+			table.insert(dialog_data.button_list, {
+				text = managers.localization:text(option.text),
+				callback_func = function()
+					VRPlusMod._data[name] = option.value
+					VRPlusMod:Save()
+					VRPlusMod:UpdateButtonLabels()
+					check_button_conflicts()
+					-- Reload hand states to apply the newly selected button bindings
+					reload_hands()
+					MenuCallbackHandler:refresh_node()
+				end
+			})
+		end
+
+		table.insert(dialog_data.button_list, {
+			text = managers.localization:text("dialog_cancel"),
+			cancel_button = true
+		})
+
+		managers.system_menu:show(dialog_data)
 	end
 
-	function MenuCallbackHandler:vrplus_button_crouch(item)
-		VRPlusMod._data.button_crouch = item:value()
-		VRPlusMod:Save()
-		check_button_conflicts()
-		-- Reload hand states to apply the newly selected button bindings
-		reload_hands()
-	end
-
-	function MenuCallbackHandler:vrplus_button_pause(item)
-		VRPlusMod._data.button_pause = item:value()
-		VRPlusMod:Save()
-		check_button_conflicts()
-		-- Reload hand states to apply the newly selected button bindings
-		reload_hands()
-	end
-
-	function MenuCallbackHandler:vrplus_button_gadget(item)
-		VRPlusMod._data.button_gadget = item:value()
-		VRPlusMod:Save()
-		check_button_conflicts()
-		-- Reload hand states to apply the newly selected button bindings
-		reload_hands()
-	end
-
-	function MenuCallbackHandler:vrplus_button_firemode(item)
-		VRPlusMod._data.button_firemode = item:value()
-		VRPlusMod:Save()
-		check_button_conflicts()
-		-- Reload hand states to apply the newly selected button bindings
-		reload_hands()
+	for _, name in ipairs(VRPlusMod.BUTTON_MAPPINGS) do
+		MenuCallbackHandler["vrplus_" .. name] = function()
+			show_button_picker(name)
+		end
 	end
 
 	-- Comfort options

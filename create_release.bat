@@ -6,7 +6,7 @@ echo ===== VR Improvements Mod / VRplus Continued Release Builder =====
 REM --- Configuration ---
 SET "OUTPUT_SUBDIR=release"
 SET "TEMP_DIR=%OUTPUT_SUBDIR%\__vrplus_temp__"
-SET "EXCLUDE_DIRS=.git .idea .vscode PD2SRC release %TEMP_DIR%"
+SET "EXCLUDE_DIRS=.git .idea .vscode PD2SRC release %TEMP_DIR% .github"
 SET "EXCLUDE_FILES=.gitignore create_release.bat" 
 SET "GITHUB_META_URL=https://raw.githubusercontent.com/DennisGHUA/payday2-vr-improvements/master/updates_meta.json"
 SET "TEMP_GITHUB_META=%OUTPUT_SUBDIR%\__vrplus_temp__github_meta.json"

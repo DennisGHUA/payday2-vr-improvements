@@ -22,12 +22,12 @@ local default_data = {
 	
 	-- Button mappings for all controllers
 	-- Users can customize these; defaults: B=jump, A=crouch, Y=pause
-	-- Note: D-Pad Up is reserved for "switch hands" (hardcoded by game)
 	button_jump = VRPlusMod.C.BUTTON_B,
 	button_crouch = VRPlusMod.C.BUTTON_A,
 	button_pause = VRPlusMod.C.BUTTON_Y,
-	button_gadget = VRPlusMod.C.BUTTON_DPAD_RIGHT,
-	button_firemode = VRPlusMod.C.BUTTON_DPAD_LEFT,
+	-- Left/right turn the view, so gadget and fire mode go on up/down
+	button_gadget = VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT,
+	button_firemode = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT,
 
 	-- Camera fading parameters
 	cam_fade_distance = 0,
@@ -82,8 +82,6 @@ local defaults_vive = {
 	button_jump = VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT,
 	button_crouch = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_OFF,
 	button_pause = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT,
-	button_gadget = VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT,
-	button_firemode = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT,
 
 	comfort = {
 		interact_mode = VRPlusMod.C.INTERACT_BOTH,
@@ -117,6 +115,7 @@ function VRPlusMod:_get_defaults(hmd_type)
 	if not hmd_type then
 		hmd_type = ({
 			["Oculus"] = "Rift",
+			["Meta"] = "Rift",
 			["Index"] = "Index",
 			["HTC"] = "Vive",
 			["Valve"] = "Frame"  -- Steam Frame detection

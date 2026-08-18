@@ -1,5 +1,19 @@
 # Changelog
 
+## V0.8.1
+- Changed: Button Mappings now opens a picker with the full list when you click a mapping, instead of cycling through the options one by one
+- Changed: Button Mappings now offers every stick/touchpad direction for both the offhand and the dominant hand
+- Changed: Advanced Controls Manager rebindings take priority over the Button Mappings menu
+- Changed: The settings file now records the mod version it was saved with, so later updates can correct older settings
+- Fixed: Stick/touchpad locomotion being broken on every controller except HTC Vive.
+- Fixed: Gadget and fire mode sitting on the same stick directions as view turning.
+  - Both are back on up/down of the dominant hand. Configs still on the 0.8.0 defaults are moved over on load.
+- Fixed: Advanced Controls Manager rebindings being ignored on every controller except the Vive
+- Fixed: Headsets reporting as "Meta" falling back to the generic layout instead of being detected as Oculus Touch/Quest
+- Fixed: Crouch being bound a second time on button-based controllers
+
+**Note:** Steam Frame compatibility still needs testing. D-Pad might not work as intended.
+
 ## V0.8.0
 - Added: "Extra Heist Info on the Main Tablet" HUD panel (default on; toggle in Options > Mod Options > VR Plus > UI Options)
   - Shows pagers used, body bags, guards with pagers, and unbagged/bagged/secured loot on the main tablet page
