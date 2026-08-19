@@ -9,7 +9,7 @@ local default_data = {
 	sprint_time = 0.25,
 	turning_mode = VRPlusMod.C.TURNING_SNAP,
 	sprint_mode = VRPlusMod.C.SPRINT_STICKY,
-	movement_controller_direction = true,
+	movement_controller_direction = false,
 	movement_locomotion = true,
 	movement_smoothing = true,
 	teleport_on_release = false,
@@ -21,7 +21,7 @@ local default_data = {
 	controller_type = nil,
 	
 	-- Button mappings for all controllers
-	-- Users can customize these; defaults: B=jump, A=crouch, Y=pause
+	-- Face buttons sit on a fixed controller: A/B right, X/Y left
 	button_jump = VRPlusMod.C.BUTTON_B,
 	button_crouch = VRPlusMod.C.BUTTON_A,
 	button_pause = VRPlusMod.C.BUTTON_Y,

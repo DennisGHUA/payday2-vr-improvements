@@ -80,6 +80,7 @@ local actions = {
 		right = "belt_right",
 	},
 	disabled = {},
+	duck = {},
 	hand_brake = {},
 	interact = {
 		left = "interact_left",
@@ -105,9 +106,9 @@ local actions = {
 	use_item_vr = {},
 	warp = {},
 	warp_target = {},
+	jump = {},
 	weapon_firemode = {},
 	weapon_gadget = {},
-	-- jump = {}, -- use button mapping instead of action mapping for jump, since it's not a hand state action
 }
 
 function get_human_control_name(id)

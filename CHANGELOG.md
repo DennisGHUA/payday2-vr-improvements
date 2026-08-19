@@ -1,5 +1,15 @@
 # Changelog
 
+## V0.8.2
+- Added: `jump` and `duck` (crouch) can now be bound in the Advanced Controls Manager.
+- Added: Button Mappings now includes Trigger Click on the offhand as a input option.
+- Fixed: The B, X and Y options in Button Mappings now bind the face button they name.
+- Fixed: The Pause option now binds the pause menu, on button controllers and Vive wands alike.
+- Fixed: Pause now sits on one hand instead of firing from both upper buttons.
+- Fixed: Jump now uses the button it is mapped to.
+- Changed: Renamed "D-Pad Up" and the other directional options to "Stick / Touchpad / D-Pad Up (Both Hands)".
+- Changed: New settings files default to HMD-relative locomotion.
+
 ## V0.8.1
 - Changed: Button Mappings now opens a picker with the full list when you click a mapping, instead of cycling through the options one by one
 - Changed: Button Mappings now offers every stick/touchpad direction for both the offhand and the dominant hand

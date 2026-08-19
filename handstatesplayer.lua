@@ -42,11 +42,13 @@ local function get_controller_type()
 end
 
 local function get_button_key(button_const, hand_name)
+	-- The game only exposes two face-button inputs per hand: "a_" (lower, A/X) and
+	-- "menu_" (upper, B/Y). There are no "b_"/"x_"/"y_" inputs to bind to.
 	local button_map = {
 		[VRPlusMod.C.BUTTON_A] = "a_",
-		[VRPlusMod.C.BUTTON_B] = "b_",
-		[VRPlusMod.C.BUTTON_X] = "x_",
-		[VRPlusMod.C.BUTTON_Y] = "y_",
+		[VRPlusMod.C.BUTTON_B] = "menu_",
+		[VRPlusMod.C.BUTTON_X] = "a_",
+		[VRPlusMod.C.BUTTON_Y] = "menu_",
 		[VRPlusMod.C.BUTTON_MENU] = "menu_",
 		[VRPlusMod.C.BUTTON_DPAD_UP] = "d_up_",
 		[VRPlusMod.C.BUTTON_DPAD_DOWN] = "d_down_",
@@ -66,31 +68,34 @@ local function get_button_key(button_const, hand_name)
 		[VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_DOMINANT] = "d_left_",
 		[VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_DOMINANT] = "d_right_",
 		[VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT] = "trackpad_button_",
-		[VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT] = "menu_"
+		[VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT] = "menu_",
+		[VRPlusMod.C.BUTTON_TRIGGER_OFF] = "trigger_",
+		[VRPlusMod.C.BUTTON_TRIGGER_DOMINANT] = "trigger_"
 	}
-	return (button_map[button_const] or "b_") .. hand_name
+	return (button_map[button_const] or "a_") .. hand_name
 end
 
--- A/B/X/Y/Menu carry no hand of their own, everything else does
-local function is_plain_button(button_const)
-	return button_const <= VRPlusMod.C.BUTTON_MENU
-end
-
--- Hand a Button Mappings option binds on: the side the player picked for the stick
--- options, both hands for the d-pad (only one controller has one and we can't tell
--- which), and plain_hand for the face buttons, which may be nil to skip them.
-local function target_hand(button_const, hand_name, plain_hand, weapon_hand, offhand)
+-- Hand a Button Mappings option binds on. Every option resolves to a definite hand:
+-- the side the player picked, the controller a face button physically sits on, or
+-- both hands for the ones that exist on both.
+local function target_hand(button_const, hand_name, weapon_hand, offhand)
 	local C = VRPlusMod.C
 
-	if button_const >= C.BUTTON_TOUCHPAD_UP_OFF and button_const <= C.BUTTON_TOUCHPAD_MENU_OFF then
+	if button_const == C.BUTTON_A or button_const == C.BUTTON_B then
+		return "r"
+	elseif button_const == C.BUTTON_X or button_const == C.BUTTON_Y then
+		return "l"
+	elseif button_const >= C.BUTTON_TOUCHPAD_UP_OFF and button_const <= C.BUTTON_TOUCHPAD_MENU_OFF then
 		return offhand
 	elseif button_const >= C.BUTTON_TOUCHPAD_UP_DOMINANT and button_const <= C.BUTTON_TOUCHPAD_MENU_DOMINANT then
 		return weapon_hand
-	elseif not is_plain_button(button_const) then
-		return hand_name
+	elseif button_const == C.BUTTON_TRIGGER_OFF then
+		return offhand
+	elseif button_const == C.BUTTON_TRIGGER_DOMINANT then
+		return weapon_hand
 	end
 
-	return plain_hand
+	return hand_name
 end
 
 -- Resolve the current dominant hand and offhand
@@ -102,54 +107,51 @@ end
 
 -- Binds a Button Mappings action, and only on the hand currently being applied:
 -- writing another hand's keys is unsafe, as that hand's own states may be applied
--- afterwards and reset them.
-local function bind_button(key_map, hand_name, button_const, plain_hand, actions, append)
+-- afterwards and reset them. `claimed` keeps the first mapping on an input, so two
+-- mappings landing on one button don't silently drop the earlier one.
+local function bind_button(key_map, claimed, hand_name, button_const, actions)
 	local weapon_hand, offhand = get_hand_context()
 
-	if target_hand(button_const, hand_name, plain_hand, weapon_hand, offhand) ~= hand_name then
+	if target_hand(button_const, hand_name, weapon_hand, offhand) ~= hand_name then
 		return
 	end
 
 	local key = get_button_key(button_const, hand_name)
 
-	if append then
-		key_map[key] = key_map[key] or {}
-		if not table.contains(key_map[key], actions[1]) then
-			table.insert(key_map[key], actions[1])
-		end
-	else
-		key_map[key] = actions
+	if claimed[key] then
+		return
 	end
+
+	claimed[key] = true
+	key_map[key] = actions
 end
 
--- Applies the Button Mappings menu to one hand. sided_only skips the face buttons,
--- which carry no hand of their own and are only bound from the free hand's states.
-local function add_mapped_buttons(hand_name, key_map, sided_only)
+-- Applies the Button Mappings menu to one hand. Every mapping has a definite hand,
+-- so this runs in every state. Order matches the menu, so on a clash the entry the
+-- player sees first is the one that keeps the button.
+local function add_mapped_buttons(hand_name, key_map)
 	local C = VRPlusMod.C
 	local data = VRPlusMod._data
 	local vive = get_controller_type() == C.CONTROLLER_VIVE
-	local weapon_hand = get_hand_context()
-	local plain = not sided_only
-
-	if data.comfort.crouching ~= C.CROUCH_NONE then
-		local crouch = data.button_crouch or (vive and C.BUTTON_TOUCHPAD_MENU_OFF or C.BUTTON_A)
-		bind_button(key_map, hand_name, crouch, plain and hand_name or nil, { "duck" })
-	end
-
-	local pause = data.button_pause or (vive and C.BUTTON_TOUCHPAD_MENU_DOMINANT or C.BUTTON_Y)
-	bind_button(key_map, hand_name, pause, plain and "l" or nil, { "menu" }, true)
+	local claimed = {}
 
 	if data.movement_locomotion then
 		local jump = data.button_jump or (vive and C.BUTTON_TOUCHPAD_CENTER_DOMINANT or C.BUTTON_B)
-		bind_button(key_map, hand_name, jump, plain and "r" or nil, { "jump" })
+		bind_button(key_map, claimed, hand_name, jump, { "jump" })
 	end
 
-	if data.turning_mode ~= C.TURNING_OFF then
-		local gadget = data.button_gadget or C.BUTTON_TOUCHPAD_UP_DOMINANT
-		local firemode = data.button_firemode or C.BUTTON_TOUCHPAD_DOWN_DOMINANT
-		bind_button(key_map, hand_name, gadget, weapon_hand, { "weapon_gadget" })
-		bind_button(key_map, hand_name, firemode, weapon_hand, { "weapon_firemode" })
+	if data.comfort.crouching ~= C.CROUCH_NONE then
+		local crouch = data.button_crouch or (vive and C.BUTTON_TOUCHPAD_MENU_OFF or C.BUTTON_A)
+		bind_button(key_map, claimed, hand_name, crouch, { "duck" })
 	end
+
+	local pause = data.button_pause or (vive and C.BUTTON_TOUCHPAD_MENU_DOMINANT or C.BUTTON_Y)
+	bind_button(key_map, claimed, hand_name, pause, { "toggle_menu" })
+
+	local gadget = data.button_gadget or C.BUTTON_TOUCHPAD_UP_DOMINANT
+	local firemode = data.button_firemode or C.BUTTON_TOUCHPAD_DOWN_DOMINANT
+	bind_button(key_map, claimed, hand_name, gadget, { "weapon_gadget" })
+	bind_button(key_map, claimed, hand_name, firemode, { "weapon_firemode" })
 end
 
 local function add_offhand_actions(hand_name, key_map)
@@ -162,8 +164,6 @@ local function add_offhand_actions(hand_name, key_map)
 		-- "move" connection and nothing else binds it, so without it the stick is dead.
 		key_map["dpad_" .. hand_name] = { "move" }
 	end
-
-	add_mapped_buttons(hand_name, key_map, false)
 end
 
 -----------------------------------------
@@ -258,12 +258,8 @@ Hooks:PostHook(BeltHandState, "apply", "VRPlusBeltActions", function(self, hand,
 end)
 
 Hooks:PostHook(WeaponHandState, "apply", "VRPlusClearTurnDirections", function(self, hand, key_map)
-	if VRPlusMod._data.turning_mode == VRPlusMod.C.TURNING_OFF then
-		return
-	end
-
-	-- The stick directions turn the view, so nothing may stay on them. Anything the
-	-- player mapped onto one is put back by the passes below.
+	-- Vanilla puts fire mode, gadget, use item and throw grenade on the four stick
+	-- directions. All four are dropped so the mappings below are the only thing there.
 	local hand_name = hand == 1 and "r" or "l"
 
 	for _, direction in ipairs({ "d_left_", "d_right_", "d_up_", "d_down_" }) do
@@ -283,29 +279,24 @@ for _, state in ipairs(states) do
 		local controller_type = get_controller_type()
 		local hand_name = hand == 1 and "r" or "l"
 
-		-- Sided mappings apply in every state, so a binding on the weapon hand still
-		-- works while that hand is holding something
-		add_mapped_buttons(hand_name, key_map, true)
-
 		-- Only apply button-based bindings for Quest/Index/Frame controllers
 		if controller_type == VRPlusMod.C.CONTROLLER_TOUCH or 
 		   controller_type == VRPlusMod.C.CONTROLLER_KNUCKLES or 
 		   controller_type == VRPlusMod.C.CONTROLLER_FRAME then
-			-- Quest/Rift/Index/Frame: Button-based controls
-			if hand == 1 then -- Right Hand
-				-- The A button is the fallback jump for the face buttons, which can only
-				-- reach the free hand. Skip it once jump has a hand of its own.
-				local jump_button = VRPlusMod._data.button_jump or VRPlusMod.C.BUTTON_B
+			local weapon_hand, offhand = get_hand_context()
 
-				if VRPlusMod._data.movement_locomotion and is_plain_button(jump_button) and not key_map["a_r"] then
-					key_map["a_r"] = { "jump" }
-				end
-			elseif hand == 2 then -- Left Hand
-				-- B/Y button for toggle menu (Quest uses Y, Index/Frame use B)
-				key_map["menu_l"] = { "toggle_menu" }
+			-- Vanilla puts the menu on the upper button of both hands, which fires it
+			-- twice. Keep the offhand one only.
+			if hand_name == weapon_hand then
+				key_map["menu_" .. hand_name] = nil
+			elseif hand_name == offhand then
+				key_map["menu_" .. hand_name] = { "toggle_menu" }
 			end
 		end
 		-- Vive controllers don't need special button bindings as they use touchpads
+
+		-- Runs last so a mapping wins over the vanilla placements above
+		add_mapped_buttons(hand_name, key_map)
 	end)
 end
 

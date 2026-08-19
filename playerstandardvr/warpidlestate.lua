@@ -159,6 +159,17 @@ local function ps_trigger_jump(self, t)
 	new_action = orig_start_action_jump(self, t, action_start_data)
 end
 
+local function jump_requires_center_click()
+	local C = VRPlusMod.C
+	local jump_button = VRPlusMod._data.button_jump
+
+	if not jump_button then
+		return false
+	end
+
+	return jump_button == C.BUTTON_TOUCHPAD_CENTER_OFF or jump_button == C.BUTTON_TOUCHPAD_CENTER_DOMINANT
+end
+
 local mvec_hand_forward = Vector3()
 local mvec_hand_forward_vert = Vector3()
 function WarpIdleState:update(t)
@@ -202,9 +213,11 @@ function WarpIdleState:update(t)
 	end
 
 	-- Disable jumping again if not pressed in the center of primary trackpad
-	local axis = controller:get_input_axis("touchpad_primary")
-	if jump_pressed and math.abs(axis.x) > 0.2 or jump_pressed and math.abs(axis.y) > 0.2 then
-		jump_pressed = false
+	if jump_pressed and jump_requires_center_click() then
+		local axis = controller:get_input_axis("touchpad_primary")
+		if axis and (math.abs(axis.x) > 0.2 or math.abs(axis.y) > 0.2) then
+			jump_pressed = false
+		end
 	end
 
 	-- For whatever reason, at least on the Rift, pressing the 'Y' button

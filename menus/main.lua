@@ -66,6 +66,8 @@ VRPlusMod.C = {
 	BUTTON_TOUCHPAD_RIGHT_DOMINANT = 19,
 	BUTTON_TOUCHPAD_CENTER_DOMINANT = 20, -- touchpad center click
 	BUTTON_TOUCHPAD_MENU_DOMINANT = 21,   -- menu button on the dominant hand
+	BUTTON_TRIGGER_OFF = 22,
+	BUTTON_TRIGGER_DOMINANT = 23,
 
 	nil
 }
@@ -112,7 +114,8 @@ VRPlusMod.BUTTON_OPTIONS = {
 	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_DOMINANT, text = "vrplus_button_touchpad_left_dominant" },
 	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_DOMINANT, text = "vrplus_button_touchpad_right_dominant" },
 	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_CENTER_DOMINANT, text = "vrplus_button_touchpad_center_dominant" },
-	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT, text = "vrplus_button_touchpad_menu_dominant" }
+	{ value = VRPlusMod.C.BUTTON_TOUCHPAD_MENU_DOMINANT, text = "vrplus_button_touchpad_menu_dominant" },
+	{ value = VRPlusMod.C.BUTTON_TRIGGER_OFF, text = "vrplus_button_trigger_off" }
 }
 
 VRPlusMod.BUTTON_MAPPINGS = {
@@ -274,6 +277,15 @@ function VRPlusMod:Load()
 		end
 		if self._data.button_firemode == VRPlusMod.C.BUTTON_DPAD_LEFT then
 			self._data.button_firemode = VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT
+		end
+	end
+
+	-- Dominant trigger overlaps the weapon fire input in weapon states; keep only
+	-- offhand trigger as a safe trigger-click mapping option.
+	for _, name in ipairs(VRPlusMod.BUTTON_MAPPINGS) do
+		if self._data[name] == VRPlusMod.C.BUTTON_TRIGGER_DOMINANT then
+			self._data[name] = VRPlusMod.C.BUTTON_TRIGGER_OFF
+			need_save = true
 		end
 	end
 
@@ -535,6 +547,23 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 
 	-- Helper function to check for button mapping conflicts
 	local function check_button_conflicts()
+		-- A "(Both Hands)" direction lands on the same physical input as the matching
+		-- offhand/dominant one, so those pairs collide too
+		local both_hands_same_as = {
+			[VRPlusMod.C.BUTTON_DPAD_UP] = { VRPlusMod.C.BUTTON_TOUCHPAD_UP_OFF, VRPlusMod.C.BUTTON_TOUCHPAD_UP_DOMINANT },
+			[VRPlusMod.C.BUTTON_DPAD_DOWN] = { VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_OFF, VRPlusMod.C.BUTTON_TOUCHPAD_DOWN_DOMINANT },
+			[VRPlusMod.C.BUTTON_DPAD_LEFT] = { VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_OFF, VRPlusMod.C.BUTTON_TOUCHPAD_LEFT_DOMINANT },
+			[VRPlusMod.C.BUTTON_DPAD_RIGHT] = { VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_OFF, VRPlusMod.C.BUTTON_TOUCHPAD_RIGHT_DOMINANT },
+			-- The Menu button is the same physical input as B and Y
+			[VRPlusMod.C.BUTTON_MENU] = { VRPlusMod.C.BUTTON_B, VRPlusMod.C.BUTTON_Y },
+		}
+
+		local function same_input(a, b)
+			return a == b
+				or table.contains(both_hands_same_as[a] or {}, b)
+				or table.contains(both_hands_same_as[b] or {}, a)
+		end
+
 		local mappings = {
 			-- With the unified value set (A/B/X/Y, D-Pad, and touchpad options
 			-- for both offhand and dominant hand), any two equal values bind
@@ -550,8 +579,8 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		for i = 1, #mappings do
 			for j = i + 1, #mappings do
 				local a, b = mappings[i], mappings[j]
-				-- Check if same button value
-				if a.value == b.value then
+				-- Check if same physical input
+				if same_input(a.value, b.value) then
 					-- Check if hands can conflict
 					local can_conflict = false
 					if a.hand == "both" or b.hand == "both" then
