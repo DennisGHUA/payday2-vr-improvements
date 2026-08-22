@@ -64,13 +64,30 @@ function PlayerStandardVR:init(unit)
 	-- See FPCameraPlayerBase
 	self.__last_movement_xy = Vector3()
 
-	-- Vertical world-space movement (jumps, falls, stairs, elevators...) that
-	-- happens between frames. Kept separate from __last_movement_xy because
-	-- that vector also feeds the walk-velocity pipeline.
-	local ghost_pos = self._ext_movement and self._ext_movement:ghost_position()
-	self.__last_movement_z = 0
-	self.__last_ghost_z = ghost_pos and ghost_pos.z or 0
+	-- Actual (post-physics) world-space movement between frames. The camera
+	-- overshoot compensation measures this instead of the input-desired ghost
+	-- delta: walking into a wall moves the ghost but not the player, and must
+	-- not pull the camera.
+	self.__last_actual_delta = Vector3()
+	self.__last_actual_delta_z = 0
+
+	local m_pos = self._ext_movement and self._ext_movement:m_pos()
+	self.__last_actual_pos = mvector3.copy(m_pos or self._unit:position())
 end
+
+-- The state instance persists across movement-state switches, so re-seed the
+-- actual-movement origin whenever we (re-)enter the standard state. Without
+-- this, a teleport that happened while another state was active (revive,
+-- custody return, etc) would look like one giant movement delta and yank the
+-- camera for a single frame.
+Hooks:PostHook(PlayerStandardVR, "enter", "VRPlusResetActualMovementOrigin", function(self, state_data, enter_data)
+	self.__last_actual_delta = self.__last_actual_delta or Vector3()
+	self.__last_actual_pos = self.__last_actual_pos or Vector3()
+	self.__last_actual_delta_z = 0
+
+	local m_pos = self._ext_movement and self._ext_movement:m_pos()
+	mvector3.set(self.__last_actual_pos, m_pos or self._unit:position())
+end)
 
 -- TODO remove when basegame rotation is confirmed to work
 local function do_rotation(self, t, dt)
@@ -291,27 +308,23 @@ local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
 local old_update_movement = PlayerStandardVR._update_movement
-local mvec_prev_ghost = Vector3()
+local mvec_actual_pos = Vector3()
 function PlayerStandardVR:_update_movement(t, dt)
+	-- Actual (post-physics) movement between frames. _pos is refreshed from the
+	-- unit position by _calculate_standard_variables before we get here, so a
+	-- wall collision shows up as zero movement even though the ghost position
+	-- (and thus the input-desired delta) advanced into the wall.
+	mvector3.set(mvec_actual_pos, self._pos)
+	mvector3.set(self.__last_actual_delta, mvec_actual_pos)
+	mvector3.subtract(self.__last_actual_delta, self.__last_actual_pos)
+	mvector3.set_z(self.__last_actual_delta, 0) -- XY only
+	self.__last_actual_delta_z = mvec_actual_pos.z - self.__last_actual_pos.z
+	mvector3.set(self.__last_actual_pos, mvec_actual_pos)
+
 	if not VRPlusMod._data.movement_locomotion then
-		-- Vanilla movement (incl. warp): keep the camera overshoot compensation
-		-- data up to date so that FPCameraPlayerBase can remove the
-		-- "everything attached to the player lags behind while moving" effect
-		-- for these paths too (see the VRPlusRemoveOvershot hook).
-		mvector3.set(mvec_prev_ghost, self._ext_movement:ghost_position())
+		-- Vanilla movement (incl. warp): nothing more to do here, the camera
+		-- overshoot compensation reads the actual movement tracked above.
 		old_update_movement(self, t, dt)
-		local ghost_now = self._ext_movement:ghost_position()
-
-		-- Horizontal (XY) locomotion delta. Z is zeroed: this vector also feeds
-		-- _last_velocity_xy, which must stay horizontal-only.
-		mvector3.set(self.__last_movement_xy, ghost_now)
-		mvector3.subtract(self.__last_movement_xy, mvec_prev_ghost)
-		mvector3.set_z(self.__last_movement_xy, 0)
-
-		-- Vertical world-space movement (warp jump, gravity, zipline, etc) is
-		-- tracked separately so the camera can compensate it too.
-		self.__last_movement_z = ghost_now.z - mvec_prev_ghost.z
-		self.__last_ghost_z = ghost_now.z
 		return
 	end
 
@@ -357,14 +370,13 @@ function PlayerStandardVR:_update_movement(t, dt)
 	--
 	-- TODO set this even when locomotion is off, so that
 	-- the hands no longer disappear (shift back a lot).
+	--
+	-- Note: this is the input-desired delta and may differ from the actual
+	-- movement when colliding with a wall; the camera overshoot compensation
+	-- uses the actual delta tracked at the top of this function instead.
 	mvector3.set(self.__last_movement_xy, pos_new)
 	mvector3.subtract(self.__last_movement_xy, init_pos_ghost)
 	mvector3.set_z(self.__last_movement_xy, 0) -- XY only, this feeds _last_velocity_xy
-
-	-- Vertical world-space movement (jump physics, falls, steps) happens
-	-- between frames, so track the ghost z delta separately.
-	self.__last_movement_z = pos_new.z - self.__last_ghost_z
-	self.__last_ghost_z = pos_new.z
 
 	-- Time-compensated version
 	mvector3.set(self._last_velocity_xy, self.__last_movement_xy)
