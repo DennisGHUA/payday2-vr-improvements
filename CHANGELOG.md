@@ -1,7 +1,10 @@
 # Changelog
 
+## V0.8.4
+- Fixed: The small flicker when stopping moving using the VR elements lag fix should be gone now in locomotion mode.
+
 ## V0.8.3
-- Added: Fixed a vanilla issue causing all player-relative VR elements to lag behind during movement
+- Added: Fixed a vanilla issue causing all player-relative VR elements to lag behind during movement (https://youtu.be/2ngw1aKqLPM)
 
 ## V0.8.2
 - Added: `jump` and `duck` (crouch) can now be bound in the Advanced Controls Manager.

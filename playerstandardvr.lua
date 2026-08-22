@@ -73,6 +73,10 @@ function PlayerStandardVR:init(unit)
 
 	local m_pos = self._ext_movement and self._ext_movement:m_pos()
 	self.__last_actual_pos = mvector3.copy(m_pos or self._unit:position())
+
+	-- Set when a jump/fall just ended, so the last airborne vertical delta
+	-- (which is stale by one frame) can be dropped on touch-down.
+	self.__last_in_air = false
 end
 
 -- The state instance persists across movement-state switches, so re-seed the
@@ -84,6 +88,7 @@ Hooks:PostHook(PlayerStandardVR, "enter", "VRPlusResetActualMovementOrigin", fun
 	self.__last_actual_delta = self.__last_actual_delta or Vector3()
 	self.__last_actual_pos = self.__last_actual_pos or Vector3()
 	self.__last_actual_delta_z = 0
+	self.__last_in_air = false
 
 	local m_pos = self._ext_movement and self._ext_movement:m_pos()
 	mvector3.set(self.__last_actual_pos, m_pos or self._unit:position())
@@ -309,6 +314,8 @@ local mvec_hmd_delta = Vector3()
 
 local old_update_movement = PlayerStandardVR._update_movement
 local mvec_actual_pos = Vector3()
+local mvec_prev_ghost = Vector3()
+local mvec_ghost_now = Vector3()
 function PlayerStandardVR:_update_movement(t, dt)
 	-- Actual (post-physics) movement between frames. _pos is refreshed from the
 	-- unit position by _calculate_standard_variables before we get here, so a
@@ -321,10 +328,29 @@ function PlayerStandardVR:_update_movement(t, dt)
 	self.__last_actual_delta_z = mvec_actual_pos.z - self.__last_actual_pos.z
 	mvector3.set(self.__last_actual_pos, mvec_actual_pos)
 
+	-- When a jump/fall just ended, the last vertical delta is stale by one
+	-- frame - the body has settled but the compensation still holds the last
+	-- airborne step. Drop it the frame we touch down.
+	if self.__last_in_air and not self._state_data.in_air then
+		self.__last_actual_delta_z = 0
+	end
+
+	self.__last_in_air = self._state_data.in_air
+
 	if not VRPlusMod._data.movement_locomotion then
-		-- Vanilla movement (incl. warp): nothing more to do here, the camera
-		-- overshoot compensation reads the actual movement tracked above.
+		-- Vanilla movement (incl. warp): the actual movement tracked above is
+		-- enough for the camera compensation. If nothing actually moved this
+		-- frame (warp/vanilla-locomotion stop), clear the now-stale delta so
+		-- the camera does not stay one step behind the units for a frame.
+		mvector3.set(mvec_prev_ghost, self._ext_movement:ghost_position())
 		old_update_movement(self, t, dt)
+		mvector3.set(mvec_ghost_now, self._ext_movement:ghost_position())
+
+		if mvector3.equal(mvec_ghost_now, mvec_prev_ghost) and not self._state_data.in_air then
+			mvector3.set_zero(self.__last_actual_delta)
+			self.__last_actual_delta_z = 0
+		end
+
 		return
 	end
 
@@ -364,6 +390,19 @@ function PlayerStandardVR:_update_movement(t, dt)
 	inject_movement(self, t, dt, pos_new)
 
 	self._ext_movement:set_ghost_position(pos_new)
+
+	-- If we came to a stop this frame (no walk input while on the ground),
+	-- the between-frame delta captured at the top of this function is stale
+	-- by one frame - the units are already at their final position. Clear it
+	-- so the camera does not sit one step behind (seen as a brief overshoot)
+	-- right after the player stops moving.
+	-- Also apply it after landing from a jump, as long as the player is not
+	-- holding the stick: on the touch-down frame both axes must settle.
+	-- A zipline is excluded: it keeps moving the player with no walk input.
+	if mvector3.equal(pos_new, init_pos_ghost) and not self._state_data.in_air and not self._state_data.on_zipline then
+		mvector3.set_zero(self.__last_actual_delta)
+		self.__last_actual_delta_z = 0
+	end
 
 	-- Non-time compensated version we can use to
 	-- fix up camera error (see FPCameraPlayerBase)

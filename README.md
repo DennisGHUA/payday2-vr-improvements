@@ -2,8 +2,6 @@
 
 A comprehensive quality-of-life and enhancement mod for PAYDAY 2 VR that significantly improves the VR experience with better controls, comfort options, HUD improvements, and gameplay tweaks.
 
-[![Playing modded PAYDAY 2 VR on the Proving Grounds](https://img.youtube.com/vi/Yz9BA0Oj0bk/0.jpg)](https://youtu.be/Yz9BA0Oj0bk)
-
 ## Features & Settings
 
 All settings accessible in-game via **Options → Mod Options → VR Improvements / VRPlus**. The sections below mirror the in-game menu layout and order.
@@ -118,6 +116,11 @@ Random, unimportant options.
 
 </details>
 
+
+[![Payday 2 VR+ mod: Before & after fixing the VR elements lag](https://img.youtube.com/vi/2ngw1aKqLPM/0.jpg)](https://youtu.be/2ngw1aKqLPM)
+
+
+[![Playing modded PAYDAY 2 VR on the Proving Grounds](https://img.youtube.com/vi/Yz9BA0Oj0bk/0.jpg)](https://youtu.be/Yz9BA0Oj0bk)
 
 ## Credits
 
