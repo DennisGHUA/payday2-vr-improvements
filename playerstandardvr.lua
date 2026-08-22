@@ -63,6 +63,13 @@ function PlayerStandardVR:init(unit)
 	-- Non-time compensated movement, only counting locomotion
 	-- See FPCameraPlayerBase
 	self.__last_movement_xy = Vector3()
+
+	-- Vertical world-space movement (jumps, falls, stairs, elevators...) that
+	-- happens between frames. Kept separate from __last_movement_xy because
+	-- that vector also feeds the walk-velocity pipeline.
+	local ghost_pos = self._ext_movement and self._ext_movement:ghost_position()
+	self.__last_movement_z = 0
+	self.__last_ghost_z = ghost_pos and ghost_pos.z or 0
 end
 
 -- TODO remove when basegame rotation is confirmed to work
@@ -293,8 +300,18 @@ function PlayerStandardVR:_update_movement(t, dt)
 		-- for these paths too (see the VRPlusRemoveOvershot hook).
 		mvector3.set(mvec_prev_ghost, self._ext_movement:ghost_position())
 		old_update_movement(self, t, dt)
-		mvector3.set(self.__last_movement_xy, self._ext_movement:ghost_position())
+		local ghost_now = self._ext_movement:ghost_position()
+
+		-- Horizontal (XY) locomotion delta. Z is zeroed: this vector also feeds
+		-- _last_velocity_xy, which must stay horizontal-only.
+		mvector3.set(self.__last_movement_xy, ghost_now)
 		mvector3.subtract(self.__last_movement_xy, mvec_prev_ghost)
+		mvector3.set_z(self.__last_movement_xy, 0)
+
+		-- Vertical world-space movement (warp jump, gravity, zipline, etc) is
+		-- tracked separately so the camera can compensate it too.
+		self.__last_movement_z = ghost_now.z - mvec_prev_ghost.z
+		self.__last_ghost_z = ghost_now.z
 		return
 	end
 
@@ -342,6 +359,12 @@ function PlayerStandardVR:_update_movement(t, dt)
 	-- the hands no longer disappear (shift back a lot).
 	mvector3.set(self.__last_movement_xy, pos_new)
 	mvector3.subtract(self.__last_movement_xy, init_pos_ghost)
+	mvector3.set_z(self.__last_movement_xy, 0) -- XY only, this feeds _last_velocity_xy
+
+	-- Vertical world-space movement (jump physics, falls, steps) happens
+	-- between frames, so track the ghost z delta separately.
+	self.__last_movement_z = pos_new.z - self.__last_ghost_z
+	self.__last_ghost_z = pos_new.z
 
 	-- Time-compensated version
 	mvector3.set(self._last_velocity_xy, self.__last_movement_xy)

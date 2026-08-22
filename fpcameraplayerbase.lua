@@ -74,19 +74,27 @@ end)
 --
 -- To compensate, subtract the movement between where we should be now and
 -- where we were last frame (which all the other objects are still stuck at).
+-- Both the horizontal (locomotion/warp) and vertical (jumps, falls) movement
+-- is covered; the vertical delta is tracked separately because the XY vector
+-- also feeds the walk-velocity pipeline.
 --
 -- Restored for PAYDAY 2 Update 247: the Diesel 3.0 rewrite dropped this from
 -- the base game, so this class of lag regressed for every object that is
 -- attached to the player's VR presentation.
 --
--- Note this only affects movement from locomotion/warp - anything else that
--- moves your camera will not be affected, so as not to increase input lag.
+-- Note this only affects movement from locomotion/warp/jump - anything else
+-- that moves your camera (physical head motion, turning) is not affected, so
+-- as not to increase input lag.
+local mvec_overshot_delta = Vector3()
+
 Hooks:PostHook(FPCameraPlayerBase, "_update_movement", "VRPlusRemoveOvershot", function(self)
 	local playerstate = self._parent_movement_ext and self._parent_movement_ext:current_state()
-	local delta = playerstate and playerstate.__last_movement_xy
+	local delta_xy = playerstate and playerstate.__last_movement_xy
 
 	-- In case we're in a state that has never done a position update
-	if delta then
-		mvector3.subtract(self._output_data.position, delta)
+	if delta_xy then
+		mvector3.set(mvec_overshot_delta, delta_xy)
+		mvector3.set_z(mvec_overshot_delta, playerstate.__last_movement_z or 0)
+		mvector3.subtract(self._output_data.position, mvec_overshot_delta)
 	end
 end)
