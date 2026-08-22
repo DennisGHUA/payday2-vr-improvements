@@ -32,32 +32,3 @@ function PlayerHandStateAkimbo:at_enter(prev_state)
 		self._hand_unit:damage():run_sequence_simple(sequence)
 	end
 end
-
--- Fixes a vanilla bug causing the hand tracking to have a big delay
-Hooks:PostHook(PlayerHandStateAkimbo, "update", "VRPlusTraceAkimboOffhand", function(self, t, dt)
-
-	if not alive(self._weapon_unit) then
-		return
-	end
-
-	if self:hsm() then
-		local hsm = self:hsm()
-		local rot = hsm:rotation()
-
-		self._weapon_unit:set_rotation(rot)
-		local pos = Vector3()
-
-		mvector3.set(pos, hsm:position())
-
-		local weapon_id = self._weapon_unit:base() and self._weapon_unit:base().name_id
-		local tweak = tweak_data.vr:get_offset_by_id(weapon_id)
-
-		if tweak and tweak.position then
-			mvector3.add(pos, tweak.position:rotate_with(self._weapon_unit:rotation()))
-		end
-
-		self._weapon_unit:set_position(pos)
-
-	end
-
-end)
