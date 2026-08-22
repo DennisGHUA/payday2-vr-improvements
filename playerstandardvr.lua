@@ -284,9 +284,18 @@ local mvec_pos_new = Vector3()
 local mvec_hmd_delta = Vector3()
 
 local old_update_movement = PlayerStandardVR._update_movement
+local mvec_prev_ghost = Vector3()
 function PlayerStandardVR:_update_movement(t, dt)
 	if not VRPlusMod._data.movement_locomotion then
-		return old_update_movement(self, t, dt)
+		-- Vanilla movement (incl. warp): keep the camera overshoot compensation
+		-- data up to date so that FPCameraPlayerBase can remove the
+		-- "everything attached to the player lags behind while moving" effect
+		-- for these paths too (see the VRPlusRemoveOvershot hook).
+		mvector3.set(mvec_prev_ghost, self._ext_movement:ghost_position())
+		old_update_movement(self, t, dt)
+		mvector3.set(self.__last_movement_xy, self._ext_movement:ghost_position())
+		mvector3.subtract(self.__last_movement_xy, mvec_prev_ghost)
+		return
 	end
 
 	local pos_new = mvec_pos_new

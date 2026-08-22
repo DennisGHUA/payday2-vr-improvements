@@ -3,7 +3,7 @@
 	"description": "Bunch of tweaks for VR",
 	"author": "",
 	"contact": "modworkshop.net/mod/45143",
-	"version": "0.8.2",
+	"version": "0.8.3",
 	"image" : "vrplus.png",
 	"color" : "255 255 255",
 	"blt_version": 2,
@@ -48,6 +48,10 @@
 		{
 			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateakimbo",
 			"script_path" : "playerhandstateakimbo.lua"
+		},
+		{
+			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateweaponassist",
+			"script_path" : "playerhandstateweaponassist.lua"
 		},
 		{
 			"hook_id" : "lib/units/beings/player/states/vr/hand/playerhandstateitem",

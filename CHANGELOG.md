@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.8.3
+- (WIP) Added: Created fix for the vanilla hand tracking lag while moving the player
+
 ## V0.8.2
 - Added: `jump` and `duck` (crouch) can now be bound in the Advanced Controls Manager.
 - Added: Button Mappings now includes Trigger Click on the offhand as a input option.

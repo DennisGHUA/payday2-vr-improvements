@@ -62,3 +62,31 @@ Hooks:PostHook(FPCameraPlayerBase, "_update_fadeout", "VRPlusRedoutEffect", func
 	end
 
 end)
+
+-- Remove the overshot effect - running moves your hands, weapons, belt and
+-- the rest of the player-relative presentation backwards.
+--
+-- Diesel engine units (hands, weapons, belt, floating HUD, etc) only apply the
+-- position written with set_position() on the next frame - not the one being
+-- rendered. The camera is not affected by this and reads the ghost position
+-- directly, so you'll always be looking at the position everything else should
+-- have caught up to, but hasn't.
+--
+-- To compensate, subtract the movement between where we should be now and
+-- where we were last frame (which all the other objects are still stuck at).
+--
+-- Restored for PAYDAY 2 Update 247: the Diesel 3.0 rewrite dropped this from
+-- the base game, so this class of lag regressed for every object that is
+-- attached to the player's VR presentation.
+--
+-- Note this only affects movement from locomotion/warp - anything else that
+-- moves your camera will not be affected, so as not to increase input lag.
+Hooks:PostHook(FPCameraPlayerBase, "_update_movement", "VRPlusRemoveOvershot", function(self)
+	local playerstate = self._parent_movement_ext and self._parent_movement_ext:current_state()
+	local delta = playerstate and playerstate.__last_movement_xy
+
+	-- In case we're in a state that has never done a position update
+	if delta then
+		mvector3.subtract(self._output_data.position, delta)
+	end
+end)

@@ -83,3 +83,74 @@ function PlayerHandStateWeapon:at_enter(prev_state)
 		end
 	end
 end
+
+-- ---------------------------------------------------------------------------
+-- Weapon movement lag fix (Update 247 / Diesel 3.0 regression)
+--
+-- Vanilla writes the dominant-hand weapon transform every frame, but the
+-- weapon model ends up up to a second or two behind the hand while the player
+-- moves through the world (locomotion or warp). The gadget laser is drawn
+-- straight from set_gadget_position() and is therefore the one thing that
+-- tracks correctly.
+--
+-- The historical VRPlus fix for this class of bug (9dc0cba, "Fix weapon
+-- movement/rotation lag") kept the *fresh* controller-derived weapon transform
+-- on the state so it could be passed on without depending on what the engine
+-- has actually applied to the weapon unit. We restore that behaviour here:
+--
+--  * init caches a scratch __weapon_position/__weapon_rotation on the state.
+--  * after the vanilla update the weapon is re-written at the transform the
+--    hand says it should be at this frame (same approach as the akimbo
+--    offhand fix, which writes directly and is immediate).
+--  * the assist hand (playerhandstateweaponassist.lua) anchors itself to
+--    these cached fresh values instead of the lagging weapon unit transform.
+-- ---------------------------------------------------------------------------
+Hooks:PostHook(PlayerHandStateWeapon, "init", "VRPlusInitWeaponTransformCache", function(self)
+	if not self.__weapon_position then
+		self.__weapon_position = Vector3()
+	end
+
+	if not self.__weapon_rotation then
+		self.__weapon_rotation = Rotation()
+	end
+end)
+
+Hooks:PostHook(PlayerHandStateWeapon, "update", "VRPlusFixWeaponLag", function(self, t, dt)
+	if not alive(self._weapon_unit) or not self.__weapon_position then
+		return
+	end
+
+	-- The fresh rotation the vanilla update derived from the hand state this
+	-- frame. When the weapon is aimed at the assist hand the vanilla code
+	-- writes a look-at rotation instead, so keep whatever the weapon carries
+	-- in that case.
+	local is_assisting = self:hsm():other_hand():current_state_name() == "weapon_assist"
+	local weapon_rot = self:hsm():rotation()
+
+	if is_assisting and not self._pistol_grip then
+		weapon_rot = self._weapon_unit:rotation()
+	end
+
+	mrotation.set_zero(self.__weapon_rotation)
+	mrotation.multiply(self.__weapon_rotation, weapon_rot)
+
+	local pos = self.__weapon_position
+
+	mvector3.set(pos, self:hsm():position())
+
+	if self._weapon_kick then
+		mvector3.subtract(pos, self.__weapon_rotation:y() * self._weapon_kick)
+	end
+
+	local tweak = tweak_data.vr:get_offset_by_id(self._weapon_id)
+
+	if tweak and tweak.position then
+		mvector3.add(pos, tweak.position:rotate_with(self.__weapon_rotation))
+	end
+
+	-- Write the fresh target directly, exactly like the akimbo offhand fix,
+	-- instead of leaving the weapon on whatever smoothed transform the
+	-- engine has buffered for the unit.
+	self._weapon_unit:set_position(pos)
+	self._weapon_unit:base():set_gadget_position(pos)
+end)
