@@ -1,7 +1,7 @@
 # Changelog
 
 ## V0.8.3
-- Added: Fixed all player-relative VR elements lagging behind during movement and warp
+- Added: Fixed a vanilla issue causing all player-relative VR elements to lag behind during movement
 
 ## V0.8.2
 - Added: `jump` and `duck` (crouch) can now be bound in the Advanced Controls Manager.
