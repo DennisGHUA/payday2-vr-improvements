@@ -4,9 +4,9 @@
 - Fixed: Vanilla sprinting with the vanilla "Dash + Direct" setting when "Enable Locomotion" is off in the mod settings
 - Fixed: The "Sprinting" setting now applies properly in Dash+Direct too, hold to sprint and toggle sprint both keep their behavior, and "Off / Vanilla" leaves default vanilla logic untouched.
 - Added: The Jump button (Button Mappings / Advanced Controls Manager) now works for vanilla "Dash + Direct"
-  Note: Jump speed isn't always accurate when combined with vanilla locomotion and sprint.
+    Note: Jump speed isn't always accurate when combined with vanilla locomotion and sprint.
 - Added: New "Enable Jump Button" toggle under Motion Controller Options (on by default).
-    Note: Jumps can sometimes be slower than expected when combined with vanilla locomotion and sprint.
+    Note: Jump button is always disabled when the vanilla movement setting is Dash, and mod locomotion is off.
 - Renamed: "Disable Sprinting" is renamed to "Off / Vanilla" functionality is the same.
 - Renamed: "Enable Locomotion" is renamed to "Only Locomotion (Direct, no Dash)" functionality is the same.
 
