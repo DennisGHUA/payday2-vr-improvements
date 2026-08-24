@@ -124,7 +124,11 @@ local function orig_start_action_jump(self, t, action_start_data)
 	self:_perform_jump(jump_vec)
 end
 
-local function ps_trigger_jump(self, t)
+-- Optional third argument (force_is_running) lets the vanilla-movement fallback in
+-- playerstandardvr.lua force the run/walk selection of the jump velocity based on
+-- the live vanilla sprint state, instead of the internal _running/_start_running_t
+-- bookkeeping (which can lag or desync in the vanilla movement modes).
+local function ps_trigger_jump(self, t, force_is_running)
 	if not self:_can_jump() then return end
 
 	-- Some player states (eg, downed) won't have mover()s,
@@ -147,7 +151,13 @@ local function ps_trigger_jump(self, t)
 	action_start_data.jump_vel_z = jump_vel_z
 
 	if self._move_dir then
-		local is_running = self._running and self._unit:movement():is_above_stamina_threshold() and t - self._start_running_t > 0.4
+		local is_running = force_is_running
+		if is_running == nil then
+			-- Locomotion-mode jump: use the standard flat-game logic (committed running
+			-- state, enough stamina, at least 0.4s of running). The vanilla movement
+			-- fallback passes an explicit force_is_running instead.
+			is_running = self._running and self._unit:movement():is_above_stamina_threshold() and t - self._start_running_t > 0.4
+		end
 		local jump_vel_xy = tweak_data.player.movement_state.standard.movement.jump_velocity.xy[is_running and "run" or "walk"]
 		action_start_data.jump_vel_xy = jump_vel_xy
 
@@ -216,8 +226,9 @@ function WarpIdleState:update(t)
 	local sprint_pressed = controller:get_input_bool("run")
 	local jump_pressed = controller:get_input_bool("jump")
 
-	-- Disable jump button if locomotion is not selected
-	if not VRPlusMod._data.movement_locomotion then
+	-- Disable the jump button if locomotion is not selected, or if the
+	-- "Enable Jump Button" motion controller option is turned off.
+	if not VRPlusMod._data.movement_locomotion or VRPlusMod._data.jump_enabled == false then
 		jump_pressed = false
 	end
 

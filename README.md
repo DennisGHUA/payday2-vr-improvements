@@ -75,7 +75,7 @@ Configure the inputs for your motion controllers.
 - **Snap Rotation Delay**: The delay in seconds between snap rotations (0.05s – 1.00s)
 - **Deadzone**: Percentage of the thumbstick/trackpad below which movement will be ignored
 - **Snap Rotation Amount**: The amount in degrees to rotate when using snap rotation (15° – 90°)
-- **Enable Locomotion**: Use thumbstick/trackpad motion to walk around, rather than warping/teleporting
+- **Only Locomotion (Direct, no Dash)**: Move directly with the thumbstick/trackpad - this mod's locomotion is direct walking only (no dash/teleport). Turn off to use the base game movement (Dash, or Dash + Direct).
 - **Apply movement smoothing**: Apply a smoothing factor to make movement easier
 - **Smooth Rotation Speed**: Rotation speed for smooth turning mode (60°/s – 360°/s at full stick)
 

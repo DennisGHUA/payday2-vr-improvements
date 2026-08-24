@@ -36,6 +36,15 @@
 			"priority": 90
 		},
 		{
+			"type": "toggle",
+			"id": "vrplus_jump_enabled",
+			"title": "vrplus_jump_enabled",
+			"description": "vrplus_jump_enabled_desc",
+			"callback": "vrplus_jump_enabled",
+			"value": "jump_enabled",
+			"priority": 95
+		},
+		{
 			"type": "multiple_choice",
 			"id": "vrplus_turning_mode",
 			"title": "vrplus_turning_mode",

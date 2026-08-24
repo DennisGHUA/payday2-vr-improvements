@@ -1,9 +1,14 @@
 # Changelog
 
 ## V0.8.5
-- Fixed: Vanilla sprinting now works again with the vanilla movement modes (Dash, Dash + Direct) when "Enable Locomotion" is turned off.
-- Fixed: The "Sprinting" setting now also applies in the vanilla Dash+Direct movement mode: "Hold-click to sprint" and "Long-click to toggle" keep their behavior, while "Off / Vanilla" leaves the vanilla default sprint handling untouched.
-- Added: The Jump button (Button Mappings / Advanced Controls Manager) now works in the vanilla movement modes (Dash / Dash+Direct) when "Enable Locomotion" is turned off, using the same jump logic as locomotion mode.
+- Fixed: Vanilla sprinting with the vanilla "Dash + Direct" setting when "Enable Locomotion" is off in the mod settings
+- Fixed: The "Sprinting" setting now applies properly in Dash+Direct too, hold to sprint and toggle sprint both keep their behavior, and "Off / Vanilla" leaves default vanilla logic untouched.
+- Added: The Jump button (Button Mappings / Advanced Controls Manager) now works for vanilla "Dash + Direct"
+  Note: Jump speed isn't always accurate when combined with vanilla locomotion and sprint.
+- Added: New "Enable Jump Button" toggle under Motion Controller Options (on by default).
+    Note: Jumps can sometimes be slower than expected when combined with vanilla locomotion and sprint.
+- Renamed: "Disable Sprinting" is renamed to "Off / Vanilla" functionality is the same.
+- Renamed: "Enable Locomotion" is renamed to "Only Locomotion (Direct, no Dash)" functionality is the same.
 
 ## V0.8.4
 - Fixed: The small flicker when stopping moving using the VR elements lag fix should be gone now in locomotion mode.

@@ -12,6 +12,8 @@ local default_data = {
 	movement_controller_direction = false,
 	movement_locomotion = true,
 	movement_smoothing = true,
+	-- Enable the jump button (also lets the vanilla movement modes use it)
+	jump_enabled = true,
 	teleport_on_release = false,
 	rotation_delay = 0.15,
 	rotation_amount = 45,

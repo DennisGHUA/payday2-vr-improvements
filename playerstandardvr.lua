@@ -20,7 +20,7 @@ function PlayerStandard:_get_max_walk_speed(...)
 	-- 'run' jump velocity when sprinting, the 'walk' jump velocity otherwise.
 	-- (Locomotion mode skips this: it has its own launch-momentum air physics via
 	-- _last_velocity_xy/_jump_vel_xy in inject_movement.)
-	if not VRPlusMod._data.movement_locomotion and self._movement_input and self._state_data and self._state_data.in_air and self._jump_vel_xy then
+	if not VRPlusMod._data.movement_locomotion and self._movement_input and VRPlusMod._data.jump_enabled ~= false and self._state_data and self._state_data.in_air and self._jump_vel_xy then
 		local jump_speed = mvector3.length(self._jump_vel_xy)
 		if jump_speed > 0 then
 			final_speed = jump_speed
@@ -751,8 +751,28 @@ function PlayerStandardVR:_can_duck() return true end
 -- no-op. In the vanilla movement modes (Dash / Direct / Dash+Direct) with the
 -- mod's locomotion disabled, WarpIdleState never runs - so trigger a real jump
 -- from the bound 'jump' input here instead, re-using the locomotion jump logic.
+
+-- True when the vanilla VR movement setting includes a direct-walking component
+-- (Dash+Direct or Direct-only). Pure Dash ('warp') is teleport-only: there is no
+-- joystick movement to carry a jump, so the jump button stays disabled there.
+function PlayerStandardVR:_vrplus_has_direct_movement()
+	local movement_type = managers.vr and managers.vr:get_setting("movement_type")
+	return movement_type ~= "warp" and movement_type ~= nil
+end
+
 function PlayerStandardVR:_check_action_jump(t, input)
 	if VRPlusMod._data.movement_locomotion then
+		return false
+	end
+
+	-- Jump is opt-in via the "Enable Jump Button" motion controller option.
+	if VRPlusMod._data.jump_enabled == false then
+		return false
+	end
+
+	-- Pure Dash (teleport-only) vanilla movement has no direct walking, so the
+	-- button jump is disabled there and only works with a direct movement mode.
+	if not self:_vrplus_has_direct_movement() then
 		return false
 	end
 
@@ -778,16 +798,32 @@ function PlayerStandardVR:_check_action_jump(t, input)
 		-- custom_move_direction. In the vanilla movement modes it stays nil, so
 		-- the jump would get no horizontal velocity and end up using the walk
 		-- impulse even mid-sprint. Seed it from the current direct-movement axis
-		-- so the horizontal jump velocity (and its run/walk selection) matches
-		-- the player's actual running state, then restore it.
+		-- so the horizontal jump velocity matches the player's actual movement,
+		-- then restore it.
 		local prev_move_dir = self._move_dir
 		local prev_normal_move_dir = self._normal_move_dir
-		local move_axis = self._movement_input and self._movement_input:state() and self._movement_input:state().move_axis
+		local move_input = self._movement_input
+		local input_state = move_input and move_input:state()
+		local move_axis = input_state and input_state.move_axis
 		if move_axis then
 			self._move_dir = mvector3.copy(move_axis)
 		end
 
-		self:vrplus_trigger_jump(t)
+		-- Find out if the vanilla movement is sprinting so the correct (run vs
+		-- walk) jump velocity is applied. The vanilla Dash+Direct mode drives
+		-- sprinting through the run input latch on the movement input (state().run
+		-- - true while the player is sprinting across the floor), plus the
+		-- internal _running/set_running state. Checking both covers the case where
+		-- one of them is momentarily stale: e.g. sticky-sprint latched _running but
+		-- the vanilla run latch was cleared, or the vanilla latch is live but the
+		-- internal _running hadn't been committed this frame yet.
+		local is_vanilla_sprinting = self._running or (input_state and input_state.run)
+
+		-- vrplus_trigger_jump re-uses the locomotion jump logic; passing the explicit
+		-- sprint state lets it pick the run jump velocity (and stamina drain)
+		-- instead of its internal _start_running_t / stamina heuristics, which
+		-- don't line up with the vanilla movement running state.
+		self:vrplus_trigger_jump(t, is_vanilla_sprinting and true or false)
 
 		self._move_dir = prev_move_dir
 		self._normal_move_dir = prev_normal_move_dir

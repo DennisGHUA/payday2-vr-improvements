@@ -135,13 +135,15 @@ local function add_mapped_buttons(hand_name, key_map)
 	local vive = get_controller_type() == C.CONTROLLER_VIVE
 	local claimed = {}
 
-	-- Jump is bound in every movement mode: with locomotion on it feeds the
-	-- WarpIdleState jump, with locomotion off (vanilla Dash/Direct/Dash+Direct)
-	-- it feeds the vanilla-movement fallback in PlayerStandardVR:_check_action_jump.
-	-- The dominant-hand defaults below don't clash with vanilla movement bindings,
-	-- which sit on the offhand trackpad button.
-	local jump = data.button_jump or (vive and C.BUTTON_TOUCHPAD_CENTER_DOMINANT or C.BUTTON_B)
-	bind_button(key_map, claimed, hand_name, jump, { "jump" })
+	-- Jump is bound in every movement mode while the "Enable Jump Button" option
+	-- is on: with locomotion on it feeds the WarpIdleState jump, with locomotion
+	-- off (vanilla Dash/Direct/Dash+Direct) it feeds the vanilla-movement fallback
+	-- in PlayerStandardVR:_check_action_jump. The dominant-hand defaults below
+	-- don't clash with vanilla movement bindings, which sit on the offhand trackpad.
+	if data.jump_enabled ~= false then
+		local jump = data.button_jump or (vive and C.BUTTON_TOUCHPAD_CENTER_DOMINANT or C.BUTTON_B)
+		bind_button(key_map, claimed, hand_name, jump, { "jump" })
+	end
 
 	if data.comfort.crouching ~= C.CROUCH_NONE then
 		local crouch = data.button_crouch or (vive and C.BUTTON_TOUCHPAD_MENU_OFF or C.BUTTON_A)

@@ -19,8 +19,8 @@
 
 	"vrplus_menu_controllers": "Opciones de controladores de movimiento",
 	"vrplus_menu_controllers_desc": "Configura las opciones de entrada de tus controladores de movimiento",
-	"vrplus_movement_locomotion": "Activar desplazamiento del personaje",
-	"vrplus_movement_locomotion_desc": "Usa el joystick/trackpad para andar, en lugar de la teleportación",
+	"vrplus_movement_locomotion": "Solo movimiento (directo, sin Dash)",
+	"vrplus_movement_locomotion_desc": "Camina directamente con el joystick/trackpad: este movimiento del mod solo ofrece caminar directo (sin teletransporte/Dash). Apágalo para usar el movimiento base del juego (Dash o Dash + Directo).",
 	"vrplus_deadzone": "Zona muerta",
 	"vrplus_deadzone_desc": "Porcentaje por el que, por debajo de él, el movimiento del joystick/trackpad será ignorado",
 	"vrplus_sprint_time": "Temporizador de carrera",
@@ -37,6 +37,9 @@
 	"vrplus_sprint_mode_off": "Desactivado / Vanilla",
 	"vrplus_sprint_mode_sticky": "Long-click to toggle sprinting",
 	"vrplus_sprint_mode_hold": "Mantener pulsado para correr",
+
+	"vrplus_jump_enabled": "Activar botón de salto",
+	"vrplus_jump_enabled_desc": "Activa el botón de salto. Funciona con la locomoción del mod y con los modos de movimiento vanilla (Dash / Direct / Dash+Direct). Los saltos del mod requieren la locomoción activada.",
 
 	"vrplus_dll_out_of_date": "IPHLPAPI.dll desactualizado",
 	"vrplus_dll_out_of_date_message": "El fichero IPHLPAPI.dll está desactualizado. Esto puede causar cuelgues, y las actualizaciones automáticas no funcionarán (siempre se te dirá que estás actualizado).",

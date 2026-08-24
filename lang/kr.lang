@@ -19,8 +19,8 @@
 
 	"vrplus_menu_controllers": "모션 컨트롤러 설정",
 	"vrplus_menu_controllers_desc": "모션 컨트롤러 입력을 변경합니다.",
-	"vrplus_movement_locomotion": "자유 이동(로코모션) ON/OFF",
-	"vrplus_movement_locomotion_desc": "엄지 스틱 / 트랙패드 로코모션(자유 이동)을 키거나 끕니다",
+	"vrplus_movement_locomotion": "로코모션만 (직접 이동, 대시 없음)",
+	"vrplus_movement_locomotion_desc": "엄지 스틱 / 트랙패드로 직접(곧장) 이동합니다. 이 로코모션은 대시/텔레포트 없이 직접 이동만 지원합니다. 끄면 바닐라 이동(Dash 또는 Dash + Direct)을 사용합니다.",
 	"vrplus_deadzone": "불감대 설정",
 	"vrplus_deadzone_desc": "얼마만큼 이하의 스틱 기울기 또는 트랙패드 입력 거리를 무시할지 설정합니다.",
 	"vrplus_sprint_time": "전력질주 조작 활성화 시간",
@@ -37,6 +37,9 @@
 	"vrplus_sprint_mode_off": "비활성화 / 바닐라",
 	"vrplus_sprint_mode_sticky": "설정한 시간 만큼 누른 이후 전력질주 유지.",
 	"vrplus_sprint_mode_hold": "누르고 있는 동안만 전력질주.",
+
+	"vrplus_jump_enabled": "점프 버튼 활성화",
+	"vrplus_jump_enabled_desc": "점프 버튼을 활성화합니다. 모드 로코모션 및 바닐라 이동 모드(Dash / Direct / Dash+Direct) 모두에서 작동합니다. 모드 기반 점프에는 로코모션이 필요합니다.",
 
 	"vrplus_dll_out_of_date": "IPHLPAPI.dll 파일이 최신버전이 아닙니다.",
 	"vrplus_dll_out_of_date_message": "당신의 IPHLPAPI.dll 파일이 최신버전이 아니며 이는 문제를 초래할 수 있으며 자동업데이트가 지원되지 않습니다. (그로인해 구버전 파일임에도 불구하고 업데이트가 필요치 않다고 표시됩니다.)",

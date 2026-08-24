@@ -486,6 +486,7 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		"cam_redout_enable",
 		"movement_smoothing",
 		"teleport_on_release",
+		"jump_enabled",
 	})
 
 	add_inputs("_G", true, {
