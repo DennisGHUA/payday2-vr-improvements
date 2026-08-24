@@ -13,6 +13,20 @@ local old_get_max_walk_speed = PlayerStandard._get_max_walk_speed
 function PlayerStandard:_get_max_walk_speed(...)
 	local final_speed = old_get_max_walk_speed(self, ...)
 
+	-- In the vanilla movement modes the airborne horizontal motion is recomputed
+	-- every frame from the stick axis * _get_max_walk_speed, and while airborne
+	-- that speed is INAIR_MAX regardless of whether the jump was a sprint-jump.
+	-- While airborne after a jump, feed the jump's launch speed instead - the
+	-- 'run' jump velocity when sprinting, the 'walk' jump velocity otherwise.
+	-- (Locomotion mode skips this: it has its own launch-momentum air physics via
+	-- _last_velocity_xy/_jump_vel_xy in inject_movement.)
+	if not VRPlusMod._data.movement_locomotion and self._movement_input and self._state_data and self._state_data.in_air and self._jump_vel_xy then
+		local jump_speed = mvector3.length(self._jump_vel_xy)
+		if jump_speed > 0 then
+			final_speed = jump_speed
+		end
+	end
+
 	-- Apply a speed cap, as per the comfort options
 	if VRPlusMod._data.comfort.max_movement_speed_enable then
 		final_speed = math.min(final_speed, VRPlusMod._data.comfort.max_movement_speed)
@@ -732,7 +746,55 @@ function PlayerStandardVR:_can_duck() return true end
 -- Since the 'jump' input isn't used by the vanilla game in VR, it's
 -- action isn't disabled. As we use it for sprinting/jumping, make
 -- sure the vanilla jumping logic doesn't fire (and lead to a crash).
-function PlayerStandardVR:_check_action_jump(t, input) return false end
+--
+-- In locomotion mode the jump is driven by WarpIdleState:update, so this stays a
+-- no-op. In the vanilla movement modes (Dash / Direct / Dash+Direct) with the
+-- mod's locomotion disabled, WarpIdleState never runs - so trigger a real jump
+-- from the bound 'jump' input here instead, re-using the locomotion jump logic.
+function PlayerStandardVR:_check_action_jump(t, input)
+	if VRPlusMod._data.movement_locomotion then
+		return false
+	end
+
+	if not self.vrplus_trigger_jump then
+		return false
+	end
+
+	local jump_pressed = self._controller and self._controller:get_input_bool("jump")
+	if jump_pressed then
+		-- Same "must be near the center of the stick/touchpad" restriction the
+		-- locomotion mode applies when the jump button is the stick click.
+		if self.vrplus_jump_requires_center_click and self.vrplus_jump_requires_center_click() then
+			local axis = self._controller:get_input_axis("touchpad_primary")
+			if axis and (math.abs(axis.x) > 0.2 or math.abs(axis.y) > 0.2) then
+				jump_pressed = false
+			end
+		end
+	end
+
+	if jump_pressed then
+		-- The jump logic (ps_trigger_jump / orig_start_action_jump) keys off
+		-- _move_dir, which in locomotion mode is set by WarpIdleState's
+		-- custom_move_direction. In the vanilla movement modes it stays nil, so
+		-- the jump would get no horizontal velocity and end up using the walk
+		-- impulse even mid-sprint. Seed it from the current direct-movement axis
+		-- so the horizontal jump velocity (and its run/walk selection) matches
+		-- the player's actual running state, then restore it.
+		local prev_move_dir = self._move_dir
+		local prev_normal_move_dir = self._normal_move_dir
+		local move_axis = self._movement_input and self._movement_input:state() and self._movement_input:state().move_axis
+		if move_axis then
+			self._move_dir = mvector3.copy(move_axis)
+		end
+
+		self:vrplus_trigger_jump(t)
+
+		self._move_dir = prev_move_dir
+		self._normal_move_dir = prev_normal_move_dir
+	end
+
+	return false
+end
 
 -- Fix weapons breaking (minigun firerate in automatic, won't fire in
 -- semifire mode) after being tazed.

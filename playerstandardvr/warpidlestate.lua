@@ -159,6 +159,12 @@ local function ps_trigger_jump(self, t)
 	new_action = orig_start_action_jump(self, t, action_start_data)
 end
 
+-- Expose the VR jump trigger to the player states so the non-locomotion fallback in
+-- playerstandardvr.lua can re-use the same jump logic (button -> real jump) that
+-- locomotion mode uses. ps_trigger_jump uses orig_start_action_jump, keeping the
+-- walk/run velocity and stamina handling identical to the locomotion path.
+PlayerStandard.vrplus_trigger_jump = ps_trigger_jump
+
 local function jump_requires_center_click()
 	local C = VRPlusMod.C
 	local jump_button = VRPlusMod._data.button_jump
@@ -169,6 +175,9 @@ local function jump_requires_center_click()
 
 	return jump_button == C.BUTTON_TOUCHPAD_CENTER_OFF or jump_button == C.BUTTON_TOUCHPAD_CENTER_DOMINANT
 end
+
+-- Mirror of the above for the non-locomotion fallback in playerstandardvr.lua.
+PlayerStandard.vrplus_jump_requires_center_click = jump_requires_center_click
 
 local mvec_hand_forward = Vector3()
 local mvec_hand_forward_vert = Vector3()
