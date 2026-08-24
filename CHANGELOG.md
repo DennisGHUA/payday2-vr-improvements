@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.8.5
+- Fixed: Sprinting now works again with the vanilla movement modes (Dash, Direct and Dash+Direct) when "Enable Locomotion" is turned off.
+
 ## V0.8.4
 - Fixed: The small flicker when stopping moving using the VR elements lag fix should be gone now in locomotion mode.
 

@@ -22,6 +22,25 @@ function PlayerStandard:_get_max_walk_speed(...)
 end
 
 function PlayerStandard:_check_action_run(t, input)
+	-- Vanilla movement (locomotion off, e.g. the vanilla Dash+Direct mode): fall
+	-- back to the vanilla VR run handling, which reads the "run" input directly
+	-- from _movement_input:state().run. The _running_wanted/_stick_move path
+	-- below is only fed by WarpIdleState:update, and that function early-returns
+	-- when locomotion is disabled - so without this fall back sprinting could
+	-- never start, no matter what the Sprinting/Motion Controller options or
+	-- Advanced Controls Manager bindings said.
+	if not VRPlusMod._data.movement_locomotion and self._movement_input then
+		local run_state = self._movement_input:state().run
+
+		if not self._running and run_state then
+			self:_start_action_running(t, input)
+		elseif self._running and not run_state then
+			self:_end_action_running(t)
+		end
+
+		return
+	end
+
 	-- Don't read input for _running_wanted - this is updated on the hand controller.
 
 	-- Don't do anything if we're not moving. Saves on crashes, eg when downed.
