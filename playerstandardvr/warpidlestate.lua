@@ -265,35 +265,8 @@ function WarpIdleState:update(t)
 	--end
 
 
-	-- If the button is being held down, start the hold timer
-	if sprint_pressed and not self._click_time_start then
-		self._click_time_start = t
-	end
-
-	-- the clock is running, and more than _data.sprint_time seconds have elapsed
-	local held_down = self._click_time_start and (t - self._click_time_start) > VRPlusMod._data.sprint_time
-
-	if not sprint_pressed then
-		if self._click_time_start and not held_down then
-			--ps_trigger_jump(state, t)
-			self._click_time_start = nil
-		end
-
-		self._click_time_start = nil
-	end
-
-
-	if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_STICKY then
-		if held_down then
-			state._running_wanted = true
-			state.__stop_running = false
-		end
-	elseif VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_HOLD then
-		state._running_wanted = held_down
-		state.__stop_running = not state._running_wanted
-	else
-		-- Sprinting disabled (SPRINT_OFF, or any unknown value)
-		state._running_wanted = false
-		state.__stop_running = true
-	end
+	-- Apply the player's "Sprinting" mode (Off / Long-click toggle / Hold-click)
+	-- so the sprint button behaves consistently with the non-locomotion fallback
+	-- in PlayerStandard:_check_action_run.
+	state:apply_sprint_mode(t, sprint_pressed)
 end

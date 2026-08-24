@@ -21,21 +21,87 @@ function PlayerStandard:_get_max_walk_speed(...)
 	return final_speed
 end
 
+-- Applies the "Sprinting" (sprint_mode) setting: Disable / Long-click to toggle
+-- (SPRINT_STICKY) / Hold-click to sprint (SPRINT_HOLD). Turns the raw run input
+-- into _running_wanted + __stop_running, which _check_action_run consumes.
+-- Shared between locomotion mode (WarpIdleState) and vanilla movement fallback.
+function PlayerStandard:apply_sprint_mode(t, sprint_pressed)
+	local mode = VRPlusMod._data.sprint_mode
+
+	-- If the sprint button is being held down, start the hold timer
+	if sprint_pressed and not self._sprint_click_start then
+		self._sprint_click_start = t
+	end
+
+	-- the clock is running, and more than _data.sprint_time seconds have elapsed
+	local held_down = self._sprint_click_start and (t - self._sprint_click_start) > VRPlusMod._data.sprint_time
+
+	if not sprint_pressed then
+		if self._sprint_click_start and not held_down then
+			self._sprint_click_start = nil
+		end
+
+		self._sprint_click_start = nil
+	end
+
+	if mode == VRPlusMod.C.SPRINT_STICKY then
+		if held_down then
+			self._running_wanted = true
+			self.__stop_running = false
+		end
+	elseif mode == VRPlusMod.C.SPRINT_HOLD then
+		self._running_wanted = held_down
+		self.__stop_running = not self._running_wanted
+	else
+		-- Sprinting disabled (SPRINT_OFF, or any unknown value)
+		self._running_wanted = false
+		self.__stop_running = true
+	end
+end
+
 function PlayerStandard:_check_action_run(t, input)
 	-- Vanilla movement (locomotion off, e.g. the vanilla Dash+Direct mode): fall
-	-- back to the vanilla VR run handling, which reads the "run" input directly
-	-- from _movement_input:state().run. The _running_wanted/_stick_move path
-	-- below is only fed by WarpIdleState:update, and that function early-returns
-	-- when locomotion is disabled - so without this fall back sprinting could
-	-- never start, no matter what the Sprinting/Motion Controller options or
-	-- Advanced Controls Manager bindings said.
+	-- back to vanilla-style run handling that reads the live "run" input and routes
+	-- it through the mod's "Sprinting" mode (Off / Long-click toggle / Hold-click).
+	-- The locomotion path below is driven by _running_wanted/_stick_move which is
+	-- only fed by WarpIdleState:update - and that function returns early whenever
+	-- locomotion is disabled - so without this branch sprinting could never start,
+	-- no matter what the Sprinting/Motion Controller options or Advanced Controls
+	-- Manager bindings said.
 	if not VRPlusMod._data.movement_locomotion and self._movement_input then
-		local run_state = self._movement_input:state().run
+		-- "Off": do not interfere - use the vanilla default sprint handling
+		-- untouched. In Dash+Direct that is the vanilla run input read straight
+		-- from _movement_input, exactly like the committed upstream fix.
+		if VRPlusMod._data.sprint_mode == VRPlusMod.C.SPRINT_OFF then
+			local run_state = self._movement_input:state().run
 
-		if not self._running and run_state then
-			self:_start_action_running(t, input)
-		elseif self._running and not run_state then
+			if not self._running and run_state then
+				self:_start_action_running(t, input)
+			elseif self._running and not run_state then
+				self:_end_action_running(t)
+			end
+
+			return
+		end
+
+		local sprint_pressed = self._controller and self._controller:get_input_bool("run") or nil
+
+		self:apply_sprint_mode(t, sprint_pressed)
+
+		-- Dash+Direct has no _move_dir (that field is locomotion-only), so sticky
+		-- sprint has nothing to clear it. Mirror locomotion's "stop running when
+		-- movement stops" gate through the analog input: while direct movement is
+		-- active we keep the sprint-mode state, otherwise it is cancelled.
+		if not self._movement_input:is_movement_walk() then
+			self._running_wanted = false
+			self.__stop_running = true
+		end
+
+		-- Start/stop running from the sprint-mode flags, mirroring the locomotion path
+		if self._running and self.__stop_running then
 			self:_end_action_running(t)
+		elseif not self._running and self._running_wanted then
+			self:_start_action_running(t, input)
 		end
 
 		return
@@ -57,8 +123,16 @@ function PlayerStandard:_check_action_run(t, input)
 end
 
 -- Prevent crashes when stopping sprinting by letting go of the stick
+-- (locomotion mode). In the vanilla movement modes (Dash / Direct / Dash+Direct)
+-- with the mod's locomotion disabled there is no _stick_move field at all, so
+-- directional running is always allowed - otherwise _update_running_timers would
+-- interrupt any sprint immediately.
 local old_can_run_directional = PlayerStandard._can_run_directional
 function PlayerStandard:_can_run_directional()
+	if not VRPlusMod._data.movement_locomotion then
+		return true
+	end
+
 	return self._stick_move and old_can_run_directional(self) or false
 end
 

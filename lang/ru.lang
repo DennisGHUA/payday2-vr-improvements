@@ -36,7 +36,7 @@
 	"vrplus_turning_mode_snap": "Резкий поворот обзора",
 	"vrplus_sprint_mode": "Спринт",
 	"vrplus_sprint_mode_desc": "Какой метод использования кнопки стика/тачпада должен использоваться для спринта",
-	"vrplus_sprint_mode_off": "Отключить спринт",
+	"vrplus_sprint_mode_off": "Отключено / Ваниль",
 	"vrplus_sprint_mode_sticky": "Долгое нажатие для переключения на спринт",
 	"vrplus_sprint_mode_hold": "Нажатие и удерживание для спринта",
 

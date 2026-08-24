@@ -34,7 +34,7 @@
 	"vrplus_turning_mode_snap": "Snap view rotation",
 	"vrplus_sprint_mode": "Carrera",
 	"vrplus_sprint_mode_desc": "Qué método usar para correr pulsando el joystick/trackpad",
-	"vrplus_sprint_mode_off": "Desactivar la carrera",
+	"vrplus_sprint_mode_off": "Desactivado / Vanilla",
 	"vrplus_sprint_mode_sticky": "Long-click to toggle sprinting",
 	"vrplus_sprint_mode_hold": "Mantener pulsado para correr",
 
