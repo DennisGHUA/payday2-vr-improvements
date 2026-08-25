@@ -1,5 +1,8 @@
 # Changelog
 
+## V0.8.6
+- Fixed: Weapon now rotates instantly with snap turning (previously had a delay).
+
 ## V0.8.5
 - Fixed: Vanilla sprinting with the vanilla "Dash + Direct" setting when "Enable Locomotion" is off in the mod settings
 - Fixed: The "Sprinting" setting now applies properly in Dash+Direct too, hold to sprint and toggle sprint both keep their behavior, and "Off / Vanilla" leaves default vanilla logic untouched.

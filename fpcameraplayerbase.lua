@@ -100,3 +100,25 @@ Hooks:PostHook(FPCameraPlayerBase, "_update_movement", "VRPlusRemoveOvershot", f
 		mvector3.subtract(self._output_data.position, mvec_overshot_delta)
 	end
 end)
+
+-- Camera base rotation turns instantly; hands/weapons lag one frame (same
+-- Diesel delay fixed above for position), so a snap turn leaves them trailing.
+-- Hold the camera a frame behind the base-rotation change to keep them aligned.
+-- Tracks base only; head motion (VRManager:hmd_rotation()) is untouched, no extra
+-- input lag.
+Hooks:PostHook(FPCameraPlayerBase, "_update_movement", "VRPlusRemoveTurnLag", function(self)
+	if not self._base_rotation or not self._output_data or not self._output_data.rotation then return end
+
+	local y = self._base_rotation:yaw()
+	local prev = self.__prev_base_yaw
+
+	if prev ~= nil and self._hmd_tracking and not self._block_input then
+		local d = y - prev
+		if d ~= 0 then
+			local r = self._output_data.rotation
+			self._output_data.rotation = Rotation(r:yaw() - d, r:pitch(), r:roll())
+		end
+	end
+
+	self.__prev_base_yaw = y
+end)
