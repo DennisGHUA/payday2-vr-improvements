@@ -50,19 +50,21 @@ function PlayerStandard:apply_sprint_mode(t, sprint_pressed)
 	-- the clock is running, and more than _data.sprint_time seconds have elapsed
 	local held_down = self._sprint_click_start and (t - self._sprint_click_start) > VRPlusMod._data.sprint_time
 
-	if not sprint_pressed then
-		if self._sprint_click_start and not held_down then
-			self._sprint_click_start = nil
-		end
-
-		self._sprint_click_start = nil
-	end
-
 	if mode == VRPlusMod.C.SPRINT_STICKY then
-		if held_down then
-			self._running_wanted = true
-			self.__stop_running = false
+		-- Long-click to toggle: a fresh long-press flips the latched sprint state.
+		-- Fire only once per press (the rising edge) - while the button is held
+		-- down held_down stays true, so without the latch it would keep toggling
+		-- every frame. On the next long-press it flips again, turning sprint off.
+		if held_down and not self._sprint_long_fired then
+			self._sprint_long_fired = true
+			self._sprint_sticky = not self._sprint_sticky
 		end
+
+		-- Keep the latched state applied every frame. The locomotion path clears
+		-- _running_wanted whenever the stick stops moving, so we re-assert it here
+		-- while input is live so a second long-click can turn sprint off again.
+		self._running_wanted = self._sprint_sticky and true or false
+		self.__stop_running = not self._running_wanted
 	elseif mode == VRPlusMod.C.SPRINT_HOLD then
 		self._running_wanted = held_down
 		self.__stop_running = not self._running_wanted
@@ -70,6 +72,14 @@ function PlayerStandard:apply_sprint_mode(t, sprint_pressed)
 		-- Sprinting disabled (SPRINT_OFF, or any unknown value)
 		self._running_wanted = false
 		self.__stop_running = true
+	end
+
+	-- The press (and any completed long-click edge) is finished once the button is
+	-- released - clear the hold timer so the next press is treated as a fresh
+	-- potential long-click toggling the sticky state again.
+	if not sprint_pressed then
+		self._sprint_click_start = nil
+		self._sprint_long_fired = false
 	end
 end
 
@@ -105,8 +115,10 @@ function PlayerStandard:_check_action_run(t, input)
 		-- Dash+Direct has no _move_dir (that field is locomotion-only), so sticky
 		-- sprint has nothing to clear it. Mirror locomotion's "stop running when
 		-- movement stops" gate through the analog input: while direct movement is
-		-- active we keep the sprint-mode state, otherwise it is cancelled.
-		if not self._movement_input:is_movement_walk() then
+		-- active we keep the sprint-mode state, otherwise it is cancelled. The only
+		-- exception is the moment of a touchpad toggle-click itself (Vive) - the pad
+		-- is centred then, so we let the click finish before the gate applies.
+		if not self._movement_input:is_movement_walk() and not (self._sprint_sticky and sprint_pressed) then
 			self._running_wanted = false
 			self.__stop_running = true
 		end
@@ -144,6 +156,19 @@ end
 local old_can_run_directional = PlayerStandard._can_run_directional
 function PlayerStandard:_can_run_directional()
 	if not VRPlusMod._data.movement_locomotion then
+		return true
+	end
+
+	-- Sticky sprint must survive the actual toggle-click on touchpad-sprint
+	-- controllers (Vive): the run button IS the trackpad click, so re-clicking to
+	-- toggle centres the pad and momentarily releases the stick - without this the
+	-- click itself would trip the stick-centric cancel below. The bypass applies
+	-- ONLY while the run input is held down (i.e. during the click itself), so
+	-- once the pad is released, or whenever sticky sprint is off, the normal
+	-- "must be pushing the stick to keep running" rules apply. This means non-Vive
+	-- headsets (Index/Oculus, where the stick stays deflected during a click) are
+	-- completely unaffected.
+	if self._sprint_sticky and self._controller and self._controller:get_input_bool("run") then
 		return true
 	end
 

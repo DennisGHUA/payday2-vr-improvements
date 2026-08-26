@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.8.7
+- Fixed: Toggle sprint (Long-click to toggle) could not be toggled off, a second long-click now stops sprinting.
+- Fixed: Toggle sprint (Long-click to toggle) now also works on the HTC Vive.
+
 ## V0.8.6
 - Fixed: Weapon now rotates instantly with snap turning (previously had a delay).
 
