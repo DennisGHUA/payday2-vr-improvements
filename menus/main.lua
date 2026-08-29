@@ -453,14 +453,25 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 	end
 
 	-- Opens the Controls Manager once the warning dialog has fully closed.
-	-- The dialog system restores the previous menu state when a dialog finishes its
-	-- close transition, which is what undoes an open_node that happened while the
-	-- dialog was still on screen (or a few frames after, in VR). Hooking the
-	-- dialog_closed event - which the dialog system dispatches after that reset -
-	-- lets the node stay open. Self-removes so it only fires once.
+	-- In VR the dialog is drawn inside an overlay menu ("system_menu") that
+	-- MenuManagerVR pushes on top of the pause/start menu while a dialog is up
+	-- (MenuManagerVR:dialog_active_changed_callback). That overlay is only
+	-- popped a tick after the dialog closes (via the system menu's
+	-- active-changed callback), so an open_node issued from the dialog-closed
+	-- event still addresses the overlay - and the controls manager node only
+	-- exists in the pause/start menu, so the select silently fails and nothing
+	-- opens. Close the overlay ourselves first so the node lands on the menu
+	-- underneath. On the flat menu no overlay is open, so this is skipped and
+	-- the node opens straight away. (The delayed VR-side pop later sees the
+	-- menu already closed and is a no-op.) Self-removes so it only fires once.
 	local open_controls_after_dialog
 	open_controls_after_dialog = function()
 		managers.system_menu:remove_dialog_closed_callback(open_controls_after_dialog)
+
+		if managers.menu:is_open("system_menu") then
+			managers.menu:close_menu("system_menu")
+		end
+
 		managers.menu:open_node("vrplus_controls_manager")
 	end
 
@@ -476,15 +487,12 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 				{
 					text = "Continue to Advanced Controls Manager",
 					callback_func = function()
-						-- Opening the node while the dialog is still closing gets undone when it
-						-- finishes closing. The dialog fades out over ~0.2 seconds
-						-- (GenericDialog.FADE_OUT_DURATION), i.e. several frames, so a one-tick
-						-- DelayedCalls fires mid-close and the node reverts. In VR this timing
-						-- never lines up, which is why it only worked on the flat menu.
-						--
-						-- Wait for the dialog to be fully closed by hooking its close event.
-						-- This fires after the dialog is gone and the previous menu state has
-						-- been restored, so the node we open here stays open - in VR and flat.
+						-- Opening the node while the dialog is still on screen gets undone
+						-- when it finishes its ~0.2 second fade-out
+						-- (GenericDialog.FADE_OUT_DURATION), so wait for the dialog to be
+						-- fully closed and removed by hooking its close event before
+						-- addressing the menu. open_controls_after_dialog also clears the
+						-- VR dialog overlay that is still covering the pause/start menu.
 						managers.system_menu:add_dialog_closed_callback(open_controls_after_dialog)
 					end
 				},
