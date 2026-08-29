@@ -1,7 +1,6 @@
 # Changelog
 
 ## V0.8.8
-- Fixed: Restored compatibility with the "Crouch Sliding - VR & Non-VR Compatible" mod (https://modworkshop.net/mod/47919).
 - Fixed: Advanced Controller Mappings menu sometimes not opening in VR
 - Fixed: Smooth turning accelerating the longer the stick is held.
 

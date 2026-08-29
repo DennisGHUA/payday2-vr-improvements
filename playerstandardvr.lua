@@ -332,17 +332,11 @@ function PlayerStandardVR:update(t, dt)
 		self._slowdown_run_prevent = nil
 	end
 
-	-- Fix for ducking state not being reset after fall damage.
-	-- If the body is ducking but our custom ducking state says we're not, end the
-	-- ducking action to ensure the states are in sync.
-	--
-	-- IMPORTANT: only correct ducks WE started (artificial crouch, tracked by
-	-- __vrplus_duck_owned). A duck forced by something else - the vanilla VR
-	-- physical crouch, or e.g. a crouch-slide mod that forces a duck while
-	-- sprinting to run its slide - must be left alone. Auto-standing those would
-	-- cancel the slide the instant it starts. External systems never set
-	-- __vrplus_duck_owned, so they are immune to this correction.
-	if self._state_data.__vrplus_duck_owned and self._state_data.ducking and not self._state_data.__vrplus_duck and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
+	-- Fix for ducking state not being reset after fall damage
+	-- If the game thinks we're ducking but our custom ducking state says we're not,
+	-- end the ducking action to ensure the states are in sync
+	-- Also check that we're in the standard state (not bleedout, etc.)
+	if self._state_data.ducking and not self._state_data.__vrplus_duck and self._ext_movement and self._ext_movement:current_state_name() == "standard" then
 		self:_end_action_ducking(t)
 	end
 
@@ -651,19 +645,13 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 		state_data.__vrplus_duck = false
 	end
 
-	-- Update the game's internal ducking state to match our custom state, and
-	-- track ownership of the body duck. Owning a duck means the artificial crouch
-	-- (and only it) is allowed to stand the body back up through the desync
-	-- guard in update. Ducks we do NOT own - the vanilla VR physical crouch or a
-	-- crouch-slide mod forcing a duck during a slide - are never force-corrected.
+	-- Update the game's internal ducking state to match our custom state
 	if was_ducking ~= state_data.__vrplus_duck then
 		if state_data.__vrplus_duck then
-			state_data.__vrplus_duck_owned = true
 			if not self._state_data.ducking then
 				self:_start_action_ducking(t)
 			end
 		else
-			state_data.__vrplus_duck_owned = false
 			if self._ext_movement and self._ext_movement:current_state_name() == "standard" and self._unit:mover() then
 				-- Player explicitly pressed the button to stand up, so always make
 				-- sure they actually do. Must not be gated on _state_data.ducking:
@@ -677,36 +665,6 @@ Hooks:PostHook(PlayerStandardVR, "_check_action_duck", "VRPlusSetDuckStatus", fu
 		end
 	end
 end)
-
--- CrouchSlide compatibility: expose the artificial crouch as a held "duck" input.
---
--- CrouchSlide detects a crouch entirely through self._controller:get_input_bool("duck")
--- (or a managers.vr crouch setting that does not exist in VRPlus). With the VRPlus
--- artificial crouch that button is only a tap in Toggle mode and is released in Hold
--- mode the moment the player stops pressing it, so the "duck" bool is true for just a
--- frame or two - way too short and unreliable for the slide's trigger, and its sprinting
--- must already be going for 0.25s at that point. By reflecting the persistent
--- __vrplus_duck flag into get_input_bool("duck") the artificial crouch reads as a held
--- crouch for its entire duration, so the slide trigger fires reliably whenever the
--- player is artificially crouched while sprinting.
---
--- Only the pool of VR controller wrappers is patched, and only for the local player.
-local old_vr_get_input_bool = ControllerWrapperVR and ControllerWrapperVR.get_input_bool
-if old_vr_get_input_bool then
-	function ControllerWrapperVR:get_input_bool(connection)
-		if connection == "duck" and VRPlusMod._data.comfort.crouching ~= VRPlusMod.C.CROUCH_NONE then
-			local player = managers.player:local_player()
-			if player and alive(player) then
-				local mov = player:movement()
-				if mov and mov._state_data and mov._state_data.__vrplus_duck then
-					return true
-				end
-			end
-		end
-
-		return old_vr_get_input_bool(self, connection)
-	end
-end
 
 -- The carry movement state (PlayerCarryVR) extends the flat PlayerCarry state, not
 -- PlayerStandardVR, so it never runs the artificial-crouch hook above. Carrying a
@@ -815,16 +773,7 @@ Hooks:PostHook(PlayerStandardVR, "_end_action_warp", "VRPlusRestoreDuckAfterWarp
 end)
 
 
--- Respect _can_duck, to prevent ducking during mask-off.
---
--- NOTE: In the base game PlayerStandardVR IS the flat PlayerStandard class
--- (playerstandardvr.lua: "PlayerStandardVR = PlayerStandard or ..."), so both
--- names map to the same _start_action_ducking field. We MUST call through the
--- previously-captured old_start_action_ducking here, never
--- PlayerStandard._start_action_ducking(self, ...) - that would just recurse
--- into this same function (stack overflow). Capturing at load time also chains
--- correctly with mods that override the same method on this shared table (e.g.
--- CrouchSlide), regardless of which one loads first.
+-- Respect _can_duck, to prevent ducking during mask-off
 local old_start_action_ducking = PlayerStandardVR._start_action_ducking
 function PlayerStandardVR:_start_action_ducking(t)
 	if not self:_can_duck() then return end
