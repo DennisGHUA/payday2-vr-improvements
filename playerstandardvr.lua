@@ -248,7 +248,24 @@ local function do_rotation(self, t, dt)
 			-- User-configurable rotation speed (degrees per second at full stick)
 			local speed = VRPlusMod._data.smooth_rotation_speed or 180
 			local delta = dt * speed * -amt
-			self:set_base_rotation(Rotation(rot + delta, 0, 0))
+
+			-- Rotate the camera base by a fixed relative amount instead of
+			-- setting an absolute world yaw. set_base_rotation derives the new
+			-- base by compensating for the current output rotation
+			-- (base - output), but VRPlusRemoveTurnLag holds that output a frame
+			-- behind during continuous rotation so the weapon/hand lag stays
+			-- hidden. While the stick is held that compensation is stale, and the
+			-- next delta was computed on top of the over-compensated result -
+			-- the turn accelerated every frame (spin speed ramping up the longer
+			-- you hold it). A relative rotation always advances by exactly delta
+			-- no matter what the output rotation shows.
+			local camera_base = self._ext_camera:camera_unit():base()
+			camera_base:rotate_base(Rotation(delta, 0, 0))
+
+			-- Keep the hands/weapons aligned and the cached base rotation
+			-- up to date, same as PlayerStandardVR:set_base_rotation does.
+			self._unit:hand():set_base_rotation(camera_base:base_rotation())
+			self._camera_base_rot = camera_base:base_rotation()
 		end
 	else
 		-- Snap turning
