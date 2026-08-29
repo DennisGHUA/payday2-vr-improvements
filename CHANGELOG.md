@@ -2,6 +2,7 @@
 
 ## V0.8.8
 - Fixed: Restored compatibility with the "Crouch Sliding - VR & Non-VR Compatible" mod (https://modworkshop.net/mod/47919).
+- Fixed: Advanced Controller Mappings menu sometimes not opening in VR
 
 ## V0.8.7
 - Fixed: Toggle sprint (Long-click to toggle) could not be toggled off, a second long-click now stops sprinting.

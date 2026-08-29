@@ -8,8 +8,8 @@ local LANG_KOREAN = false
 ]]
 _G.VRPlusMod = _G.VRPlusMod or {}
 
--- Conflict warning timer (debounced, shown immediately after selection)
-VRPlusMod._conflict_timer = nil
+-- Pending button-conflict warning (debounced, shown once the picker dialog closes)
+VRPlusMod._conflict_warning_pending = nil
 
 -- Constants
 VRPlusMod.C = {
@@ -452,6 +452,18 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		VRPlusMod:AskHMDType(true)
 	end
 
+	-- Opens the Controls Manager once the warning dialog has fully closed.
+	-- The dialog system restores the previous menu state when a dialog finishes its
+	-- close transition, which is what undoes an open_node that happened while the
+	-- dialog was still on screen (or a few frames after, in VR). Hooking the
+	-- dialog_closed event - which the dialog system dispatches after that reset -
+	-- lets the node stay open. Self-removes so it only fires once.
+	local open_controls_after_dialog
+	open_controls_after_dialog = function()
+		managers.system_menu:remove_dialog_closed_callback(open_controls_after_dialog)
+		managers.menu:open_node("vrplus_controls_manager")
+	end
+
 	function MenuCallbackHandler:vrplus_controls_manager()
 		-- Show deprecation warning dialog using PAYDAY 2's native system
 		local dialog_data = {
@@ -464,11 +476,16 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 				{
 					text = "Continue to Advanced Controls Manager",
 					callback_func = function()
-						-- Selecting the node from inside the dialog is undone when the
-						-- dialog closes, so open it on the next tick
-						DelayedCalls:Add("vrplus_open_controls_manager", 0, function()
-							managers.menu:open_node("vrplus_controls_manager")
-						end)
+						-- Opening the node while the dialog is still closing gets undone when it
+						-- finishes closing. The dialog fades out over ~0.2 seconds
+						-- (GenericDialog.FADE_OUT_DURATION), i.e. several frames, so a one-tick
+						-- DelayedCalls fires mid-close and the node reverts. In VR this timing
+						-- never lines up, which is why it only worked on the flat menu.
+						--
+						-- Wait for the dialog to be fully closed by hooking its close event.
+						-- This fires after the dialog is gone and the previous menu state has
+						-- been restored, so the node we open here stays open - in VR and flat.
+						managers.system_menu:add_dialog_closed_callback(open_controls_after_dialog)
 					end
 				},
 				{
@@ -546,6 +563,21 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 		reload_hands()
 	end
 
+	-- Shows the button conflict warning dialog on top of the current menu. Pulled
+	-- out of check_button_conflicts so the warning can be deferred until any dialog
+	-- that is closing has fully gone (see check_button_conflicts).
+	local function show_conflict_warning(msg)
+		local dialog_data = {
+			title = "VRPlus: Button Conflict Detected",
+			text = msg .. ".\n\nSome functions may not work as expected. Consider remapping to different buttons.",
+			button_list = {
+				{text = "OK", cancel_button = true}
+			},
+			id = "vrplus_button_conflict_warning"
+		}
+		managers.system_menu:show(dialog_data)
+	end
+
 	-- Helper function to check for button mapping conflicts
 	local function check_button_conflicts()
 		-- A "(Both Hands)" direction lands on the same physical input as the matching
@@ -607,26 +639,30 @@ Hooks:Add( "MenuManagerInitialize", "MenuManagerInitialize_VRPlusMod", function(
 			-- Show warning in console
 			log("[VRPlus] WARNING: " .. msg)
 			
-			-- Cancel any existing timer
-			if VRPlusMod._conflict_timer then
-				VRPlusMod._conflict_timer:stop()
-				VRPlusMod._conflict_timer = nil
+			-- Cancel any pending warning - the most recent selection wins
+			if VRPlusMod._conflict_warning_pending then
+				managers.system_menu:remove_dialog_closed_callback(VRPlusMod._conflict_warning_pending)
+				VRPlusMod._conflict_warning_pending = nil
 			end
 			
-			-- Show visual popup warning immediately (next tick, no delay)
-			if managers and managers.menu then
-				VRPlusMod._conflict_timer = DelayedCalls:Add("vrplus_conflict_warning", 0, function()
-					local dialog_data = {
-						title = "VRPlus: Button Conflict Detected",
-						text = msg .. ".\n\nSome functions may not work as expected. Consider remapping to different buttons.",
-						button_list = {
-							{text = "OK", is_cancel_button = true}
-						},
-						id = "vrplus_button_conflict_warning"
-					}
-					managers.system_menu:show(dialog_data)
-					VRPlusMod._conflict_timer = nil
-				end)
+			-- Show the visual popup warning. check_button_conflicts runs inside the
+			-- button picker's callback while that dialog is still closing, so showing
+			-- the warning right away queues it behind the picker and, in VR, it can
+			-- end up never appearing. Wait until the picker has fully closed, then
+			-- show the warning on top of the restored menu.
+			if managers and managers.system_menu then
+				if managers.system_menu:is_active() then
+					local open_warning
+					open_warning = function()
+						managers.system_menu:remove_dialog_closed_callback(open_warning)
+						VRPlusMod._conflict_warning_pending = nil
+						show_conflict_warning(msg)
+					end
+					VRPlusMod._conflict_warning_pending = open_warning
+					managers.system_menu:add_dialog_closed_callback(open_warning)
+				else
+					show_conflict_warning(msg)
+				end
 			end
 		end
 	end
