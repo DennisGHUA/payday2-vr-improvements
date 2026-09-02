@@ -13,6 +13,8 @@
 	the crouch button.
 --]]
 
+Hooks:Register("VRPlusPlayerHandUpdate")
+
 function PlayerHand:_update_controllers(t, dt)
 	local hmd_pos = VRManager:hmd_position()
 	local current_height = hmd_pos.z
@@ -187,4 +189,6 @@ function PlayerHand:_update_controllers(t, dt)
 
 		self:set_belt_active(found, i)
 	end
+
+	Hooks:Call("VRPlusPlayerHandUpdate", self, t, dt)
 end
