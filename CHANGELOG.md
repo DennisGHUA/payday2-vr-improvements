@@ -1,5 +1,9 @@
 # Changelog
 
+## V0.8.9
+- Added: One specific fix for VR when the vanilla VR stuttering/freezes every few seconds after the Diesel 3.0 (update 247) upgrade.
+- Added: Compatibility support for the upcoming Immersive Reloading for VR mod (https://www.youtube.com/watch?v=Yla6eaUqjg8)
+
 ## V0.8.8
 - Fixed: Advanced Controller Mappings menu sometimes not opening in VR
 - Fixed: Smooth turning accelerating the longer the stick is held.
