@@ -1,7 +1,7 @@
 # Changelog
 
 ## V0.8.9
-- Added: One specific fix for VR when the vanilla VR stuttering/freezes every few seconds after the Diesel 3.0 (update 247) upgrade.
+- Added: A fix for a vanilla VR issue introduced with the Diesel 3.0 (Update 247) upgrade, which caused stuttering and freezes every few seconds. The vanilla adaptive-quality scaling now only resizes render targets when the scaling changes, fixing many of the random VR stutters.
 - Added: Compatibility support for the upcoming Immersive Reloading for VR mod (https://www.youtube.com/watch?v=Yla6eaUqjg8)
 
 ## V0.8.8
